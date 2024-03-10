@@ -18,7 +18,6 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 // import habitsLogo from "./assets/habits-logo.png";
 
 import { LoadingSpinner } from "@/reusable-ui/LoadingSpinner";
-import { backgroundCover } from "./layout";
 import { Slider } from "@/components/ui/slider";
 import { MoreVertical, Settings } from "lucide-react";
 import {
@@ -54,6 +53,8 @@ const Checkbox = ({ label, checked, onChange }) => {
     </label>
   );
 };
+
+const backgroundCover = "";
 
 const pathways = [
   {
@@ -795,10 +796,7 @@ export const PathwayCard = observer(({ pathway, listId }) => {
               >
                 Edit
               </DropdownMenuItem>
-              <Link
-                href={`/analytics/?pathwayId=${pathway.id}`}
-                passHref
-              >
+              <Link href={`/analytics/?pathwayId=${pathway.id}`} passHref>
                 <DropdownMenuItem>View Stats</DropdownMenuItem>
               </Link>
               {isInList ? (
