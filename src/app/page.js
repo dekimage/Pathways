@@ -9,7 +9,7 @@ import { HiOutlineCog6Tooth } from "react-icons/hi2";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdOutlineMusicNote, MdOutlineMusicOff } from "react-icons/md";
 import PathwayBuilder from "./new-pathway/page";
-
+import logoImg from "@/assets/logo.png";
 import { observer } from "mobx-react";
 import MobxStore from "@/mobx";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -36,6 +36,8 @@ import {
 import { formatTimeFromSteps } from "@/utils/transformers";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
+import TimerNew from "@/components/TimerNew";
 
 // to reusable UI
 const Checkbox = ({ label, checked, onChange }) => {
@@ -291,7 +293,7 @@ export const HorizontalPathwaysList = ({ pathways, title, description }) => {
     <div className="mb-8">
       <TitleDescription title={title} description={description} />
       <ScrollArea>
-        <div className="flex gap-4">
+        <div className="flex gap-4 h-full">
           {pathways.map((pathway, i) => (
             <PathwayCard key={i} pathway={pathway} />
           ))}
@@ -359,9 +361,16 @@ const PathwayPlayerHeader = ({
       >
         <IoIosArrowBack size={20} className="text-slate-600" />
       </button>
-      <div>
-        {pathway.emoji} {pathway.name}
+      <div className="flex items-center">
+        <div
+          className="w-fit mr-1 p-1 rounded"
+          style={{ background: pathway.backgroundColor }}
+        >
+          {pathway.emoji}
+        </div>
+        <div className="text-xl font-bold">{pathway.name}</div>
       </div>
+
       <div>
         <button
           className="mr-2 rounded-full hover:bg-gray-100"
@@ -392,59 +401,48 @@ const PathwayPlayerHeader = ({
 };
 
 const ProgressBar = ({ currentStep, pathway }) => {
+  const totalSteps = pathway.steps.length;
+
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex-1 mr-4">
-        <div className="w-full rounded-full h-2.5">
-          <div
-            className="bg-slate-500 h-2.5 rounded-full"
-            style={{
-              width: `${(currentStep / pathway.steps.length) * 100}%`,
-            }}
-          ></div>
+        <div className="w-full flex rounded-full bg-gray-400 h-2.5">
+          {Array.from({ length: totalSteps }, (_, index) => (
+            <div
+              key={index}
+              className={`flex-1 h-2.5 transition-all duration-300 ${
+                index <= currentStep ? "bg-primary" : "bg-transparent"
+              } ${index !== totalSteps - 1 ? "mr-0.5" : ""} rounded-full`}
+            ></div>
+          ))}
         </div>
       </div>
       <span className="text-sm font-medium text-gray-700">
-        {currentStep + 1}/{pathway.steps.length}
+        {currentStep}/{totalSteps}
       </span>
     </div>
   );
 };
 
-const Timer = ({ timer, restartTimer, isPlaying, setIsPlaying }) => {
-  return (
-    <div className="mb-4 flex items-center justify-between p-2 rounded-lg">
-      <div className="flex items-center">
-        {isPlaying ? (
-          <button
-            className="text-slate-600 hover:text-slate-800 mr-2"
-            onClick={() => setIsPlaying(false)}
-          >
-            <FaPause size={12} />
-          </button>
-        ) : (
-          <button
-            className="text-slate-600 hover:text-slate-800 mr-2"
-            onClick={() => setIsPlaying(true)}
-          >
-            <FaPlay size={12} />
-          </button>
-        )}
-      </div>
-
-      <div className="text-lg font-semibold text-slate-600">
-        {Math.floor(timer / 60)}:
-        {timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
-      </div>
-      <button
-        className="text-slate-600 hover:text-slate-800"
-        onClick={() => restartTimer()}
-      >
-        <FaRedo size={12} />
-      </button>
-    </div>
-  );
-};
+// const ProgressBar = ({ currentStep, pathway }) => {
+//   return (
+//     <div className="flex items-center justify-between mb-4">
+//       <div className="flex-1 mr-4">
+//         <div className="w-full rounded-full h-2.5 bg-gray-400">
+//           <div
+//             className="bg-primary h-2.5 rounded-full"
+//             style={{
+//               width: `${(currentStep / pathway.steps.length) * 100}%`,
+//             }}
+//           ></div>
+//         </div>
+//       </div>
+//       <span className="text-sm font-medium text-gray-700">
+//         {currentStep}/{pathway.steps.length}
+//       </span>
+//     </div>
+//   );
+// };
 
 export const PathwayPlayer = observer(({ pathway }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -658,17 +656,24 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
       <ProgressBar currentStep={currentStep} pathway={pathway} />
 
-      <div
+      {/* <div
         className="h-24 bg-cover  bg-no-repeat bg-center w-full"
         style={{ backgroundImage: `url(${pathway.background})` }}
-      ></div>
+      ></div> */}
 
-      <Timer
+      <TimerNew
         timer={timer}
         restartTimer={restartTimer}
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
       />
+
+      {/* <Timer
+        timer={timer}
+        restartTimer={restartTimer}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+      /> */}
 
       <h2 className="text-md mb-2">
         <div>Step {currentStep + 1}:</div>
@@ -679,7 +684,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
       {step.responseType === "text" && (
         <textarea
-          className="w-full p-3 border  rounded focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent mb-4 min-h-[250px]"
+          className="w-full p-3 border  rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent mb-4 min-h-[200px]"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="Your response..."
@@ -733,23 +738,14 @@ export const PathwayPlayer = observer(({ pathway }) => {
         />
       )}
 
-      <button
-        className={`w-full py-3 rounded text-white ${
-          canProceed ? "bg-slate-800 hover:bg-slate-900" : "bg-gray-300"
-        }`}
-        disabled={!canProceed}
-        onClick={handleNextStep}
-      >
+      <Button disabled={!canProceed} onClick={handleNextStep}>
         {step.buttonText || "Next"}
-      </button>
-      {step.allowSkip && (
-        <button
-          className="py-2 mt-2 px-4  text-white rounded"
-          onClick={handleSkipStep}
-        >
+      </Button>
+      {/* {step.allowSkip && (
+        <Button variant="outline" className="mt-2" onClick={handleSkipStep}>
           Skip
-        </button>
-      )}
+        </Button>
+      )} */}
     </div>
   );
 });
@@ -773,77 +769,97 @@ export const PathwayCard = observer(({ pathway, listId }) => {
 
   return (
     !isMobileOpen && (
-      <Card className="p-4 w-64 h-[320px] flex flex-col justify-between relative">
-        <div className="flex flex-grow flex-col">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute top-[16px] right-[16px] p-2"
-              >
-                <MoreVertical className="h-4 w-4" />
-                <span className="sr-only">More</span>
-                {/* <HiOutlineCog6Tooth size={20} className="text-slate-600" /> */}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => {
-                  setPathwayPlaying(pathway);
-                  setIsPathwayEditView(false);
-                }}
-              >
-                Edit
-              </DropdownMenuItem>
-              <Link href={`/analytics/?pathwayId=${pathway.id}`} passHref>
-                <DropdownMenuItem>View Stats</DropdownMenuItem>
-              </Link>
-              {isInList ? (
-                <DropdownMenuItem
-                  onClick={() => removeFromList(listId, pathway.id)}
-                >
-                  Remove From List
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem onClick={() => deletePathway(pathway.id)}>
-                  Delete
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+      <Card className=" w-64 h-[350px] flex flex-col justify-between backdrop-blur-md relative">
+        <div className="relative h-full">
+          <div className="absolute  flex justify-center items-center space-x-4 top-[10px] left-[10px] z-[-100]">
+            {/* <div className="w-32 h-16 bg-yellow-500 rounded-full blur-md"></div>
+            <div className="w-32 h-16 bg-orange-500 rounded-lg blur-md"></div>
+             */}
+            <div
+              className="w-28 h-20  rounded-xl blur-lg"
+              style={{ backgroundColor: backgroundColor }}
+            ></div>
+          </div>
+          {/* <div className="absolute inset-0 flex justify-center items-center space-x-4 top-[260px] left-[150px] z-[-100]">
+            <div className="w-20 h-12 bg-yellow-500 rounded-xl blur-md"></div>
+          </div> */}
 
-          <div
-            className="flex justify-center items-center border border-slate w-fit p-4 text-4xl"
-            style={{ backgroundColor: backgroundColor }}
-          >
-            {emoji}
-          </div>
-          <div className="my-2">
-            <div className="text-xl bold mb-2">{name}</div>
-            <CardDescription>{description}</CardDescription>
-          </div>
-          <div className="my-2">
-            <Badge variant="screen" className="mr-2">
-              {totalDurationCalced}
-            </Badge>
-            <Badge variant="screen" className="mr-2">
-              {steps?.length} Steps
-            </Badge>
+          <div className="relative w-full h-full p-4 backdrop-blur-lg bg-white/30 rounded-lg  shadow-xl flex flex-col items-between z-100">
+            <div className="flex flex-grow flex-col">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="absolute top-[16px] right-[16px] p-2"
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                    <span className="sr-only">More</span>
+                    {/* <HiOutlineCog6Tooth size={20} className="text-slate-600" /> */}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setPathwayPlaying(pathway);
+                      setIsPathwayEditView(false);
+                    }}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                  <Link href={`/analytics/?pathwayId=${pathway.id}`} passHref>
+                    <DropdownMenuItem>View Stats</DropdownMenuItem>
+                  </Link>
+                  {isInList ? (
+                    <DropdownMenuItem
+                      onClick={() => removeFromList(listId, pathway.id)}
+                    >
+                      Remove From List
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem onClick={() => deletePathway(pathway.id)}>
+                      Delete
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <div
+                className="flex justify-center items-center  w-fit p-4 text-4xl rounded-lg"
+                style={{ backgroundColor: backgroundColor }}
+              >
+                {emoji}
+              </div>
+              <div className="my-2">
+                <div className="text-xl bold mb-2">{name}</div>
+                <CardDescription className="text-foreground">
+                  {description}
+                </CardDescription>
+              </div>
+              <div className="my-2">
+                <Badge variant="screen" className="mr-2">
+                  {totalDurationCalced}
+                </Badge>
+                <Badge variant="screen" className="mr-2">
+                  {steps?.length} Steps
+                </Badge>
+              </div>
+            </div>
+            {pathway.timeType == "time" && (
+              <div>
+                {pathway.progress || 0} / {pathway.completionLimit}
+              </div>
+            )}
+
+            <Button
+              className="w-full mt-2"
+              onClick={() => MobxStore.setPathwayPlaying(pathway)}
+            >
+              <FaPlay className="mr-2 h-3 w-3" />
+              Play
+            </Button>
           </div>
         </div>
-        {pathway.timeType == "time" && (
-          <div>
-            {pathway.progress || 0} / {pathway.completionLimit}
-          </div>
-        )}
-
-        <Button
-          className="w-full mt-2"
-          onClick={() => MobxStore.setPathwayPlaying(pathway)}
-        >
-          <span className="mr-2">Play</span> <FaPlay />
-        </Button>
       </Card>
     )
   );

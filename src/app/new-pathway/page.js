@@ -15,13 +15,15 @@ import {
 import MobxStore from "@/mobx";
 import { useRouter } from "next/navigation";
 import EmojiPicker from "emoji-picker-react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronUp, Gem } from "lucide-react";
 import Circle from "@uiw/react-color-circle";
 import { DEFAULT_COLORS } from "../gamify/page";
 import { Slider } from "@/components/ui/slider";
 import { ComboBoxCreate } from "@/reusable-ui/ComboBoxCreate";
 import { addValueToObjects } from "@/utils/transformers";
 import { observer } from "mobx-react";
+import Image from "next/image";
+import logoImg from "@/assets/logo.png";
 
 const placeholders = {
   checklist: [
@@ -198,8 +200,8 @@ const ComboBoxWithHelper = ({
 }) => {
   return (
     <div className="flex items-center justify-between   rounded mt-6">
-      <div>
-        <label className="mt-4 text-md font-medium">{title}</label>
+      <div className="flex justify-center items-center gap-1">
+        <div className="text-md font-medium">{title}</div>
         <QuestionHelpBox>{helperChildren}</QuestionHelpBox>
       </div>
       <Combobox
@@ -215,9 +217,9 @@ const ComboBoxWithHelper = ({
 
 const SwitchWithHelper = ({ helperChildren, title, value, callback }) => {
   return (
-    <div className="flex items-center justify-between   rounded mt-6">
-      <div>
-        <label className="mt-4 text-md font-medium">{title}</label>
+    <div className="flex items-center justify-between rounded mt-6">
+      <div className="flex justify-center items-center gap-1">
+        <div className="text-md font-medium">{title}</div>
         <QuestionHelpBox>{helperChildren}</QuestionHelpBox>
       </div>
       <Switch checked={value} onCheckedChange={() => callback()} />
@@ -326,6 +328,219 @@ const DaysOptions = ({ options, setOptions }) => {
           onToggle={toggleDay}
         />
       ))}
+    </div>
+  );
+};
+
+const DeleteStepModal = ({ handleDeleteStep }) => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <LuTrash />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle>Are you sure you want to delete this step?</DialogTitle>
+        <DialogClose asChild>
+          <Button variant="outline">Cancel</Button>
+        </DialogClose>
+        <Button onClick={handleDeleteStep}>Delete</Button>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const Step = ({
+  step,
+  index,
+  handleStepChange,
+  handleUpdateStepChange,
+  handleDeleteStep,
+  handleUpdateStepOptions,
+}) => {
+  const [showStep, setShowStep] = useState(false);
+  return (
+    <div
+      key={index}
+      className="flex flex-col my-4  rounded-lg border border-gray"
+    >
+      <div
+        className="flex justify-between p-4 cursor-pointer"
+        onClick={() => setShowStep(!showStep)}
+      >
+        <div className="text-lg font-bold flex justify-center items-center">
+          Step {index + 1}
+        </div>
+        <div className="flex gap-2">
+          <DeleteStepModal handleDeleteStep={handleDeleteStep} />
+
+          <Button variant="outline" onClick={() => setShowStep(!showStep)}>
+            {showStep ? <ChevronUp /> : <ChevronDown />}
+          </Button>
+        </div>
+      </div>
+      {showStep && (
+        <div className="flex flex-col p-4 border-t">
+          <div className="mt-4 text-md font-medium">Question</div>
+          <input
+            type="text"
+            name="question"
+            placeholder={`Step ${index + 1} Question`}
+            value={step.question}
+            onChange={(e) => handleStepChange(index, e)}
+            className="mb-2 p-2 border  rounded w-full"
+          />
+
+          <div className="mt-4 text-md font-medium">Context (optional)</div>
+          <textarea
+            type="text"
+            name="context"
+            placeholder="Add additional context here..."
+            multiline
+            value={step.context}
+            onChange={(e) => handleStepChange(index, e)}
+            className="mb-4 p-2 border  rounded h-24"
+          />
+
+          {/* <div className="border-t mt-4"></div> */}
+
+          <ComboBoxWithHelper
+            title="Response Type"
+            value={step.responseType}
+            setValue={(value) => {
+              handleUpdateStepChange(index, "responseType", value);
+            }}
+            searchLabel={"Response Type"}
+            options={[
+              {
+                value: "text",
+                label: "Text Input",
+              },
+              {
+                value: "checklist",
+                label: "Checklist",
+              },
+              {
+                value: "slider",
+                label: "Slider",
+              },
+              {
+                value: "mood",
+                label: "Mood Press",
+              },
+            ]}
+            helperChildren={"hey"}
+          />
+
+          {/* {step.responseType == "text" && (
+            <div className="flex flex-col pl-4 border-l">
+              <SwitchWithHelper
+                title="Set Minimum Text"
+                value={step.minText}
+                callback={() =>
+                  handleUpdateStepChange(
+                    index,
+                    "minText",
+                    step.minText ? 0 : 30
+                  )
+                }
+                helperChildren={"hey"}
+              />
+              {!!step.minText && (
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    type="number"
+                    name="minText"
+                    placeholder={`Minimum Text`}
+                    value={step.minText}
+                    onChange={(e) => handleStepChange(index, e)}
+                    className="p-2 border  rounded w-[70px]"
+                  />
+                  <div>Words</div>
+                </div>
+              )}
+            </div>
+          )} */}
+
+          {step.responseType === "checklist" && (
+            <div className="flex flex-col pl-4 border-l">
+              <CheckboxOptions
+                stepIndex={index}
+                options={step.options || [""]}
+                setOptions={handleUpdateStepOptions}
+              />
+            </div>
+          )}
+
+          {step.responseType === "slider" && (
+            <div className="flex flex-col pl-4 border-l">
+              <Slider
+                defaultValue={[1]}
+                max={step.sliderMax || 10}
+                step={step.sliderMin || 1}
+                className="mt-4"
+              />
+              <div className="flex justify-between mt-2">
+                <div className="w-[100px]">
+                  <div className="mt-4 text-md font-medium">Min</div>
+                  <input
+                    type="number"
+                    name="sliderMin"
+                    placeholder="1"
+                    value={step.sliderMin}
+                    onChange={(e) => handleStepChange(index, e)}
+                    className="mb-2 p-2 border  rounded w-full"
+                  />
+                </div>
+                <div className="w-[100px]">
+                  <div className="mt-4 text-md font-medium">Max</div>
+                  <input
+                    type="number"
+                    name="sliderMax"
+                    placeholder="10"
+                    value={step.sliderMax}
+                    onChange={(e) => handleStepChange(index, e)}
+                    className="mb-2 p-2 border  rounded w-full"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* {step.responseType === "mood" && <div>Mood Selector</div>} */}
+
+          {/* <div className="border-t border-gray-200 mt-4"></div> */}
+
+          <div className="mt-4 text-md font-medium">Timer (In Seconds)</div>
+          <input
+            type="number"
+            name="timer"
+            placeholder="30"
+            value={step.timer}
+            onChange={(e) => handleStepChange(index, e)}
+            className="mb-2 p-2 border  rounded"
+          />
+
+          <SwitchWithHelper
+            title="Auto-Play Timer"
+            value={step.autoplay}
+            callback={() =>
+              handleUpdateStepChange(index, "autoplay", !step.autoplay)
+            }
+            helperChildren={"hey"}
+          />
+
+          {/* <SwitchWithHelper
+            title="Allow Skip Step"
+            value={step.allowSkip}
+            callback={() =>
+              handleUpdateStepChange(index, "allowSkip", !step.allowSkip)
+            }
+            helperChildren={"hey"}
+          /> */}
+        </div>
+      )}
     </div>
   );
 };
@@ -446,31 +661,16 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
   return (
     <div className="m-4 sm:m-8 flex">
       <div className="flex flex-col rounded-lg max-w-[480px] w-full">
-        <Button
-          className="w-fit mb-4"
-          variant="outline"
-          onClick={() => {
-            if (editFromInside) {
-              setIsPathwayEditView(false);
-            } else {
-              setPathwayPlaying(false);
-              setIsPathwayEditView(false);
-            }
-          }}
-        >
-          <ChevronLeft size={20} />
-          Back
-        </Button>
         <div className="text-2xl font-bold">
           {pathwayToEdit ? "Edit" : "Create New"} Pathway
         </div>
-        <label className="mt-4 text-md font-medium">Icon</label>
+        <div className="mt-4 text-md font-medium">Icon</div>
         <DialogEmojiPicker
           emoji={pathway.emoji}
           backgroundColor={pathway.backgroundColor}
           handleEmojiChange={(value) => handleInputChange("emoji", value)}
         />
-        <label className="mt-4 mb-2 text-md font-medium">Background</label>
+        <div className="mt-4 mb-2 text-md font-medium">Background</div>
         <Circle
           style={{ position: "relative", zIndex: "100 !important" }}
           colors={DEFAULT_COLORS}
@@ -480,15 +680,12 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
             handleInputChange("backgroundColor", color.hex);
           }}
         />
-        {/* <DialogEmojiPicker
-          emoji={pathway.emoji}
-          handleEmojiChange={(value) => handleInputChange("emoji", value)}
-        /> */}
-        <DialogSelectBackground
+
+        {/* <DialogSelectBackground
           background={pathway.background}
           handleSelectImage={(value) => handleInputChange("background", value)}
-        />
-        <label className="mt-4 text-md font-medium">Name</label>
+        /> */}
+        <div className="mt-4 text-md font-medium">Name</div>
         <input
           type="text"
           name="name"
@@ -497,9 +694,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
           onChange={(e) => handleInputChange("name", e.target.value)}
           className="mb-4 p-2 border  rounded"
         />
-        <label className="mt-4 text-md font-medium">
-          Description (Optional)
-        </label>
+        <div className="mt-4 text-md font-medium">Description (Optional)</div>
         <textarea
           type="text"
           name="description"
@@ -534,7 +729,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
 
         {pathway.timeType === "time" && (
           <div className="flex flex-col pl-4 border-l ">
-            {/* <label className="mt-4 text-md font-medium">Time</label>
+            {/* <div className="mt-4 text-md font-medium">Time</div>
             <input
               type="time"
               name="time"
@@ -578,7 +773,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
 
             {pathway.frequency !== "unlimited" && (
               <div className="flex flex-col pl-4 border-l ">
-                <label className="mt-4 text-md font-medium"></label>
+                <div className="mt-4 text-md font-medium"></div>
                 <div>
                   <input
                     type="number"
@@ -595,7 +790,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
               </div>
             )}
 
-            <label className="mt-4 text-md font-medium">Show on Days:</label>
+            <div className="mt-4 text-md font-medium">Show on Days:</div>
             <DaysOptions
               options={pathway.days}
               setOptions={(value) => handleInputChange("days", value)}
@@ -605,9 +800,9 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
 
         {pathway.timeType === "event" && (
           <div className="flex flex-col pl-4 border-l">
-            <div className="flex items-center justify-between   rounded mt-6">
-              <div>
-                <label className="mt-4 text-md font-medium">Trigger</label>
+            <div className="flex items-center justify-between  rounded mt-6">
+              <div className="flex justify-center items-center gap-1">
+                <div className="text-md font-medium">Trigger</div>
                 <QuestionHelpBox>help</QuestionHelpBox>
               </div>
 
@@ -667,200 +862,36 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
         />
         {isGamify && (
           <div className="flex flex-col pl-4 border-l">
-            <label className="mt-4 text-md font-medium">
+            <div className="mt-4 text-md font-medium">
               Reward For Completion
-            </label>
-            <div>
+            </div>
+            <div className="flex items-center gap-1">
               <input
                 type="number"
                 name="reward"
                 placeholder="50"
                 value={`${pathway.reward}`}
                 onChange={(e) => handleInputChange("reward", e.target.value)}
-                className="mb-2 p-2 border  rounded w-[70px] mr-2"
+                className="mb-2 p-2 border  rounded w-[70px] mr-2 text-end"
               />
-              🥮
+              <Gem />
             </div>
           </div>
         )}
-        <div className="text-2xl mt-8 flex justify-center">
+        <div className="text-2xl font-bold mt-8 flex">
           Steps ({pathway.steps?.length})
         </div>
         {pathway.steps?.map((step, index) => {
           return (
-            <div
+            <Step
               key={index}
-              className="flex flex-col my-4  rounded-lg p-4 border border-gray"
-            >
-              <div className="flex justify-between mb-4">
-                <div className="text-lg">Step {index + 1}</div>
-                <div onClick={() => deleteStep(index)}>
-                  <LuTrash />
-                </div>
-              </div>
-
-              <label className="mt-4 text-md font-medium">Question</label>
-              <input
-                type="text"
-                name="question"
-                placeholder={`Step ${index + 1} Question`}
-                value={step.question}
-                onChange={(e) => handleStepChange(index, e)}
-                className="mb-2 p-2 border  rounded w-full"
-              />
-
-              <label className="mt-4 text-md font-medium">
-                Context (optional?)
-              </label>
-              <textarea
-                type="text"
-                name="context"
-                placeholder="Add additional context here..."
-                multiline
-                value={step.context}
-                onChange={(e) => handleStepChange(index, e)}
-                className="mb-4 p-2 border  rounded h-24"
-              />
-
-              {/* <div className="border-t mt-4"></div> */}
-
-              <ComboBoxWithHelper
-                title="Response Type"
-                value={step.responseType}
-                setValue={(value) => {
-                  handleUpdateStepChange(index, "responseType", value);
-                }}
-                searchLabel={"Response Type"}
-                options={[
-                  {
-                    value: "text",
-                    label: "Text Input",
-                  },
-                  {
-                    value: "checklist",
-                    label: "Checklist",
-                  },
-                  {
-                    value: "slider",
-                    label: "Slider",
-                  },
-                  {
-                    value: "mood",
-                    label: "Mood Press",
-                  },
-                ]}
-                helperChildren={"hey"}
-              />
-
-              {step.responseType == "text" && (
-                <div className="flex flex-col pl-4 border-l">
-                  <SwitchWithHelper
-                    title="Set Minimum Text"
-                    value={step.minText}
-                    callback={() =>
-                      handleUpdateStepChange(
-                        index,
-                        "minText",
-                        step.minText ? 0 : 30
-                      )
-                    }
-                    helperChildren={"hey"}
-                  />
-                  {!!step.minText && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <input
-                        type="number"
-                        name="minText"
-                        placeholder={`Minimum Text`}
-                        value={step.minText}
-                        onChange={(e) => handleStepChange(index, e)}
-                        className="p-2 border  rounded w-[70px]"
-                      />
-                      <div>Words</div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {step.responseType === "checklist" && (
-                <div className="flex flex-col pl-4 border-l">
-                  <CheckboxOptions
-                    stepIndex={index}
-                    options={step.options || [""]}
-                    setOptions={handleUpdateStepOptions}
-                  />
-                </div>
-              )}
-
-              {step.responseType === "slider" && (
-                <div className="flex flex-col pl-4 border-l">
-                  <Slider
-                    defaultValue={[1]}
-                    max={step.sliderMax || 10}
-                    step={step.sliderMin || 1}
-                    className="mt-4"
-                  />
-                  <div className="flex justify-between mt-2">
-                    <div className="w-[100px]">
-                      <label className="mt-4 text-md font-medium">Min</label>
-                      <input
-                        type="number"
-                        name="sliderMin"
-                        placeholder="1"
-                        value={step.sliderMin}
-                        onChange={(e) => handleStepChange(index, e)}
-                        className="mb-2 p-2 border  rounded w-full"
-                      />
-                    </div>
-                    <div className="w-[100px]">
-                      <label className="mt-4 text-md font-medium">Max</label>
-                      <input
-                        type="number"
-                        name="sliderMax"
-                        placeholder="10"
-                        value={step.sliderMax}
-                        onChange={(e) => handleStepChange(index, e)}
-                        className="mb-2 p-2 border  rounded w-full"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {step.responseType === "mood" && <div>Mood Selector</div>}
-
-              {/* <div className="border-t border-gray-200 mt-4"></div> */}
-
-              <label className="mt-4 text-md font-medium">
-                Timer (In Seconds)
-              </label>
-              <input
-                type="number"
-                name="timer"
-                placeholder="30"
-                value={step.timer}
-                onChange={(e) => handleStepChange(index, e)}
-                className="mb-2 p-2 border  rounded w-full"
-              />
-
-              <SwitchWithHelper
-                title="Auto-Play Timer"
-                value={step.autoplay}
-                callback={() =>
-                  handleUpdateStepChange(index, "autoplay", !step.autoplay)
-                }
-                helperChildren={"hey"}
-              />
-
-              <SwitchWithHelper
-                title="Allow Skip Step"
-                value={step.allowSkip}
-                callback={() =>
-                  handleUpdateStepChange(index, "allowSkip", !step.allowSkip)
-                }
-                helperChildren={"hey"}
-              />
-            </div>
+              step={step}
+              index={index}
+              handleStepChange={handleStepChange}
+              handleUpdateStepChange={handleUpdateStepChange}
+              handleDeleteStep={deleteStep}
+              handleUpdateStepOptions={handleUpdateStepOptions}
+            />
           );
         })}
         <Button
@@ -870,14 +901,30 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
         >
           + Add Step
         </Button>
-        <Button
-          type="submit"
-          className="mt-4"
-          // disabled={pathway.steps?.length < 1}
-          onClick={handleSubmit}
-        >
-          Save Changes
-        </Button>
+      </div>
+      <div class="fixed h-[53px] top-0 left-0 w-full bg-background border b-top flex justify-between items-center">
+        <div className="flex h-[53px] items-center justify-center px-2 mr-4 border-r pr-[26px]">
+          <Image src={logoImg} width={32} height={32} alt="logo" />
+          <div className="text-xl font-bold ml-1">PlayRoutines</div>
+        </div>
+        <div className="flex flex-grow gap-2 pr-4 justify-between">
+          <Button
+            className="w-fit"
+            variant="outline"
+            onClick={() => {
+              if (editFromInside) {
+                setIsPathwayEditView(false);
+              } else {
+                setPathwayPlaying(false);
+                setIsPathwayEditView(false);
+              }
+            }}
+          >
+            <ChevronLeft size={20} />
+            Back
+          </Button>
+          <Button onClick={handleSubmit}>Save Changes</Button>
+        </div>
       </div>
     </div>
   );

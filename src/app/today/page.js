@@ -8,6 +8,7 @@ import {
   TitleDescription,
 } from "../page";
 import { shouldShowToday } from "@/utils/date";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const TodayPage = observer(() => {
   const { userPathways, pathwayPlaying, loading } = MobxStore;
@@ -17,54 +18,75 @@ const TodayPage = observer(() => {
   }
 
   return (
-    <div className="mx-4 flex flex-col gap-4">
-      <TitleDescription
-        title="Daily"
-        description="Start your day with fresh pathways"
-      />
-      <div className="flex flex-col gap-4">
-        {userPathways
-          ?.filter((p) => shouldShowToday(p.days))
-          .map((pathway, i) => (
-            <PathwayCard key={i} pathway={pathway} />
-          ))}
-      </div>
+    <div className="h-[90vh] max-w-[600px] m-4 sm:mx-8">
+      <Tabs defaultValue="daily" className="w-[400px]">
+        <TabsList>
+          <TabsTrigger value="daily">Daily</TabsTrigger>
+          <TabsTrigger value="weekly">Weekly</TabsTrigger>
+          <TabsTrigger value="monthly">Monthly</TabsTrigger>
+          <TabsTrigger value="anytime">Anytime</TabsTrigger>
+        </TabsList>
+        <TabsContent value="daily">
+          <TitleDescription
+            title="Daily"
+            description="Start your day with these routines"
+          />
+          <div className="flex flex-col gap-4">
+            {userPathways
+              ?.filter((p) => shouldShowToday(p.days))
+              .map((pathway, i) => (
+                <PathwayCard key={i} pathway={pathway} />
+              ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="weekly">
+          <TitleDescription
+            title="Weekly"
+            description="Make your weekly routine"
+          />
+          <div className="flex flex-col gap-4">
+            {userPathways
+              ?.filter((p) => shouldShowToday(p.days))
+              .map((pathway, i) => (
+                <PathwayCard key={i} pathway={pathway} />
+              ))}
+          </div>
+        </TabsContent>
 
-      <TitleDescription title="Weekly" description="" />
-      <div className="flex flex-col gap-4">
-        {userPathways
-          ?.filter((p) => shouldShowToday(p.days))
-          .map((pathway, i) => (
-            <PathwayCard key={i} pathway={pathway} />
-          ))}
-      </div>
+        <TabsContent value="monthly">
+          <TitleDescription title="Monthly" description="Once a month stuff" />
+          <div className="flex flex-col gap-4">
+            {userPathways
+              ?.filter((p) => shouldShowToday(p.days))
+              .map((pathway, i) => (
+                <PathwayCard key={i} pathway={pathway} />
+              ))}
+          </div>
+        </TabsContent>
 
-      <TitleDescription title="Monthly" description="" />
-      <div className="flex flex-col gap-4">
-        {userPathways
-          ?.filter((p) => shouldShowToday(p.days))
-          .map((pathway, i) => (
-            <PathwayCard key={i} pathway={pathway} />
-          ))}
-      </div>
+        <TabsContent value="anytime">
+          <TitleDescription
+            title="Anytime"
+            description="Home of flexible routines"
+          />
+          <div className="flex flex-col gap-4">
+            {userPathways
+              ?.filter((p) => shouldShowToday(p.days))
+              .map((pathway, i) => (
+                <PathwayCard key={i} pathway={pathway} />
+              ))}
+          </div>
+        </TabsContent>
+      </Tabs>
 
-      <TitleDescription title="Yearly" description="" />
+      {/* <TitleDescription title="Yearly" description="" />
       <div className="flex flex-col gap-4">
         {userPathways
           ?.filter((p) => shouldShowToday(p.days))
           .map((pathway, i) => (
             <PathwayCard key={i} pathway={pathway} />
           ))}
-      </div>
-
-      <TitleDescription title="Anytime" description="" />
-      <div className="flex flex-col gap-4">
-        {userPathways
-          ?.filter((p) => shouldShowToday(p.days))
-          .map((pathway, i) => (
-            <PathwayCard key={i} pathway={pathway} />
-          ))}
-      </div>
+      </div> */}
     </div>
   );
 });

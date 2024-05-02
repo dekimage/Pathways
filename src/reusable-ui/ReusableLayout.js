@@ -6,8 +6,10 @@ import { VerticalNavbar } from "./VerticalNavbar";
 
 import {
   CalendarCheck,
+  Flame,
   Gamepad2,
   GaugeCircle,
+  Gem,
   LayoutDashboard,
   ListMinus,
   Plus,
@@ -21,9 +23,7 @@ import { observer } from "mobx-react";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { UserNav } from "./ReusableProfileMenu";
 import Image from "next/image";
-import logoImg from "../assets/pathway-logo.png";
-import streakImg from "../assets/streak.png";
-import coinImg from "../assets/coin.png";
+import logoImg from "../assets/logo.png";
 import MobileHeader from "./MobileHeader";
 import {
   Dialog,
@@ -94,16 +94,15 @@ const ReusableLayout = observer(({ children }) => {
   const { user, lists, logout } = MobxStore;
 
   const pathname = usePathname();
+
   const isRoute = (route) => {
     if (route === "/") {
-      return pathname.toLowerCase() === `/${route.toLowerCase()}`
-        ? "default"
-        : "ghost";
+      return pathname === route ? "default" : "primary";
     }
 
     return pathname.toLowerCase().includes(route.toLowerCase())
       ? "default"
-      : "ghost";
+      : "primary";
   };
 
   return (
@@ -120,7 +119,7 @@ const ReusableLayout = observer(({ children }) => {
           >
             <div className="flex h-[52px] items-center justify-center px-2">
               <Image src={logoImg} width={32} height={32} alt="logo" />
-              <div className="text-2xl font-bold ml-1">PathWays</div>
+              <div className="text-xl font-bold ml-1">PlayRoutines</div>
             </div>
             <Separator />
             <VerticalNavbar
@@ -200,17 +199,18 @@ const ReusableLayout = observer(({ children }) => {
                   <>
                     <div className="flex items-center gap-1">
                       {MobxStore.user?.streak || 0}{" "}
-                      <Image
+                      {/* <Image
                         src={streakImg}
                         width={28}
                         height={28}
                         alt="streak"
-                      />
+                      /> */}
+                      <Flame />
                     </div>
                     <div className="flex items-center gap-1">
-                      {" "}
-                      {MobxStore.user?.gold}{" "}
-                      <Image src={coinImg} width={28} height={28} alt="coin" />
+                      {MobxStore.user?.gold}
+                      {/* <Image src={coinImg} width={28} height={28} alt="coin" /> */}
+                      <Gem />
                     </div>
                     <Link href="/new-pathway">
                       <Button>
