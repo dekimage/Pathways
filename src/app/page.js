@@ -19,13 +19,23 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 import { LoadingSpinner } from "@/reusable-ui/LoadingSpinner";
 import { Slider } from "@/components/ui/slider";
-import { MoreVertical, Settings } from "lucide-react";
+import { Check, CheckCircle2, MoreVertical, Settings } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import {
   Carousel,
   CarouselContent,
@@ -38,6 +48,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import TimerNew from "@/components/TimerNew";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 // to reusable UI
 const Checkbox = ({ label, checked, onChange }) => {
@@ -57,155 +68,6 @@ const Checkbox = ({ label, checked, onChange }) => {
 };
 
 const backgroundCover = "";
-
-const pathways = [
-  {
-    id: "aHd3mnf2uw8Ixx7Lp8Ys",
-    name: "Plan my Day",
-    description: "A simple process to help you focus on what matters most.",
-    duration: "3 min",
-    time: "Morning",
-    emoji: "📜",
-    autoPlayMusic: false,
-    background: backgroundCover,
-    steps: [
-      {
-        question: "What is the most important task for today?",
-        context: "Write down the absolute must for today, 1 main FROG.",
-        timer: 30,
-        currentStep: 1,
-        buttonText: "Next",
-        minText: 5,
-        responseType: "text",
-        allowSkip: false,
-        autoplay: false,
-      },
-      {
-        question: "List 2 bonus tasks for today.",
-        context: "These are important but not as much as the FROG.",
-        timer: 45,
-        currentStep: 2,
-        buttonText: "Next",
-        minText: 10,
-        responseType: "text",
-        allowSkip: false,
-        autoplay: false,
-      },
-      {
-        question: "Add 2 more extra tasks that are nice to have.",
-        context:
-          "These DONT add pressure! They are fun extras if I want to have fun.",
-        timer: 30,
-        currentStep: 3,
-        buttonText: "Complete",
-        minText: 10,
-        responseType: "text",
-        allowSkip: true,
-        autoplay: false,
-      },
-    ],
-  },
-  {
-    id: "LiuGGIFtC38QfzZp93MP",
-    name: "Deep Work",
-    description:
-      "Get 80% of your daily work done in just 90 minutes of laser focused time.",
-    duration: "90 min",
-    time: "Morning",
-    emoji: "🧘",
-    background: backgroundCover,
-    steps: [
-      {
-        question:
-          "Remove all possible distractions, all notifications off and all people OFF. Tell everyone you are getting into BEAST MODE.",
-        context: "this should be a checklist",
-        timer: 30,
-        currentStep: 1,
-        buttonText: "Next",
-        minText: 0,
-        responseType: "text",
-        allowSkip: true,
-        autoplay: false,
-      },
-      {
-        question: "Get your FROG READY.",
-        context:
-          "POTENTIAL TASK: LINKING OF PATHWAYS, LIKE NOW I NEED TO LINK FIND MY PRIORITIES TASK HERE. OR THE RESULT OF IT?? THINK ABOUT THIS! DENI",
-        timer: 10,
-        currentStep: 2,
-        buttonText: "Next",
-        minText: 0,
-        responseType: "text",
-        allowSkip: true,
-      },
-      {
-        question: "Focus Session #1",
-        context:
-          "This is type nothing? you just need to do something, maybe timer will be in focus with bonus reminders? or somthn that you might require",
-        timer: 60 * 60,
-        currentStep: 3,
-        buttonText: "Next",
-        minText: 0,
-        responseType: "text",
-      },
-      {
-        question:
-          "Small Break, Get up and stretch, drink water and juggle with balls. Get hyped and ready to complete a tough session!",
-        context: "probably checklist again",
-        timer: 5 * 60,
-        currentStep: 3,
-        buttonText: "Next",
-        minText: 0,
-        responseType: "text",
-      },
-      {
-        question: "Focus Session #2",
-        context:
-          "This is type nothing? you just need to do something, maybe timer will be in focus with bonus reminders? or somthn that you might require",
-        timer: 60 * 60,
-        currentStep: 3,
-        buttonText: "Next",
-        minText: 0,
-        responseType: "text",
-      },
-    ],
-  },
-  {
-    id: "LiuGGIFtC38QfzZp93MP",
-    name: "Reflect on Learning",
-    description: "Learn by reflection",
-    duration: "5 min",
-    time: "Night",
-    emoji: "📖",
-    autoPlayMusic: true,
-    background: backgroundCover,
-    steps: [
-      {
-        question: "What new thing did you learn today?",
-        context: "Write down at least 1 thing.",
-        timer: 60,
-        currentStep: 1,
-        buttonText: "Next",
-        minText: 20,
-        responseType: "text",
-        allowSkip: false,
-        autoplay: false,
-      },
-      {
-        question:
-          "Reflect on how you applied yesterday's learning in today's activities.",
-        context:
-          "Think of something that i have applied today that i learned in a previous session, and try to note what specifically i did and from where i learned it.",
-        timer: 150,
-        currentStep: 2,
-        buttonText: "Next",
-        minText: 15,
-        responseType: "text",
-        allowSkip: true,
-      },
-    ],
-  },
-];
 
 const MoodSelector = ({ mood, onSelectMood, showSingle = false }) => {
   const moodEmojis = [
@@ -406,12 +268,12 @@ const ProgressBar = ({ currentStep, pathway }) => {
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex-1 mr-4">
-        <div className="w-full flex rounded-full bg-gray-400 h-2.5">
+        <div className="w-full flex rounded-full  h-2.5">
           {Array.from({ length: totalSteps }, (_, index) => (
             <div
               key={index}
               className={`flex-1 h-2.5 transition-all duration-300 ${
-                index <= currentStep ? "bg-primary" : "bg-transparent"
+                index < currentStep ? "bg-primary" : "bg-gray-300"
               } ${index !== totalSteps - 1 ? "mr-0.5" : ""} rounded-full`}
             ></div>
           ))}
@@ -424,25 +286,90 @@ const ProgressBar = ({ currentStep, pathway }) => {
   );
 };
 
-// const ProgressBar = ({ currentStep, pathway }) => {
+// const SkipDialog = ({ handleNextStep, step }) => {
 //   return (
-//     <div className="flex items-center justify-between mb-4">
-//       <div className="flex-1 mr-4">
-//         <div className="w-full rounded-full h-2.5 bg-gray-400">
-//           <div
-//             className="bg-primary h-2.5 rounded-full"
-//             style={{
-//               width: `${(currentStep / pathway.steps.length) * 100}%`,
-//             }}
-//           ></div>
+//     <Dialog isOpen={true} onClose={() => {}}>
+//       <DialogTrigger>
+//         <Button variant="outline" className="w-full">
+//           Skip
+//         </Button>
+//       </DialogTrigger>
+//       <DialogContent>
+//         <div className="flex flex-col items-center justify-center">
+//           <Button onClick={handleNextStep}>Next</Button>
 //         </div>
-//       </div>
-//       <span className="text-sm font-medium text-gray-700">
-//         {currentStep}/{pathway.steps.length}
-//       </span>
-//     </div>
+//       </DialogContent>
+//     </Dialog>
 //   );
 // };
+
+const SkipDialog = ({ handleNextStep, step }) => {
+  const [selectedOption, setSelectedOption] = useState("skip");
+
+  const isSkip = selectedOption === "skip";
+  const isChange = selectedOption === "change";
+  const isMove = selectedOption === "move";
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button variant="outline">Skip</Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div className="mx-auto w-full max-w-sm">
+          <DrawerHeader>
+            <DrawerTitle>Do you want to skip?</DrawerTitle>
+            <DrawerDescription>
+              Select the option you like best
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4 pb-0">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div
+                className={`px-6 py-2 rounded border flex items-center w-[350px] cursor-pointer ${
+                  isSkip && "border border-2 border-primary"
+                }`}
+                onClick={() => setSelectedOption("skip")}
+              >
+                {isSkip && (
+                  <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
+                )}
+                Skip today
+              </div>
+              <div
+                className={`px-6 py-2 rounded border flex items-center  w-[350px] cursor-pointer ${
+                  isChange && "border border-2 border-primary"
+                }`}
+                onClick={() => setSelectedOption("change")}
+              >
+                {isChange && (
+                  <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
+                )}
+                Change the order
+              </div>
+              <div
+                className={`px-6 py-2 rounded border flex items-center  w-[350px] cursor-pointer ${
+                  isMove && "border border-2 border-primary"
+                }`}
+                onClick={() => setSelectedOption("move")}
+              >
+                {isMove && (
+                  <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
+                )}
+                Move step to end
+              </div>
+            </div>
+          </div>
+          <DrawerFooter>
+            <Button>Select</Button>
+            <DrawerClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+};
 
 export const PathwayPlayer = observer(({ pathway }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -662,6 +589,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
       ></div> */}
 
       <TimerNew
+        setTimer={setTimer}
         timer={timer}
         restartTimer={restartTimer}
         isPlaying={isPlaying}
@@ -738,9 +666,14 @@ export const PathwayPlayer = observer(({ pathway }) => {
         />
       )}
 
-      <Button disabled={!canProceed} onClick={handleNextStep}>
-        {step.buttonText || "Next"}
-      </Button>
+      <div className="flex gap-2">
+        <Button className="w-full" onClick={handleNextStep}>
+          {/* {step.buttonText || "Complete"} */}
+          <Check /> Complete
+        </Button>
+        <SkipDialog handleNextStep={handleNextStep} step={step} />
+      </div>
+
       {/* {step.allowSkip && (
         <Button variant="outline" className="mt-2" onClick={handleSkipStep}>
           Skip
@@ -870,7 +803,19 @@ const QuestsBuilder = observer(() => {
     (pathway) => pathway.creatorId !== MobxStore.user?.uid
   );
 
-  const { userPathways, pathwayPlaying } = MobxStore;
+  const {
+    userPathways,
+    pathwayPlaying,
+    setPathwayPlaying,
+    setIsPathwayEditView,
+  } = MobxStore;
+  const pathname = usePathname();
+  useEffect(() => {
+    return () => {
+      setPathwayPlaying(null);
+      setIsPathwayEditView(false);
+    };
+  }, [pathname, setPathwayPlaying, setIsPathwayEditView]);
 
   return (
     <div className="m-4 sm:mx-8">

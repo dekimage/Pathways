@@ -12,7 +12,7 @@ const PasswordResetForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form id="reset-pass" onSubmit={handleSubmit}>
       <input
         type="email"
         value={email}
