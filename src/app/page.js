@@ -15,7 +15,7 @@ import MobxStore from "@/mobx";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 // import HeroSection from "../reusable-ui/HeroSection";
-// import habitsLogo from "./assets/habits-logo.png";
+// import habitsLogo from "./assets/habits-logo.png"
 
 import { LoadingSpinner } from "@/reusable-ui/LoadingSpinner";
 import { Slider } from "@/components/ui/slider";
@@ -49,6 +49,14 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import TimerNew from "@/components/TimerNew";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+
+//move to static
+const frequencyLookup = {
+  everyday: "today",
+  everyweek: "week",
+  everymonth: "month",
+  everyyear: "year",
+};
 
 // to reusable UI
 const Checkbox = ({ label, checked, onChange }) => {
@@ -684,6 +692,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
 });
 
 export const PathwayCard = observer(({ pathway, listId }) => {
+  console.log("pathway", pathway);
   const { name, description, emoji, time, duration, steps, backgroundColor } =
     pathway;
   const {
@@ -779,8 +788,9 @@ export const PathwayCard = observer(({ pathway, listId }) => {
               </div>
             </div>
             {pathway.timeType == "time" && (
-              <div>
-                {pathway.progress || 0} / {pathway.completionLimit}
+              <div className="text-sm  text-center w-fit">
+                {pathway.progress || 0} / {pathway.completionLimit}{" "}
+                {frequencyLookup[pathway.frequency]}
               </div>
             )}
 

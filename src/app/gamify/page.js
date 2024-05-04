@@ -37,6 +37,11 @@ export const DEFAULT_COLORS = [
   "#e6ccb2",
 ];
 
+export function getRandomColor() {
+  const randomIndex = Math.floor(Math.random() * DEFAULT_COLORS.length);
+  return DEFAULT_COLORS[randomIndex];
+}
+
 const STATIC_MAX_PURCHASE_LIMITS = [
   { value: "unlimited", label: "Unlimited" },
   { value: "single", label: "Single" },

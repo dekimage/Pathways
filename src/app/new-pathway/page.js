@@ -1,6 +1,6 @@
 "use client";
 import { Switch } from "@/components/ui/switch";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { Combobox } from "@/reusable-ui/ComboBox";
 import { Button } from "@/components/ui/button";
 import { LuTrash } from "react-icons/lu";
@@ -17,13 +17,48 @@ import { useRouter } from "next/navigation";
 import EmojiPicker from "emoji-picker-react";
 import { ChevronDown, ChevronLeft, ChevronUp, Gem } from "lucide-react";
 import Circle from "@uiw/react-color-circle";
-import { DEFAULT_COLORS } from "../gamify/page";
+import { DEFAULT_COLORS, getRandomColor } from "../gamify/page";
 import { Slider } from "@/components/ui/slider";
 import { ComboBoxCreate } from "@/reusable-ui/ComboBoxCreate";
 import { addValueToObjects } from "@/utils/transformers";
 import { observer } from "mobx-react";
 import Image from "next/image";
 import logoImg from "@/assets/logo.png";
+import randomUnicodeEmoji from "random-unicode-emoji";
+
+// add these to utils
+
+function truncateString(str, num) {
+  if (str.length > num) {
+    return str.slice(0, num) + "...";
+  }
+  return str;
+}
+
+const daysOfWeek = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+function isSingleEmoji(emoji) {
+  const baseEmoji = emoji.replace(/[\u{1F3FB}-\u{1F3FF}\u{FE0F}]/gu, "");
+  return !baseEmoji.includes("\u200D") && Array.from(baseEmoji).length === 1;
+}
+
+function generateSingleEmoji() {
+  let emoji;
+  do {
+    emoji = randomUnicodeEmoji.random({ count: 1 })[0];
+  } while (!isSingleEmoji(emoji));
+  return emoji;
+}
+
+const suggestedTimers = [30, 60, 90, 120, 180, 240, 300, 600, 900, 1800, 3600];
 
 const placeholders = {
   checklist: [
@@ -283,29 +318,19 @@ const CheckboxOptions = ({ stepIndex, options, setOptions }) => {
 };
 
 const DayCircle = ({ day, isSelected, onToggle }) => {
-  const selectedClass = isSelected
-    ? "bg-blue-500 text-white"
-    : "bg-gray-200 text-black";
+  const selectedClass = isSelected ? "bg-primary text-white" : "bg-background";
   return (
     <button
-      className={`h-10 w-10 rounded-full flex items-center justify-center m-1 ${selectedClass}`}
+      className={`h-10 w-10 rounded-full border flex items-center justify-center m-1 ${selectedClass}`}
       onClick={() => onToggle(day)}
     >
-      {day.charAt(0)} {/* Display only the first letter of the day */}
+      {day.charAt(0)}
     </button>
   );
 };
 
 const DaysOptions = ({ options, setOptions }) => {
-  const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  console.log({ options });
 
   const toggleDay = (day) => {
     const index = options.indexOf(day);
@@ -351,89 +376,98 @@ const DeleteStepModal = ({ handleDeleteStep }) => {
   );
 };
 
-const Step = ({
-  step,
-  index,
-  handleStepChange,
-  handleUpdateStepChange,
-  handleDeleteStep,
-  handleUpdateStepOptions,
-}) => {
-  const [showStep, setShowStep] = useState(false);
-  return (
-    <div
-      key={index}
-      className="flex flex-col my-4  rounded-lg border border-gray"
-    >
+const Step = forwardRef(
+  (
+    {
+      step,
+      index,
+      isOpen,
+      toggleStep,
+      handleStepChange,
+      handleUpdateStepChange,
+      handleDeleteStep,
+      handleUpdateStepOptions,
+    },
+    ref
+  ) => {
+    return (
       <div
-        className="flex justify-between p-4 cursor-pointer"
-        onClick={() => setShowStep(!showStep)}
+        ref={ref}
+        key={index}
+        className="flex flex-col my-4  rounded-lg border border-gray justify-center"
       >
-        <div className="text-lg font-bold flex justify-center items-center">
-          Step {index + 1}
+        <div
+          className="flex justify-between items-center cursor-pointer"
+          onClick={toggleStep}
+        >
+          <div className="flex bg-primary text-black text-2xl px-2 w-[40px] text-center h-full items-center justify-center rounded-tl-md rounded-bl-md mr-2">
+            {index + 1}
+          </div>
+          <div className="flex flex-grow text-lg font-bold items-center py-4">
+            {step.question && `${truncateString(step.question, 30)}`}
+          </div>
+          <div className="flex gap-2 items-center pr-2">
+            <DeleteStepModal handleDeleteStep={handleDeleteStep} />
+
+            <Button variant="outline" onClick={toggleStep}>
+              {isOpen ? <ChevronUp /> : <ChevronDown />}
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <DeleteStepModal handleDeleteStep={handleDeleteStep} />
+        {isOpen && (
+          <div className="flex flex-col p-4 border-t">
+            <div className="mt-4 text-md font-medium">Question</div>
+            <input
+              type="text"
+              name="question"
+              placeholder={`Step ${index + 1} Question`}
+              value={step.question}
+              onChange={(e) => handleStepChange(index, e)}
+              className="mb-2 p-2 border  rounded w-full"
+            />
 
-          <Button variant="outline" onClick={() => setShowStep(!showStep)}>
-            {showStep ? <ChevronUp /> : <ChevronDown />}
-          </Button>
-        </div>
-      </div>
-      {showStep && (
-        <div className="flex flex-col p-4 border-t">
-          <div className="mt-4 text-md font-medium">Question</div>
-          <input
-            type="text"
-            name="question"
-            placeholder={`Step ${index + 1} Question`}
-            value={step.question}
-            onChange={(e) => handleStepChange(index, e)}
-            className="mb-2 p-2 border  rounded w-full"
-          />
+            <div className="mt-4 text-md font-medium">Context (optional)</div>
+            <textarea
+              type="text"
+              name="context"
+              placeholder="Add additional context here..."
+              multiline
+              value={step.context}
+              onChange={(e) => handleStepChange(index, e)}
+              className="mb-4 p-2 border  rounded h-24"
+            />
 
-          <div className="mt-4 text-md font-medium">Context (optional)</div>
-          <textarea
-            type="text"
-            name="context"
-            placeholder="Add additional context here..."
-            multiline
-            value={step.context}
-            onChange={(e) => handleStepChange(index, e)}
-            className="mb-4 p-2 border  rounded h-24"
-          />
+            {/* <div className="border-t mt-4"></div> */}
 
-          {/* <div className="border-t mt-4"></div> */}
+            <ComboBoxWithHelper
+              title="Response Type"
+              value={step.responseType}
+              setValue={(value) => {
+                handleUpdateStepChange(index, "responseType", value);
+              }}
+              searchLabel={"Response Type"}
+              options={[
+                {
+                  value: "text",
+                  label: "Text Input",
+                },
+                {
+                  value: "checklist",
+                  label: "Checklist",
+                },
+                {
+                  value: "slider",
+                  label: "Slider",
+                },
+                {
+                  value: "mood",
+                  label: "Mood Press",
+                },
+              ]}
+              helperChildren={"hey"}
+            />
 
-          <ComboBoxWithHelper
-            title="Response Type"
-            value={step.responseType}
-            setValue={(value) => {
-              handleUpdateStepChange(index, "responseType", value);
-            }}
-            searchLabel={"Response Type"}
-            options={[
-              {
-                value: "text",
-                label: "Text Input",
-              },
-              {
-                value: "checklist",
-                label: "Checklist",
-              },
-              {
-                value: "slider",
-                label: "Slider",
-              },
-              {
-                value: "mood",
-                label: "Mood Press",
-              },
-            ]}
-            helperChildren={"hey"}
-          />
-
-          {/* {step.responseType == "text" && (
+            {/* {step.responseType == "text" && (
             <div className="flex flex-col pl-4 border-l">
               <SwitchWithHelper
                 title="Set Minimum Text"
@@ -463,75 +497,93 @@ const Step = ({
             </div>
           )} */}
 
-          {step.responseType === "checklist" && (
-            <div className="flex flex-col pl-4 border-l">
-              <CheckboxOptions
-                stepIndex={index}
-                options={step.options || [""]}
-                setOptions={handleUpdateStepOptions}
-              />
-            </div>
-          )}
+            {step.responseType === "checklist" && (
+              <div className="flex flex-col pl-4 border-l">
+                <CheckboxOptions
+                  stepIndex={index}
+                  options={step.options || [""]}
+                  setOptions={handleUpdateStepOptions}
+                />
+              </div>
+            )}
 
-          {step.responseType === "slider" && (
-            <div className="flex flex-col pl-4 border-l">
-              <Slider
-                defaultValue={[1]}
-                max={step.sliderMax || 10}
-                step={step.sliderMin || 1}
-                className="mt-4"
-              />
-              <div className="flex justify-between mt-2">
-                <div className="w-[100px]">
-                  <div className="mt-4 text-md font-medium">Min</div>
-                  <input
-                    type="number"
-                    name="sliderMin"
-                    placeholder="1"
-                    value={step.sliderMin}
-                    onChange={(e) => handleStepChange(index, e)}
-                    className="mb-2 p-2 border  rounded w-full"
-                  />
-                </div>
-                <div className="w-[100px]">
-                  <div className="mt-4 text-md font-medium">Max</div>
-                  <input
-                    type="number"
-                    name="sliderMax"
-                    placeholder="10"
-                    value={step.sliderMax}
-                    onChange={(e) => handleStepChange(index, e)}
-                    className="mb-2 p-2 border  rounded w-full"
-                  />
+            {step.responseType === "slider" && (
+              <div className="flex flex-col pl-4 border-l">
+                <Slider
+                  defaultValue={[1]}
+                  max={step.sliderMax || 10}
+                  step={step.sliderMin || 1}
+                  className="mt-4"
+                />
+                <div className="flex justify-between mt-2">
+                  <div className="w-[100px]">
+                    <div className="mt-4 text-md font-medium">Min</div>
+                    <input
+                      type="number"
+                      name="sliderMin"
+                      placeholder="1"
+                      value={step.sliderMin}
+                      onChange={(e) => handleStepChange(index, e)}
+                      className="mb-2 p-2 border  rounded w-full"
+                    />
+                  </div>
+                  <div className="w-[100px]">
+                    <div className="mt-4 text-md font-medium">Max</div>
+                    <input
+                      type="number"
+                      name="sliderMax"
+                      placeholder="10"
+                      value={step.sliderMax}
+                      onChange={(e) => handleStepChange(index, e)}
+                      className="mb-2 p-2 border  rounded w-full"
+                    />
+                  </div>
                 </div>
               </div>
+            )}
+
+            {/* {step.responseType === "mood" && <div>Mood Selector</div>} */}
+
+            {/* <div className="border-t border-gray-200 mt-4"></div> */}
+
+            <div className="mt-4 text-md font-medium">Timer (In Seconds)</div>
+            <div className="flex flex-wrap gap-2 my-4">
+              {suggestedTimers.map((timer, i) => (
+                <Button
+                  key={i}
+                  onClick={() =>
+                    handleStepChange(index, {
+                      target: { name: "timer", value: timer },
+                    })
+                  }
+                  className={` ${
+                    timer === step.timer && "bg-primary text-black"
+                  }`}
+                  variant="outline"
+                >
+                  {timer / 60} min
+                </Button>
+              ))}
             </div>
-          )}
+            <input
+              type="number"
+              name="timer"
+              placeholder="30"
+              value={step.timer}
+              onChange={(e) => handleStepChange(index, e)}
+              className="mb-2 p-2 border  rounded"
+            />
 
-          {/* {step.responseType === "mood" && <div>Mood Selector</div>} */}
+            <SwitchWithHelper
+              title="Auto-Play Timer"
+              value={step.autoplay}
+              callback={() =>
+                handleUpdateStepChange(index, "autoplay", !step.autoplay)
+              }
+              helperChildren={"hey"}
+            />
 
-          {/* <div className="border-t border-gray-200 mt-4"></div> */}
-
-          <div className="mt-4 text-md font-medium">Timer (In Seconds)</div>
-          <input
-            type="number"
-            name="timer"
-            placeholder="30"
-            value={step.timer}
-            onChange={(e) => handleStepChange(index, e)}
-            className="mb-2 p-2 border  rounded"
-          />
-
-          <SwitchWithHelper
-            title="Auto-Play Timer"
-            value={step.autoplay}
-            callback={() =>
-              handleUpdateStepChange(index, "autoplay", !step.autoplay)
-            }
-            helperChildren={"hey"}
-          />
-
-          {/* <SwitchWithHelper
+            {/* <SwitchWithHelper
             title="Allow Skip Step"
             value={step.allowSkip}
             callback={() =>
@@ -539,11 +591,12 @@ const Step = ({
             }
             helperChildren={"hey"}
           /> */}
-        </div>
-      )}
-    </div>
-  );
-};
+          </div>
+        )}
+      </div>
+    );
+  }
+);
 
 const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
   const router = useRouter();
@@ -553,6 +606,9 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
   const [musicTrack, setMusicTrack] = useState("");
   const [pathway, setPathway] = useState(pathwayToEdit || DEFAULT_PATHWAY);
   const [hex, setHex] = useState("#F44E3B");
+  const [openStepIndex, setOpenStepIndex] = useState(null);
+  const stepRefs = useRef([]);
+
   const {
     editFromInside,
     setPathwayPlaying,
@@ -562,11 +618,28 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
   } = MobxStore;
 
   useEffect(() => {
+    stepRefs.current = stepRefs.current.slice(0, pathway.steps.length);
+  }, [pathway.steps.length]);
+
+  useEffect(() => {
     if (pathwayToEdit) {
       setPathway(pathwayToEdit);
     }
   }, [pathwayToEdit]);
 
+  const toggleStep = (index) => {
+    const shouldOpen = openStepIndex !== index;
+    setOpenStepIndex(shouldOpen ? index : null);
+
+    if (shouldOpen) {
+      setTimeout(() => {
+        stepRefs.current[index]?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  };
   const handleInputChange = (name, value) => {
     setPathway({ ...pathway, [name]: value });
   };
@@ -582,6 +655,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
       ...pathway,
       steps: [...pathway.steps, DEFAULT_STEP],
     });
+    setOpenStepIndex(pathway.steps.length);
   };
 
   const handleUpdateStepChange = (stepIndex, name, value) => {
@@ -665,11 +739,27 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
           {pathwayToEdit ? "Edit" : "Create New"} Pathway
         </div>
         <div className="mt-4 text-md font-medium">Icon</div>
-        <DialogEmojiPicker
-          emoji={pathway.emoji}
-          backgroundColor={pathway.backgroundColor}
-          handleEmojiChange={(value) => handleInputChange("emoji", value)}
-        />
+        <div className="flex gap-4 items-center">
+          <DialogEmojiPicker
+            emoji={pathway.emoji}
+            backgroundColor={pathway.backgroundColor}
+            handleEmojiChange={(value) => handleInputChange("emoji", value)}
+          />
+          <Button
+            variant="outline"
+            onClick={() => {
+              setPathway({
+                ...pathway,
+                emoji: generateSingleEmoji(),
+                backgroundColor: getRandomColor(),
+              });
+              setHex(getRandomColor());
+            }}
+          >
+            🎲 Random
+          </Button>
+        </div>
+
         <div className="mt-4 mb-2 text-md font-medium">Background</div>
         <Circle
           style={{ position: "relative", zIndex: "100 !important" }}
@@ -694,7 +784,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
           onChange={(e) => handleInputChange("name", e.target.value)}
           className="mb-4 p-2 border  rounded"
         />
-        <div className="mt-4 text-md font-medium">Description (Optional)</div>
+        <div className="mt-4 text-md font-medium">Description</div>
         <textarea
           type="text"
           name="description"
@@ -705,12 +795,16 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
         />
         <ComboBoxWithHelper
           title="When"
-          value={pathway.timeType}
+          value={pathway.timeType || "any"}
           setValue={(value) => {
             handleInputChange("timeType", value);
           }}
           searchLabel={"Trigger"}
           options={[
+            {
+              value: "any",
+              label: "Anytime",
+            },
             {
               value: "time",
               label: "Time/Day Specific",
@@ -719,12 +813,8 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
               value: "event",
               label: "Event Triggered",
             },
-            {
-              value: "any",
-              label: "Not Specified",
-            },
           ]}
-          helperChildren={"When will you do this pathway?"}
+          helperChildren={"When will you do this routine?"}
         />
 
         {pathway.timeType === "time" && (
@@ -778,23 +868,41 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
                   <input
                     type="number"
                     name="completionLimit"
-                    placeholder="50"
+                    placeholder="3"
                     value={`${pathway.completionLimit}`}
                     onChange={(e) =>
                       handleInputChange("completionLimit", e.target.value)
                     }
                     className="mb-2 p-2 border  rounded w-[70px] mr-2"
                   />
-                  per {pathway.frequency?.replace("every", "").toLowerCase()}
+                  per{" "}
+                  {pathway.frequency?.replace("every", "").toLowerCase() ||
+                    "day"}
                 </div>
               </div>
             )}
 
-            <div className="mt-4 text-md font-medium">Show on Days:</div>
-            <DaysOptions
-              options={pathway.days}
-              setOptions={(value) => handleInputChange("days", value)}
-            />
+            <div className="mt-4 text-md font-medium ">Show on Days:</div>
+            <div className="flex justify-between items-center">
+              <DaysOptions
+                options={
+                  pathway.days || [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                  ]
+                }
+                setOptions={(value) => handleInputChange("days", value)}
+              />
+              <Button
+                onClick={() => handleInputChange("days", daysOfWeek)}
+                variant="outline"
+              >
+                Select All
+              </Button>
+            </div>
           </div>
         )}
 
@@ -887,6 +995,9 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
               key={index}
               step={step}
               index={index}
+              toggleStep={() => toggleStep(index)}
+              ref={(el) => (stepRefs.current[index] = el)} // Assign ref
+              isOpen={openStepIndex === index}
               handleStepChange={handleStepChange}
               handleUpdateStepChange={handleUpdateStepChange}
               handleDeleteStep={deleteStep}

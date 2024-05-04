@@ -52,7 +52,7 @@ export function Combobox({
             </label>
           )}
           {value
-            ? options.find((framework) => framework.value === value)?.label
+            ? options.find((option) => option.value === value)?.label
             : options[0].label}
 
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
