@@ -19,7 +19,7 @@ const TodayPage = observer(() => {
 
   return (
     <div className="h-[90vh] max-w-[600px] m-4 sm:mx-8">
-      <Tabs defaultValue="daily" className="w-[400px]">
+      <Tabs defaultValue="daily" className="min-w-[350px]">
         <TabsList>
           <TabsTrigger value="daily">Daily</TabsTrigger>
           <TabsTrigger value="weekly">Weekly</TabsTrigger>

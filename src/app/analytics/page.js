@@ -19,6 +19,7 @@ import {
   ChevronDown,
   ChevronUp,
   Clock4,
+  Gem,
   Hourglass,
   Sigma,
   WalletCards,
@@ -181,7 +182,7 @@ const LogDetails = ({ log }) => {
                 <div className="text-xl">{step.question}</div>
               </div>
 
-              <div className="mt-4 text-md bg-slate-100 p-2 rounded">
+              <div className="mt-4 text-md bg-muted p-2 rounded">
                 {step.response}
               </div>
 
@@ -321,7 +322,9 @@ const LogCardReward = ({ log }) => {
             <div className="text-gray-500 text-sm">
               {getRelativeTime(log.timestamp.seconds * 1000)}
             </div>
-            <div className="text-red-500 text-sm">-{reward.cost} 🥮</div>
+            <div className="text-red-500 text-sm flex items-center gap-1">
+              -{reward.cost} <Gem size={14} />
+            </div>
             {/* <Badge className="">{totalDuration} seconds</Badge> */}
           </div>
         </div>
@@ -407,14 +410,14 @@ const LogsPage = observer(() => {
         description="Analyse past data to improve your journey."
       />
 
-      <div className="flex items-center h-fit gap-4">
+      <div className="flex sm:items-center h-fit gap-4 flex-col sm:flex-row items-start">
         <Tabs defaultValue="pathways">
           <TabsList>
             <TabsTrigger
               onClick={() => setFilterType("pathways")}
               value="pathways"
             >
-              Pathways
+              Routines
             </TabsTrigger>
             <TabsTrigger
               onClick={() => setFilterType("rewards")}
@@ -477,8 +480,8 @@ const LogsPage = observer(() => {
         </div>
       )}
       {filteredPathwayLogs.length > 0 && (
-        <div className="flex gap-4 my-4">
-          <Card className="py-2 px-2 w-1/3">
+        <div className="flex gap-4 my-4 flex-col sm:flex-row">
+          <Card className="py-2 px-2 sm:w-1/3 w-full">
             <div className="flex justify-between items-center">
               <div className="flex justify-between items-between w-full flex-col">
                 <div className="flex justify-between items-between w-full">
@@ -501,7 +504,7 @@ const LogsPage = observer(() => {
             </div>
           </Card>
 
-          <Card className="py-2 px-2 w-1/3">
+          <Card className="py-2 px-2 sm:w-1/3 w-full">
             <div className="flex justify-between items-center">
               <div className="flex justify-between items-between w-full flex-col">
                 <div className="flex justify-between items-between w-full">
@@ -523,7 +526,7 @@ const LogsPage = observer(() => {
             </div>
           </Card>
 
-          <Card className="py-2 px-2 w-1/3">
+          <Card className="py-2 px-2 sm:w-1/3 w-full">
             <div className="flex justify-between items-center">
               <div className="flex justify-between items-between w-full flex-col">
                 <div className="flex justify-between items-between w-full">
@@ -553,7 +556,7 @@ const LogsPage = observer(() => {
         {filteredLogs.length === 0 && (
           <PodcastEmptyPlaceholder
             title="No Logs Today"
-            description="Play Pathways to add logs."
+            description="Play Routines to add logs."
           >
             <Link href="/">
               <Button>Go to Dashboard</Button>

@@ -129,7 +129,7 @@ const MoodSelector = ({ mood, onSelectMood, showSingle = false }) => {
 
 export const TitleDescription = ({ title, description, button }) => {
   return (
-    <div className="flex items-center justify-between mb-4">
+    <div className="flex sm:items-center justify-between mb-4 sm:flex-row flex-col items-start">
       <div className="space-y-1 mr-4">
         <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
         <p className="text-sm text-muted-foreground">{description}</p>
@@ -692,7 +692,6 @@ export const PathwayPlayer = observer(({ pathway }) => {
 });
 
 export const PathwayCard = observer(({ pathway, listId }) => {
-  console.log("pathway", pathway);
   const { name, description, emoji, time, duration, steps, backgroundColor } =
     pathway;
   const {

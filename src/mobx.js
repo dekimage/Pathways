@@ -58,7 +58,7 @@ class Store {
 
   // App States
   isMobileOpen = false;
-  loading = true;
+  loading = false;
   pathwayPlaying = false;
   isPathwayEditView = false;
   editFromInside = true;

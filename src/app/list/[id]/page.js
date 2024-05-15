@@ -90,7 +90,7 @@ const CustomListPage = observer(({ params }) => {
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Pathway</DialogTitle>
+            <DialogTitle>Add Routine</DialogTitle>
             <DialogDescription>
               Select a pathway to add to this list
             </DialogDescription>
@@ -132,11 +132,11 @@ const CustomListPage = observer(({ params }) => {
   };
 
   return (
-    <div className="h-[90vh] m-4 sm:mx-8">
+    <div className="h-full m-4 sm:mx-8">
       <TitleDescription
         title={list?.name}
         button={
-          <div>
+          <div className="flex items-end">
             <Dialog
               open={showEditListDialog}
               onOpenChange={setShowEditListDialog}
@@ -215,7 +215,7 @@ const CustomListPage = observer(({ params }) => {
             </Dialog>
             <Button onClick={() => setShowDialog(true)}>
               <Plus size={16} className="mr-2" />
-              Add Pathway
+              Add Routine
             </Button>
           </div>
         }
@@ -223,13 +223,13 @@ const CustomListPage = observer(({ params }) => {
       {!listPathways.length && (
         <PodcastEmptyPlaceholder
           title="Your List is Empty"
-          description="Add your first pathway to this list"
+          description="Add your first routine to this list"
         >
           <AddPathway
             trigger={
               <Button onClick={() => setShowDialog(true)}>
                 <Plus size={16} className="mr-2" />
-                Add Pathway
+                Add Routine
               </Button>
             }
           />
@@ -242,7 +242,7 @@ const CustomListPage = observer(({ params }) => {
         {listPathways.length > 0 && (
           <AddPathway
             trigger={
-              <div className="cursor-pointer hover:bg-gray-100 rounded-lg border bg-card text-card-foreground shadow-sm p-4 w-64 h-[320px] flex flex-col justify-center items-center relative text-gray-400">
+              <div className="cursor-pointer hover:bg-muted rounded-lg border bg-card text-card-foreground shadow-sm p-4 w-64 h-[350px] flex-col justify-center items-center relative text-gray-400 hidden sm:flex">
                 <div className="flex items-center gap-1">
                   <span className="text-2xl">+</span>Add
                 </div>

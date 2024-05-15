@@ -9,6 +9,20 @@ import { Combobox } from "@/reusable-ui/ComboBox";
 import Circle from "@uiw/react-color-circle";
 import MobxStore from "@/mobx";
 import { observer } from "mobx-react";
+import { ChevronLeft, Gem } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export function SkeletonDemo() {
+  return (
+    <div className="flex items-center space-x-4 w-full">
+      <Skeleton className="h-12 w-full rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-full" />
+      </div>
+    </div>
+  );
+}
 
 export const DEFAULT_COLORS = [
   "#F44E3B",
@@ -52,32 +66,32 @@ const STATIC_MAX_PURCHASE_LIMITS = [
   { value: "custom", label: "Custom" },
 ];
 
-const STATIC_REWARDS = [
-  {
-    cost: 50,
-    name: "Watch 1 episode of anime",
-    emoji: "📺",
-    timesPurchased: 0,
-    backgroundColor: "#F44E3B",
-    maxPurchaseLimit: "unlimited", //single/every day/every week/ every month/ every year/ custom
-  },
-  {
-    cost: 100,
-    name: "Watch 1 movie",
-    emoji: "🎥",
-    timesPurchased: 0,
-    backgroundColor: "#FE9200",
-    maxPurchaseLimit: "single",
-  },
-  {
-    cost: 200,
-    name: "Eat 1 dessert",
-    emoji: "🍰",
-    timesPurchased: 0,
-    backgroundColor: "#FCDC00",
-    maxPurchaseLimit: "every day",
-  },
-];
+// const STATIC_REWARDS = [
+//   {
+//     cost: 50,
+//     name: "Watch 1 episode of anime",
+//     emoji: "📺",
+//     timesPurchased: 0,
+//     backgroundColor: "#F44E3B",
+//     maxPurchaseLimit: "unlimited", //single/every day/every week/ every month/ every year/ custom
+//   },
+//   {
+//     cost: 100,
+//     name: "Watch 1 movie",
+//     emoji: "🎥",
+//     timesPurchased: 0,
+//     backgroundColor: "#FE9200",
+//     maxPurchaseLimit: "single",
+//   },
+//   {
+//     cost: 200,
+//     name: "Eat 1 dessert",
+//     emoji: "🍰",
+//     timesPurchased: 0,
+//     backgroundColor: "#FCDC00",
+//     maxPurchaseLimit: "every day",
+//   },
+// ];
 
 const defaultReward = {
   cost: null,
@@ -116,6 +130,13 @@ const RewardBuilder = ({ setIsCreate, rewardState, setRewardState }) => {
 
   return (
     <div>
+      <Button
+        variant="outline"
+        className="mb-4"
+        onClick={() => setIsCreate(false)}
+      >
+        <ChevronLeft size="16" /> Back
+      </Button>
       <TitleDescription
         title="Create New Reward"
         description="Buy rewards using coins you earn by completing pathways"
@@ -156,7 +177,9 @@ const RewardBuilder = ({ setIsCreate, rewardState, setRewardState }) => {
             onChange={(e) => handleInputChange("cost", e.target.value)}
             className="p-2 border rounded max-w-[80px]"
           />
-          <div className="text-2xl">🥮</div>
+          <div className="text-2xl">
+            <Gem />
+          </div>
         </div>
         <label className="mt-4 text-md font-medium">Max Purchase Limit</label>
         <Combobox
@@ -190,6 +213,18 @@ const RewardBuilder = ({ setIsCreate, rewardState, setRewardState }) => {
         <Button className="mt-4" onClick={() => saveReward(reward)}>
           Save
         </Button>
+
+        <Button
+          variant="outline"
+          className="mt-4"
+          onClick={() => {
+            setIsCreate(false);
+            setRewardState(null);
+          }}
+        >
+          Cancel
+        </Button>
+
         <Button
           variant="destructive"
           className="mt-4"
@@ -200,16 +235,6 @@ const RewardBuilder = ({ setIsCreate, rewardState, setRewardState }) => {
           }}
         >
           Delete
-        </Button>
-        <Button
-          variant="outline"
-          className="mt-4"
-          onClick={() => {
-            setIsCreate(false);
-            setRewardState(null);
-          }}
-        >
-          Cancel
         </Button>
       </div>
     </div>
@@ -241,14 +266,18 @@ const Reward = ({
           {emoji}
         </div>
       </div>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 flex-grow">
         <div className="text-md">{name}</div>
         <div className="flex gap-2">
-          <div className="">{cost} 🥮</div>
-          <Badge className="">{maxPurchaseLimit}</Badge>
+          <div className="flex justify-center items-center gap-1">
+            {cost} <Gem size={16} />
+          </div>
+          <Badge variant="outline" className="">
+            {maxPurchaseLimit}
+          </Badge>
         </div>
       </div>
-      <div className="flex items-center flex-grow justify-end gap-2">
+      <div className="flex items-center flex-grow justify-end gap-2 sm:flex-row flex-col">
         <Button
           variant="outline"
           onClick={() => {
@@ -270,7 +299,7 @@ const GamifyPage = observer(() => {
   const [isCreate, setIsCreate] = useState(false);
   const [rewardState, setRewardState] = useState(null);
   return (
-    <div className="h-[90vh] max-w-[600px] m-4 sm:mx-8">
+    <div className="h-full max-w-[600px] m-4 sm:mx-8">
       {isCreate ? (
         <RewardBuilder
           setIsCreate={setIsCreate}
@@ -281,12 +310,12 @@ const GamifyPage = observer(() => {
         <>
           <TitleDescription
             title="Rewards"
-            description="Spend coins you earn by completing pathways to buy custom rewards."
+            description="Spend gems you earn by completing routines to buy custom rewards."
             button={
               <Button onClick={() => setIsCreate(true)}>+ Create Reward</Button>
             }
           />
-          <div className="flex flex-col gap-4 mb-4">
+          {/* <div className="flex flex-col gap-4 mb-4">
             {STATIC_REWARDS.map((reward, index) => (
               <Reward
                 key={index}
@@ -297,18 +326,22 @@ const GamifyPage = observer(() => {
                 setRewardState={setRewardState}
               />
             ))}
-          </div>
+          </div> */}
+          <div className="flex flex-col gap-4 mb-4">
+            {MobxStore.rewards.map((reward, index) => (
+              <Reward
+                key={index}
+                reward={reward}
+                setIsCreate={setIsCreate}
+                isCreate={isCreate}
+                rewardState={rewardState}
+                setRewardState={setRewardState}
+              />
+            ))}
 
-          {MobxStore.rewards.map((reward, index) => (
-            <Reward
-              key={index}
-              reward={reward}
-              setIsCreate={setIsCreate}
-              isCreate={isCreate}
-              rewardState={rewardState}
-              setRewardState={setRewardState}
-            />
-          ))}
+            {MobxStore.rewards.length === 0 &&
+              [0, 1, 2, 3].map((_, i) => <SkeletonDemo key={i} />)}
+          </div>
         </>
       )}
     </div>

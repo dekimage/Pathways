@@ -41,12 +41,13 @@ import { ModeToggle } from "@/components/ui/themeButton";
 
 const defaultLayout = [20, 80];
 
-const CreateListDialog = () => {
+export const CreateListDialog = () => {
   const [listName, setListName] = useState("");
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { addList } = MobxStore;
 
   return (
-    <Dialog>
+    <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full">
           <Plus size={16} className="mr-2" /> Create List
@@ -56,7 +57,7 @@ const CreateListDialog = () => {
         <DialogHeader>
           <DialogTitle>Create New List</DialogTitle>
           <DialogDescription>
-            Store different pathways across custom lists.
+            Store different routines across custom lists.
           </DialogDescription>
         </DialogHeader>
         <div>
@@ -72,13 +73,17 @@ const CreateListDialog = () => {
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setShowDialog(false)}>
+          <Button
+            variant="outline"
+            className="mt-2 sm:mt-0"
+            onClick={() => setShowDeleteDialog(false)}
+          >
             Cancel
           </Button>
           <Button
             type="submit"
             onClick={() => {
-              // setShowDialog(false);
+              setShowDeleteDialog(false);
               addList(listName);
             }}
           >
@@ -198,23 +203,17 @@ const ReusableLayout = observer(({ children }) => {
                 {user ? (
                   <>
                     <div className="flex items-center gap-1">
-                      {MobxStore.user?.streak || 0}{" "}
-                      {/* <Image
-                        src={streakImg}
-                        width={28}
-                        height={28}
-                        alt="streak"
-                      /> */}
+                      {MobxStore.user?.streak || 0}
+
                       <Flame />
                     </div>
                     <div className="flex items-center gap-1">
                       {MobxStore.user?.gold}
-                      {/* <Image src={coinImg} width={28} height={28} alt="coin" /> */}
                       <Gem />
                     </div>
                     <Link href="/new-pathway">
                       <Button>
-                        <Plus size={16} className="mr-2" /> Create Pathway
+                        <Plus size={16} className="mr-2" /> Create Routine
                       </Button>
                     </Link>
                     <ModeToggle />

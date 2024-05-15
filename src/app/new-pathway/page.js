@@ -58,7 +58,7 @@ function generateSingleEmoji() {
   return emoji;
 }
 
-const suggestedTimers = [30, 60, 90, 120, 180, 240, 300, 600, 900, 1800, 3600];
+const suggestedTimers = [30, 60, 90, 120, 180, 300, 600];
 
 const placeholders = {
   checklist: [
@@ -561,7 +561,7 @@ const Step = forwardRef(
                   }`}
                   variant="outline"
                 >
-                  {timer / 60} min
+                  {timer >= 60 ? `${timer / 60} min` : `${timer} sec`}
                 </Button>
               ))}
             </div>
