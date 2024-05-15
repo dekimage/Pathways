@@ -392,45 +392,13 @@ export const PathwayPlayer = observer(({ pathway }) => {
   const [feedback, setFeedback] = useState(null);
   const [startTime, setStartTime] = useState(Date.now());
 
+  const [timeOver, setTimeOver] = useState(false);
+
   const { setPathwayPlaying } = MobxStore;
 
   const audioRef = useRef(null);
 
   const { isPathwayEditView, setIsPathwayEditView } = MobxStore;
-
-  useEffect(() => {
-    const audioElement = audioRef.current;
-
-    const playAudio = async () => {
-      if (!audioElement) return;
-
-      try {
-        await audioElement.play();
-      } catch (error) {
-        console.error("Error attempting to play audio:", error);
-      }
-    };
-
-    const pauseAudio = () => {
-      if (!audioElement || audioElement.paused) return;
-
-      audioElement.pause();
-    };
-
-    if (isMusicPlaying) {
-      playAudio();
-    } else {
-      pauseAudio();
-    }
-  }, [isMusicPlaying]);
-
-  useEffect(() => {
-    if (isMusicPlaying) {
-      audioRef?.current?.play();
-    } else {
-      audioRef?.current?.pause();
-    }
-  }, [isMusicPlaying]);
 
   useEffect(() => {
     let interval = null;
@@ -442,9 +410,19 @@ export const PathwayPlayer = observer(({ pathway }) => {
       }, 1000);
     }
 
-    if (isPlaying && timer > 0) {
+    if (isPlaying) {
       interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
+        setTimer((prevTimer) => {
+          if (prevTimer <= 0 && !timeOver) {
+            setTimeOver(true);
+
+            return 0;
+          } else if (timeOver) {
+            return prevTimer + 1;
+          } else {
+            return prevTimer - 1;
+          }
+        });
       }, 1000);
     } else if (!isPlaying && timer !== 0) {
       clearInterval(interval);
@@ -454,7 +432,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
       clearInterval(interval);
       clearInterval(totalDurationInterval);
     };
-  }, [isPlaying, timer, sessionComplete]);
+  }, [isPlaying, timer, timeOver, sessionComplete]);
 
   const handleNextStep = () => {
     const newResponses = [
@@ -512,6 +490,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
   const restartTimer = () => {
     setTimer(step.timer);
+    setTimeOver(false);
   };
 
   const canProceed = true;
@@ -571,7 +550,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
   }
 
   return (
-    <div className="flex flex-col max-w-lg  p-4  rounded-lg shadow-md mt-8 ml-8 border border-gray">
+    <div className="flex flex-col max-w-lg p-4 sm:mt-8 m-0 sm:rounded-lg sm:shadow-md sm:border border-gray">
       <audio
         ref={audioRef}
         src={`rpg-music-${pathway.musicPack || 2}.mp3`}
@@ -594,19 +573,13 @@ export const PathwayPlayer = observer(({ pathway }) => {
       ></div> */}
 
       <TimerNew
+        timer={timer}
+        restartTimer={restartTimer}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
         setTimer={setTimer}
-        timer={timer}
-        restartTimer={restartTimer}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
+        timeOver={timeOver}
       />
-
-      {/* <Timer
-        timer={timer}
-        restartTimer={restartTimer}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
-      /> */}
 
       <h2 className="text-md mb-2">
         <div>Step {currentStep + 1}:</div>
@@ -824,13 +797,13 @@ const QuestsBuilder = observer(() => {
   }, [pathname, setPathwayPlaying, setIsPathwayEditView]);
 
   return (
-    <div className="m-4 sm:mx-8">
+    <div className="m-0 sm:mx-8">
       {/* <HeroSection bgImg={backgroundCover} logo={questsLogo} /> */}
 
       {pathwayPlaying ? (
         <PathwayPlayer pathway={pathwayPlaying} />
       ) : (
-        <>
+        <div className="m-4 sm:mx-8">
           {/* <HorizontalPathwaysList
             pathways={pathways}
             title="Featured"
@@ -854,32 +827,10 @@ const QuestsBuilder = observer(() => {
             title="My Pathways"
             description="From Subcollection Users"
           />
-        </>
+        </div>
       )}
     </div>
   );
 });
 
 export default QuestsBuilder;
-
-// const StardewValleyStyle = () => {
-//   return (
-//     <div className="bg-[#F5F5DC] border-4 border-[#A0522D] shadow-lg p-4 rounded-lg flex items-center space-x-4">
-//       <div
-//         className="w-12 h-12 bg-cover rounded-full bg-no-repeat bg-center"
-//         style={{ backgroundImage: `url('path/to/your/icon.png')` }}
-//       ></div>
-//       <div className="flex flex-col">
-//         <h2 className="text-lg font-bold" style={{ color: "#8B4513" }}>
-//           Process Name
-//         </h2>
-//         <p className="text-sm" style={{ color: "#BC8F8F" }}>
-//           Short description of the process...
-//         </p>
-//         <button className="bg-[#DEB887] hover:bg-[#D2B48C] text-white font-semibold py-2 px-4 border border-[#8B4513] rounded mt-2">
-//           Start
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
