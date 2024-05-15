@@ -829,7 +829,7 @@ const QuestsBuilder = observer(() => {
       {pathwayPlaying ? (
         <PathwayPlayer pathway={pathwayPlaying} />
       ) : (
-        <div className="m-4 sm:mx-8">
+        <div className="m-4 sm:mx-0">
           {/* <HorizontalPathwaysList
             pathways={pathways}
             title="Featured"
