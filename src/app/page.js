@@ -46,6 +46,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import TimerNew from "@/components/TimerNew";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
 //move to static
 const frequencyLookup = {
@@ -56,21 +57,34 @@ const frequencyLookup = {
 };
 
 // to reusable UI
-const Checkbox = ({ label, checked, onChange }) => {
+const Checkbox1 = ({ label, checked, onChange }) => {
   return (
-    <label className="flex items-center space-x-3 cursor-pointer my-2 w-fit">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        className={`form-checkbox h-5 w-5 text-black ${
-          checked ? "bg-black" : "bg-white border"
-        }`}
-      />
-      <span className="text-xl">{label}</span>
-    </label>
+    <div className="flex items-center space-x-3 mb-2 cursor-pointer my-2 border p-2 w-full">
+      <Checkbox id={label} />
+      <label
+        htmlFor={label}
+        className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+      >
+        {label}
+      </label>
+    </div>
   );
 };
+// const Checkbox = ({ label, checked, onChange }) => {
+//   return (
+//     <label className="flex items-center space-x-3 cursor-pointer my-2 w-fit">
+//       <input
+//         type="checkbox"
+//         checked={checked}
+//         onChange={onChange}
+//         className={`form-checkbox h-5 w-5 text-black ${
+//           checked ? "bg-black" : "bg-white border"
+//         }`}
+//       />
+//       <span className="text-xl">{label}</span>
+//     </label>
+//   );
+// };
 
 const backgroundCover = "";
 
@@ -278,7 +292,7 @@ const ProgressBar = ({ currentStep, pathway }) => {
             <div
               key={index}
               className={`flex-1 h-2.5 transition-all duration-300 ${
-                index < currentStep ? "bg-primary" : "bg-gray-300"
+                index < currentStep ? "bg-primary" : "bg-muted"
               } ${index !== totalSteps - 1 ? "mr-0.5" : ""} rounded-full`}
             ></div>
           ))}
@@ -308,8 +322,18 @@ const ProgressBar = ({ currentStep, pathway }) => {
 //   );
 // };
 
-const SkipDialog = ({ handleNextStep, step }) => {
+const SkipDialog = ({ handleSkipStep, handleNextStep, step }) => {
   const [selectedOption, setSelectedOption] = useState("skip");
+
+  const handleSelect = () => {
+    if (selectedOption === "skip") {
+      handleSkipStep();
+    } else if (selectedOption === "change") {
+      handleNextStep();
+    } else if (selectedOption === "move") {
+      handleNextStep();
+    }
+  };
 
   const isSkip = selectedOption === "skip";
   const isChange = selectedOption === "change";
@@ -365,7 +389,10 @@ const SkipDialog = ({ handleNextStep, step }) => {
             </div>
           </div>
           <DrawerFooter>
-            <Button>Select</Button>
+            <DrawerClose asChild>
+              <Button onClick={handleSelect}>Select</Button>
+            </DrawerClose>
+
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
@@ -600,7 +627,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
       {step.responseType === "checklist" && (
         <div className="my-4">
           {step.options?.map((option, optionIndex) => (
-            <Checkbox
+            <Checkbox1
               key={optionIndex}
               label={option}
               checked={(userInputCheckbox || []).includes(option)}
@@ -646,17 +673,16 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
       <div className="flex gap-2">
         <Button className="w-full" onClick={handleNextStep}>
+          {/* {step.allowSkip && */}
           {/* {step.buttonText || "Complete"} */}
           <Check /> Complete
         </Button>
-        <SkipDialog handleNextStep={handleNextStep} step={step} />
+        <SkipDialog
+          handleSkipStep={handleSkipStep}
+          handleNextStep={handleNextStep}
+          step={step}
+        />
       </div>
-
-      {/* {step.allowSkip && (
-        <Button variant="outline" className="mt-2" onClick={handleSkipStep}>
-          Skip
-        </Button>
-      )} */}
     </div>
   );
 });
