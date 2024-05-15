@@ -127,6 +127,7 @@ const LogDetails = ({ log }) => {
       </div>
 
       <Button
+        className="w-1/2"
         onClick={() =>
           isSpecificPathway
             ? router.replace("/analytics", undefined, {
@@ -135,12 +136,14 @@ const LogDetails = ({ log }) => {
             : router.push(`/analytics?pathwayId=${log.pathway.id}`)
         }
       >
-        {isSpecificPathway ? "Hide All Time" : "All Time Analysis"}
+        {isSpecificPathway
+          ? "Hide all time analysis"
+          : "View all time analysis"}
       </Button>
 
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogTrigger>
-          <Button className="ml-2" variant="destructive">
+          <Button className="ml-2" variant="outline">
             Delete
           </Button>
         </DialogTrigger>
@@ -297,13 +300,7 @@ const LogCard = ({ log }) => {
 };
 
 const LogCardReward = ({ log }) => {
-  // const pathway = {
-  //   name: "Pathway 1",
-  //   emoji: "🥮",
-  //   backgroundColor: "#FDE68A",
-  // };
-
-  const { totalDuration, stepsCompleted, reward } = log;
+  const { reward } = log;
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div className="flex flex-col  justify-between p-2 border rounded-md">
@@ -325,32 +322,9 @@ const LogCardReward = ({ log }) => {
             <div className="text-red-500 text-sm flex items-center gap-1">
               -{reward.cost} <Gem size={14} />
             </div>
-            {/* <Badge className="">{totalDuration} seconds</Badge> */}
           </div>
         </div>
-        <div className="flex items-center flex-grow justify-end gap-2">
-          <Button
-            variant="outline"
-            onClick={() => {
-              setIsExpanded(!isExpanded);
-            }}
-          >
-            {isExpanded ? (
-              <>
-                {/* Hide */}
-                <ChevronUp size={20} />
-              </>
-            ) : (
-              <>
-                {/* View */}
-                <ChevronDown size={20} />
-              </>
-            )}
-          </Button>
-        </div>
       </div>
-
-      {/* {isExpanded && <LogDetails log={log} />} */}
     </div>
   );
 };

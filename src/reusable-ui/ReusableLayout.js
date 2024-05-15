@@ -122,10 +122,13 @@ const ReusableLayout = observer(({ children }) => {
             maxSize={20}
             className="max-w-[200px] min-w-[200px] h-[950px]"
           >
-            <div className="flex h-[52px] items-center justify-center px-2">
+            <Link
+              href="/"
+              className="flex h-[52px] items-center justify-center px-2"
+            >
               <Image src={logoImg} width={32} height={32} alt="logo" />
               <div className="text-xl font-bold ml-1">PlayRoutines</div>
-            </div>
+            </Link>
             <Separator />
             <VerticalNavbar
               links={[
@@ -207,10 +210,10 @@ const ReusableLayout = observer(({ children }) => {
 
                       <Flame />
                     </div>
-                    <div className="flex items-center gap-1">
+                    <Link href="/gamify" className="flex items-center gap-1">
                       {MobxStore.user?.gold}
                       <Gem />
-                    </div>
+                    </Link>
                     <Link href="/new-pathway">
                       <Button>
                         <Plus size={16} className="mr-2" /> Create Routine

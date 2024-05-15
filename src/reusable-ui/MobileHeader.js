@@ -39,10 +39,13 @@ const MobileHeader = observer(() => {
 
   return (
     <div className="flex justify-between items-center border-b relative h-[52px] z-10000 p-4">
-      <div className="flex h-[53px] items-center justify-center pr-[26px]">
+      <Link
+        href="/"
+        className="flex h-[53px] items-center justify-center pr-[26px]"
+      >
         <Image src={logoImg} width={32} height={32} alt="logo" />
         <div className="text-xl font-bold ml-1">PlayRoutines</div>
-      </div>
+      </Link>
       <div className="flex items-center gap-2">
         {/* <ModeToggle /> */}
         <Button onClick={toggleMenu} className="p-2">
@@ -54,7 +57,7 @@ const MobileHeader = observer(() => {
         </Button>
       </div>
 
-      {isMobileOpen && (
+      {isMobileOpen && user && (
         <div className="absolute top-[52px] left-0 w-full h-screen flex flex-col items-start px-2 bg-background">
           <div className="flex w-full px-2 justify-between mt-2 mx-4">
             <div className="flex gap-2 items-center">
@@ -63,14 +66,14 @@ const MobileHeader = observer(() => {
 
                 <Flame />
               </div>
-              <div className="flex items-center gap-1">
+              <Link href="/gamify" className="flex items-center gap-1">
                 {user?.gold}
                 <Gem />
-              </div>
+              </Link>
             </div>
             <div className="flex gap-2 items-center mr-4 pb-2">
               <ModeToggle />
-              {user && <UserNav user={user} logout={logout} />}
+              <UserNav user={user} logout={logout} />
             </div>
           </div>
           <Separator />
@@ -141,6 +144,22 @@ const MobileHeader = observer(() => {
               }))}
             />
           )}
+        </div>
+      )}
+
+      {isMobileOpen && !user && (
+        <div className="absolute top-[52px] left-0 w-full h-screen flex flex-col items-start px-2 bg-background">
+          <div className="flex flex-col gap-2 mx-4 mt-8 w-full pr-8">
+            <h2 className="text-xl font-semibold">Welcome!</h2>
+            <Link href="/signup" className="w-full">
+              <Button className="w-full">Create Free Account</Button>
+            </Link>
+            <Link href="/login" className="w-full">
+              <Button className="w-full" variant="outline">
+                Login
+              </Button>
+            </Link>
+          </div>
         </div>
       )}
     </div>

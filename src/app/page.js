@@ -14,9 +14,6 @@ import { observer } from "mobx-react";
 import MobxStore from "@/mobx";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-// import HeroSection from "../reusable-ui/HeroSection";
-// import habitsLogo from "./assets/habits-logo.png"
-
 import { LoadingSpinner } from "@/reusable-ui/LoadingSpinner";
 import { Slider } from "@/components/ui/slider";
 import { Check, CheckCircle2, MoreVertical, Settings } from "lucide-react";

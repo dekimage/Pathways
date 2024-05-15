@@ -13,7 +13,7 @@ import {
   dialogClose,
 } from "@/components/ui/dialog";
 import MobxStore from "@/mobx";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import EmojiPicker from "emoji-picker-react";
 import { ChevronDown, ChevronLeft, ChevronUp, Gem } from "lucide-react";
 import Circle from "@uiw/react-color-circle";
@@ -234,7 +234,7 @@ const ComboBoxWithHelper = ({
   options,
 }) => {
   return (
-    <div className="flex items-center justify-between   rounded mt-6">
+    <div className="flex items-center justify-between rounded mt-6 gap-2">
       <div className="flex justify-center items-center gap-1">
         <div className="text-md font-medium">{title}</div>
         <QuestionHelpBox>{helperChildren}</QuestionHelpBox>
@@ -330,8 +330,6 @@ const DayCircle = ({ day, isSelected, onToggle }) => {
 };
 
 const DaysOptions = ({ options, setOptions }) => {
-  console.log({ options });
-
   const toggleDay = (day) => {
     const index = options.indexOf(day);
     const newOptions = [...options];
@@ -406,7 +404,7 @@ const Step = forwardRef(
           <div className="flex flex-grow text-lg font-bold items-center py-4">
             {step.question && `${truncateString(step.question, 30)}`}
           </div>
-          <div className="flex gap-2 items-center pr-2">
+          <div className="flex gap-2 items-center pr-2 p-2">
             <DeleteStepModal handleDeleteStep={handleDeleteStep} />
 
             <Button variant="outline" onClick={toggleStep}>
@@ -609,6 +607,8 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
   const [openStepIndex, setOpenStepIndex] = useState(null);
   const stepRefs = useRef([]);
 
+  const pathname = usePathname();
+
   const {
     editFromInside,
     setPathwayPlaying,
@@ -736,7 +736,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
     <div className="m-4 sm:m-8 flex">
       <div className="flex flex-col rounded-lg max-w-[480px] w-full">
         <div className="text-2xl font-bold">
-          {pathwayToEdit ? "Edit" : "Create New"} Pathway
+          {pathwayToEdit ? "Edit" : "Create New"} Routine
         </div>
         <div className="mt-4 text-md font-medium">Icon</div>
         <div className="flex gap-4 items-center">
@@ -916,7 +916,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
 
               <ComboBoxCreate
                 title="Create New Trigger"
-                description="This trigger will be saved for future pathways."
+                description="This trigger will be saved for future routines."
                 value={pathway.trigger}
                 searchLabel={"Trigger"}
                 options={addValueToObjects(triggeredEvents)}
@@ -1014,15 +1014,20 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
         </Button>
       </div>
       <div class="fixed h-[53px] top-0 left-0 w-full bg-background border b-top flex justify-between items-center">
-        <div className="flex h-[53px] items-center justify-center px-2 mr-4 border-r pr-[26px]">
+        <div className="h-[53px] items-center justify-center px-2 mr-4 border-r pr-[26px] hidden sm:flex">
           <Image src={logoImg} width={32} height={32} alt="logo" />
           <div className="text-xl font-bold ml-1">PlayRoutines</div>
         </div>
-        <div className="flex flex-grow gap-2 pr-4 justify-between">
+        <div className="flex flex-grow gap-2 pr-4 sm:pl-0 pl-4 justify-between">
           <Button
             className="w-fit"
             variant="outline"
             onClick={() => {
+              if (pathname == "/new-pathway") {
+                setPathwayPlaying(false);
+                setIsPathwayEditView(false);
+                router.push("/");
+              }
               if (editFromInside) {
                 setIsPathwayEditView(false);
               } else {

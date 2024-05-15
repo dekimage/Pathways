@@ -66,33 +66,6 @@ const STATIC_MAX_PURCHASE_LIMITS = [
   { value: "custom", label: "Custom" },
 ];
 
-// const STATIC_REWARDS = [
-//   {
-//     cost: 50,
-//     name: "Watch 1 episode of anime",
-//     emoji: "📺",
-//     timesPurchased: 0,
-//     backgroundColor: "#F44E3B",
-//     maxPurchaseLimit: "unlimited", //single/every day/every week/ every month/ every year/ custom
-//   },
-//   {
-//     cost: 100,
-//     name: "Watch 1 movie",
-//     emoji: "🎥",
-//     timesPurchased: 0,
-//     backgroundColor: "#FE9200",
-//     maxPurchaseLimit: "single",
-//   },
-//   {
-//     cost: 200,
-//     name: "Eat 1 dessert",
-//     emoji: "🍰",
-//     timesPurchased: 0,
-//     backgroundColor: "#FCDC00",
-//     maxPurchaseLimit: "every day",
-//   },
-// ];
-
 const defaultReward = {
   cost: null,
   name: "",
@@ -310,23 +283,17 @@ const GamifyPage = observer(() => {
         <>
           <TitleDescription
             title="Rewards"
-            description="Spend gems you earn by completing routines to buy custom rewards."
+            description="Spend gems to buy custom rewards."
             button={
-              <Button onClick={() => setIsCreate(true)}>+ Create Reward</Button>
+              <Button
+                className="mt-2 sm:mt-0"
+                onClick={() => setIsCreate(true)}
+              >
+                + Create Reward
+              </Button>
             }
           />
-          {/* <div className="flex flex-col gap-4 mb-4">
-            {STATIC_REWARDS.map((reward, index) => (
-              <Reward
-                key={index}
-                reward={reward}
-                setIsCreate={setIsCreate}
-                isCreate={isCreate}
-                rewardState={rewardState}
-                setRewardState={setRewardState}
-              />
-            ))}
-          </div> */}
+
           <div className="flex flex-col gap-4 mb-4">
             {MobxStore.rewards.map((reward, index) => (
               <Reward
@@ -340,7 +307,7 @@ const GamifyPage = observer(() => {
             ))}
 
             {MobxStore.rewards.length === 0 &&
-              [0, 1, 2, 3].map((_, i) => <SkeletonDemo key={i} />)}
+              Array.from({ length: 6 }).map((_, i) => <SkeletonDemo key={i} />)}
           </div>
         </>
       )}
