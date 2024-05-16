@@ -1,862 +1,610 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import { FaPlay, FaPause, FaRedo, FaStar } from "react-icons/fa";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription } from "@/components/ui/card";
-import { MdClose } from "react-icons/md";
-import { HiOutlineCog6Tooth } from "react-icons/hi2";
-import { IoIosArrowBack } from "react-icons/io";
-import { MdOutlineMusicNote, MdOutlineMusicOff } from "react-icons/md";
-import PathwayBuilder from "./new-pathway/page";
-import logoImg from "@/assets/logo.png";
-import { observer } from "mobx-react";
-import MobxStore from "@/mobx";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-
-import { LoadingSpinner } from "@/reusable-ui/LoadingSpinner";
-import { Slider } from "@/components/ui/slider";
-import { Check, CheckCircle2, MoreVertical, Settings } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { formatTimeFromSteps } from "@/utils/transformers";
+  AlignVerticalDistributeCenter,
+  ArrowDown,
+  Check,
+  CloudRainWind,
+  Cross,
+  Gift,
+  Minus,
+  Plus,
+  Quote,
+  X,
+} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { HackerNews, ProductHunt, Reddit, TwitterX } from "@/assets/svgs";
 import Image from "next/image";
-import TimerNew from "@/components/TimerNew";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { FaDiscord } from "react-icons/fa";
+import logoImage from "@/assets/logo.png";
 
-//move to static
-const frequencyLookup = {
-  everyday: "today",
-  everyweek: "week",
-  everymonth: "month",
-  everyyear: "year",
-};
+const avatars = Array.from({ length: 5 });
 
-// to reusable UI
-const Checkbox1 = ({ label, checked, onChange }) => {
-  return (
-    <div className="flex items-center space-x-3 mb-2 cursor-pointer my-2 border p-2 w-full">
-      <Checkbox id={label} />
-      <label
-        htmlFor={label}
-        className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-      >
-        {label}
-      </label>
-    </div>
-  );
-};
-// const Checkbox = ({ label, checked, onChange }) => {
-//   return (
-//     <label className="flex items-center space-x-3 cursor-pointer my-2 w-fit">
-//       <input
-//         type="checkbox"
-//         checked={checked}
-//         onChange={onChange}
-//         className={`form-checkbox h-5 w-5 text-black ${
-//           checked ? "bg-black" : "bg-white border"
-//         }`}
-//       />
-//       <span className="text-xl">{label}</span>
-//     </label>
-//   );
-// };
+const FaqItem = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
-const backgroundCover = "";
-
-const MoodSelector = ({ mood, onSelectMood, showSingle = false }) => {
-  const moodEmojis = [
-    { mood: "Happy", emoji: "😊" },
-    { mood: "Sad", emoji: "😔" },
-    { mood: "Angry", emoji: "😠" },
-    { mood: "Surprised", emoji: "😲" },
-    { mood: "Calm", emoji: "😌" },
-  ];
-
-  const [selectedMood, setSelectedMood] = useState(mood || "");
-
-  const handleMoodClick = (mood) => {
-    setSelectedMood(mood);
-    onSelectMood(mood);
+  const toggleFAQ = () => {
+    setIsOpen(!isOpen);
   };
-
-  if (showSingle) {
-    const { mood, emoji } = moodEmojis.find((m) => m.mood === selectedMood) || {
-      mood: "",
-      emoji: "",
-    };
-    return (
-      <div
-        key={mood}
-        className={`text-4xl ${
-          selectedMood === mood ? "opacity-100" : "opacity-60"
-        } focus:outline-none`}
+  return (
+    <li>
+      <button
+        onClick={toggleFAQ}
+        className="relative flex gap-2 items-center w-full py-5 text-base font-semibold text-left border-t md:text-lg border-base-content/10 plausible-event-name=What+do+I+get+exactly?"
       >
-        {emoji}
-      </div>
-    );
-  }
+        <span className="flex-1 text-gray-400 ">first questio</span>
 
-  return (
-    <div className="flex justify-center gap-2 mb-8">
-      {moodEmojis.map(({ mood, emoji }) => (
-        <button
-          key={mood}
-          className={`text-4xl ${
-            selectedMood === mood ? "opacity-100" : "opacity-60"
-          } focus:outline-none`}
-          onClick={() => handleMoodClick(mood)}
-        >
-          {emoji}
-        </button>
-      ))}
-    </div>
+        {isOpen ? (
+          <Minus className="flex-shrink-0 w-4 h-4 ml-auto fill-current" />
+        ) : (
+          <Plus className="flex-shrink-0 w-4 h-4 ml-auto fill-current" />
+        )}
+      </button>
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="pb-5 leading-relaxed">
+          <div className="space-y-4 leading-relaxed">
+            <p>
+              3/ Access to our Discord with makers who build fast to stay
+              accountable!
+            </p>
+          </div>
+        </div>
+      </div>
+    </li>
   );
 };
 
-export const TitleDescription = ({ title, description, button }) => {
+function YouTubeEmbed() {
+  const embedId = "https://www.youtube.com/watch?v=Gli5allDOa8"; // Replace with actual ID
+
   return (
-    <div className="flex sm:items-center justify-between mb-4 sm:flex-row flex-col items-start">
-      <div className="space-y-1 mr-4">
-        <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
-        <p className="text-sm text-muted-foreground">{description}</p>
-      </div>
-      {button && button}
+    <div className="video-responsive w-full flex justify-center items-center">
+      <iframe
+        width="380"
+        height="280"
+        src={`https://www.youtube.com/embed/${embedId}`}
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        title="Embedded youtube"
+      />
     </div>
   );
-};
-
-{
-  /* <Carousel
-opts={{
-  align: "start",
-}}
-className="w-full"
->
-<CarouselContent>
-  {pathways.map((pathway, i) => (
-    <CarouselItem key={i} className="lg:basis-1/4 w-[270px]">
-      <PathwayCard key={i} pathway={pathway} />
-    </CarouselItem>
-  ))}
-</CarouselContent>
-<CarouselPrevious />
-<CarouselNext />
-</Carousel> */
 }
 
-export const HorizontalPathwaysList = ({ pathways, title, description }) => {
+const QuoteSingle = () => {
   return (
-    <div className="mb-8">
-      <TitleDescription title={title} description={description} />
-      <ScrollArea>
-        <div className="flex gap-4 h-full">
-          {pathways.map((pathway, i) => (
-            <PathwayCard key={i} pathway={pathway} />
-          ))}
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+    <div className="space-y-4 max-w-md mx-auto">
+      <Quote />
+      <p className="md:text-lg leading-relaxed">
+        It's a game changer. Comes with an easy-to-follow tutorial, and saves a
+        ton of time.
+      </p>
+      <div className="flex items-center gap-2">
+        <Avatar className="w-12 h-12">
+          <AvatarImage src="" />
+          <AvatarFallback>MG</AvatarFallback>
+        </Avatar>
+        <p>Yifan Goh</p>
+        <Badge className="bg-green-500">Founder</Badge>
+      </div>
     </div>
   );
 };
 
-const ResponseItem = ({ response, index }) => {
-  const [isShowing, setIsShowing] = useState(false);
+const freeFeatures = {
+  title: "Starter",
+  features: [
+    "5 Premium Routines from famous people and books",
+    "3 Custom Routines",
+    "2 Lists",
+    "7 Days Analytics",
+  ],
+  negativeFeatures: ["No Gamification"],
+  isPremium: false,
+  price: 0,
+};
 
+const premiumFeatures = {
+  title: "Premium",
+  features: [
+    "50 Premium Routines from famous people and books",
+    "Unlimited Custom Routines",
+    "Unlimited Lists",
+    "Unlimited Analytics",
+    "Gamification Feature",
+  ],
+  isPremium: true,
+  price: 99,
+};
+
+const PricingBox = ({ pricingData }) => {
+  const { title, features, isPremium, negativeFeatures, price } = pricingData;
   return (
-    <div className="flex flex-col bg-gray-100 mb-2 p-2 rounded-lg w-full">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700">
-          Step {index + 1}:
-        </span>
-        <span className="text-sm text-gray-500">
-          {response.timeSpent} seconds
-        </span>
-
-        {response.skipped ? (
-          <div className="w-[60px]"></div>
-        ) : (
-          <button
-            className="py-2 px-4 text-white rounded text-sm"
-            onClick={() => setIsShowing(!isShowing)}
-          >
-            {isShowing ? "Hide" : "View"}
-          </button>
-        )}
-      </div>
-      {isShowing && (
-        <div className="rounded-lg mt-2 p-4">
-          {response.responseType == "checklist" &&
-            response.response.map((r) => <div key={r}>{r}</div>)}
-
-          {response.responseType == "text" && <div>{response.response}</div>}
-
-          {response.responseType == "slider" && <div>{response.response}</div>}
-
-          {response.responseType == "mood" && (
-            <MoodSelector mood={response.response} showSingle />
-          )}
+    <div
+      className={`relative w-full bg-muted rounded ${
+        isPremium && "border border-primary"
+      }`}
+    >
+      {isPremium && (
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+          <span className="badge text-xs text-primary-content font-semibold border-0 bg-primary p-2 rounded">
+            POPULAR
+          </span>
         </div>
       )}
-    </div>
-  );
-};
+      {/* <div className="absolute -inset-[1px] rounded-[8px] bg-primary z-10"></div> */}
+      <div className="relative flex flex-col gap-5 lg:gap-8 z-10 bg-base-100 p-8 rounded-lg">
+        <div className="flex justify-between items-center gap-4">{title}</div>
 
-const PathwayPlayerHeader = ({
-  pathway,
-  isMusicPlaying,
-  handlePreviousStep,
-  setIsMusicPlaying,
-  setIsPathwayEditView,
-}) => {
-  return (
-    <div className="flex justify-between items-center mb-4">
-      <button
-        className=" rounded-full hover:bg-gray-100"
-        onClick={handlePreviousStep}
-      >
-        <IoIosArrowBack size={20} className="text-slate-600" />
-      </button>
-      <div className="flex items-center">
-        <div
-          className="w-fit mr-1 p-1 rounded"
-          style={{ background: pathway.backgroundColor }}
-        >
-          {pathway.emoji}
+        <div className="flex gap-2">
+          <div className="flex flex-col justify-end mb-[4px] text-lg">
+            <p className="relative opacity-80">
+              <span className="absolute bg-base-content h-[1.5px] inset-x-0 top-[48%]"></span>
+              {isPremium && <span className="line-through">$199</span>}
+            </p>
+          </div>
+
+          <p className="text-5xl tracking-tight font-extrabold">${price}</p>
+          <div className="flex flex-col justify-end mb-[4px]">
+            <p className="text-xs opacity-60 uppercase font-semibold">USD</p>
+          </div>
         </div>
-        <div className="text-xl font-bold">{pathway.name}</div>
-      </div>
 
-      <div>
-        <button
-          className="mr-2 rounded-full hover:bg-gray-100"
-          onClick={() => setIsMusicPlaying(!isMusicPlaying)}
-        >
-          {isMusicPlaying ? (
-            <MdOutlineMusicOff size={20} className="text-slate-600" />
-          ) : (
-            <MdOutlineMusicNote size={20} className="text-slate-600" />
-          )}
-        </button>
-
-        <button
-          className="mr-2 rounded-full hover:bg-gray-100"
-          onClick={() => setIsPathwayEditView(true)}
-        >
-          <HiOutlineCog6Tooth size={20} className="text-slate-600" />
-        </button>
-        <button
-          className="rounded-full hover:bg-gray-100"
-          onClick={() => setPathwayPlaying(null)}
-        >
-          <MdClose size={20} className="text-slate-600" />
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const ProgressBar = ({ currentStep, pathway }) => {
-  const totalSteps = pathway.steps.length;
-
-  return (
-    <div className="flex items-center justify-between mb-4">
-      <div className="flex-1 mr-4">
-        <div className="w-full flex rounded-full  h-2.5">
-          {Array.from({ length: totalSteps }, (_, index) => (
-            <div
-              key={index}
-              className={`flex-1 h-2.5 transition-all duration-300 ${
-                index < currentStep ? "bg-primary" : "bg-muted"
-              } ${index !== totalSteps - 1 ? "mr-0.5" : ""} rounded-full`}
-            ></div>
+        <ul className="space-y-2.5 leading-relaxed text-base flex-1">
+          {features.map((feature, i) => (
+            <li key={i} className="flex items-center gap-2">
+              <span>
+                <Check />
+              </span>
+              <span>{feature}</span>
+            </li>
           ))}
+          {negativeFeatures?.map((nfeature, i) => (
+            <li key={i} className="flex items-center gap-2 ">
+              <span>
+                <X className="text-gray-400/30" />
+              </span>
+              <span className="text-gray-400/30">{nfeature}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="space-y-2">
+          <Button className="w-full">Get Started</Button>
+          <p className="flex items-center justify-center gap-2 text-sm text-center text-gray-400/80 font-medium relative">
+            {isPremium
+              ? "Pay once. Build unlimited routines."
+              : "Try for free with limited features."}
+          </p>
         </div>
       </div>
-      <span className="text-sm font-medium text-gray-700">
-        {currentStep}/{totalSteps}
-      </span>
     </div>
   );
 };
 
-// const SkipDialog = ({ handleNextStep, step }) => {
-//   return (
-//     <Dialog isOpen={true} onClose={() => {}}>
-//       <DialogTrigger>
-//         <Button variant="outline" className="w-full">
-//           Skip
-//         </Button>
-//       </DialogTrigger>
-//       <DialogContent>
-//         <div className="flex flex-col items-center justify-center">
-//           <Button onClick={handleNextStep}>Next</Button>
-//         </div>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// };
-
-const SkipDialog = ({ handleSkipStep, handleNextStep, step }) => {
-  const [selectedOption, setSelectedOption] = useState("skip");
-
-  const handleSelect = () => {
-    if (selectedOption === "skip") {
-      handleSkipStep();
-    } else if (selectedOption === "change") {
-      handleNextStep();
-    } else if (selectedOption === "move") {
-      handleNextStep();
-    }
-  };
-
-  const isSkip = selectedOption === "skip";
-  const isChange = selectedOption === "change";
-  const isMove = selectedOption === "move";
+const LandingPage = () => {
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button variant="outline">Skip</Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
-          <DrawerHeader>
-            <DrawerTitle>Do you want to skip?</DrawerTitle>
-            <DrawerDescription>
-              Select the option you like best
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="p-4 pb-0">
-            <div className="flex flex-col items-center justify-center gap-2">
-              <div
-                className={`px-6 py-2 rounded border flex items-center w-[350px] cursor-pointer ${
-                  isSkip && "border border-2 border-primary"
-                }`}
-                onClick={() => setSelectedOption("skip")}
-              >
-                {isSkip && (
-                  <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
-                )}
-                Skip today
-              </div>
-              <div
-                className={`px-6 py-2 rounded border flex items-center  w-[350px] cursor-pointer ${
-                  isChange && "border border-2 border-primary"
-                }`}
-                onClick={() => setSelectedOption("change")}
-              >
-                {isChange && (
-                  <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
-                )}
-                Change the order
-              </div>
-              <div
-                className={`px-6 py-2 rounded border flex items-center  w-[350px] cursor-pointer ${
-                  isMove && "border border-2 border-primary"
-                }`}
-                onClick={() => setSelectedOption("move")}
-              >
-                {isMove && (
-                  <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
-                )}
-                Move step to end
-              </div>
+    <div>
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-20 lg:items-start px-8 py-8 lg:py-20">
+        <div className="flex flex-col gap-10 lg:gap-14 items-center justify-center text-center lg:text-left lg:items-start">
+          <h1 className="font-extrabold text-4xl lg:text-6xl tracking-tight md:-mb-4 flex flex-col gap-3 items-center lg:items-start">
+            Transform Knowledge into Action with PlayRoutines
+          </h1>
+
+          <p className="text-lg opacity-80 leading-relaxed">
+            The Only Self Improvement Platform that helps you apply knowledge,
+            and not accumulate it.
+          </p>
+
+          <div className="space-y-4">
+            <Button className="">Get PlayRoutines</Button>
+            <p className="text-sm md:text-base flex justify-center items-center gap-2 md:text-sm">
+              <Gift className="text-primary" />
+              <span className="text-primary">$100 off </span>for the first 3150
+              customers (10 left)
+            </p>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-center items-center align-center gap-3">
+            <div className="flex flex-row -space-x-5 avatar-group justy-start">
+              {avatars.map((avatar, i) => (
+                <Avatar key={i} className="avatar w-12 h-12">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              ))}
+            </div>
+
+            <div className="flex gap-1">
+              {avatars.map((_, i) => (
+                <div key={i}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    class="w-5 h-5 text-yellow-500"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-base text-gray-400/80">
+              <span className="font-semibold text-gray-400">94</span> people put
+              wisdom into practice
             </div>
           </div>
-          <DrawerFooter>
-            <DrawerClose asChild>
-              <Button onClick={handleSelect}>Select</Button>
-            </DrawerClose>
-
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
         </div>
-      </DrawerContent>
-    </Drawer>
-  );
-};
-
-export const PathwayPlayer = observer(({ pathway }) => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const step = pathway.steps[currentStep];
-  const [timer, setTimer] = useState(step.timer);
-  const [totalDuration, setTotalDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(step.autoplay);
-  const [userInput, setUserInput] = useState();
-  const [userInputCheckbox, setUserInputCheckbox] = useState([]);
-  const [responses, setResponses] = useState([]);
-  const [sessionComplete, setSessionComplete] = useState(false);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(pathway.autoPlayMusic);
-
-  const [distractions, setDistractions] = useState(null);
-  const [feedback, setFeedback] = useState(null);
-  const [startTime, setStartTime] = useState(Date.now());
-
-  const [timeOver, setTimeOver] = useState(false);
-
-  const { setPathwayPlaying } = MobxStore;
-
-  const audioRef = useRef(null);
-
-  const { isPathwayEditView, setIsPathwayEditView } = MobxStore;
-
-  useEffect(() => {
-    let interval = null;
-    let totalDurationInterval = null;
-
-    if (!sessionComplete) {
-      totalDurationInterval = setInterval(() => {
-        setTotalDuration((prevDuration) => prevDuration + 1);
-      }, 1000);
-    }
-
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setTimer((prevTimer) => {
-          if (prevTimer <= 0 && !timeOver) {
-            setTimeOver(true);
-
-            return 0;
-          } else if (timeOver) {
-            return prevTimer + 1;
-          } else {
-            return prevTimer - 1;
-          }
-        });
-      }, 1000);
-    } else if (!isPlaying && timer !== 0) {
-      clearInterval(interval);
-    }
-
-    return () => {
-      clearInterval(interval);
-      clearInterval(totalDurationInterval);
-    };
-  }, [isPlaying, timer, timeOver, sessionComplete]);
-
-  const handleNextStep = () => {
-    const newResponses = [
-      ...responses,
-      {
-        question: step.question,
-        responseType: step.responseType,
-        // variable response type based on the responseType
-        response: userInput || userInputCheckbox || "",
-        timeSpent: step.timer - timer,
-        skipped: false,
-        // idleTime: 0,
-      },
-    ];
-    setResponses(newResponses);
-
-    if (currentStep < pathway.steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-      setTimer(pathway.steps[currentStep + 1].timer);
-      setUserInput("");
-    } else {
-      setSessionComplete(true);
-    }
-  };
-
-  const handleSkipStep = () => {
-    const newResponses = [
-      ...responses,
-      {
-        question: step.question,
-        responseType: step.responseType,
-        response: "",
-        timeSpent: 0,
-        skipped: true,
-      },
-    ];
-    setResponses(newResponses);
-
-    if (currentStep < pathway.steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-      setTimer(pathway.steps[currentStep + 1].timer);
-    } else {
-      setSessionComplete(true);
-    }
-  };
-
-  const handlePreviousStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-      setTimer(pathway.steps[currentStep - 1].timer);
-    } else {
-      setPathwayPlaying(null);
-    }
-  };
-
-  const restartTimer = () => {
-    setTimer(step.timer);
-    setTimeOver(false);
-  };
-
-  const canProceed = true;
-  // timer === 0 && userInput.length >= step.minText;
-
-  if (isPathwayEditView) {
-    return <PathwayBuilder pathwayToEdit={pathway} />;
-  }
-
-  if (sessionComplete) {
-    return (
-      <div className="flex flex-col max-w-lg  p-6 rounded-lg shadow-md mt-8 ml-8 border border-gray">
-        <h2 className="text-2xl font-semibold  mb-4">Congratulations!</h2>
-        <div className="flex justify-center mb-4">
-          {responses.map((res, i) => (
-            <div key={i}>
-              {!res.skipped && (
-                <FaStar key={i} className="text-yellow-400 text-3xl" />
-              )}
-            </div>
-          ))}
-        </div>
-        <p className="text-gray-700 mb-4">You ve completed the session!</p>
-        <p className="text-sm text-gray-600 mb-2">
-          Total Duration: {Math.floor(totalDuration / 60)}:
-          {totalDuration % 60 < 10
-            ? `0${totalDuration % 60}`
-            : totalDuration % 60}
-        </p>
-        <div className="flex flex-col w-full">
-          {responses.map((response, index) => (
-            <ResponseItem response={response} key={index} index={index} />
-          ))}
-        </div>
-        <Button
-          className="w-full mt-2"
-          onClick={() => {
-            MobxStore.addLog(pathway, {
-              pathway: pathway,
-              startTime,
-              totalDuration,
-              timestamp: Date.now(),
-              ...(distractions && {
-                distractions: distractions,
-              }),
-              ...(feedback && { feedback }),
-              ...(pathway.gold && { goldEarned: pathway.gold }),
-              responses,
-            });
-            setPathwayPlaying(false);
-          }}
-        >
-          Complete
-        </Button>
       </div>
-    );
-  }
+      <div>Image here</div>
 
-  return (
-    <div className="flex flex-col max-w-lg p-4 sm:mt-8 m-0 sm:rounded-lg sm:shadow-md sm:border border-gray">
-      <audio
-        ref={audioRef}
-        src={`rpg-music-${pathway.musicPack || 2}.mp3`}
-        loop
-      />
+      <div className="p-8 md:p-12 flex flex-wrap items-center justify-center gap-4 md:gap-8">
+        <span className="text-xs text-[10px] opacity-50"> Featured on</span>
+        <Link href="https://www.producthunt.com/posts/playroutines">
+          <HackerNews />
+        </Link>
+        <Link href="https://www.producthunt.com/posts/playroutines">
+          <ProductHunt />
+        </Link>
+        <Link href="https://twitter.com/dekizeki">
+          <TwitterX />
+        </Link>
+        <Link href="https://www.producthunt.com/posts/playroutines">
+          <Reddit />
+        </Link>
+      </div>
 
-      <PathwayPlayerHeader
-        pathway={pathway}
-        isMusicPlaying={isMusicPlaying}
-        handlePreviousStep={handlePreviousStep}
-        setIsMusicPlaying={setIsMusicPlaying}
-        setIsPathwayEditView={setIsPathwayEditView}
-      />
+      <div className="relative py-24 px-8">
+        <div className="relative bg-neutral text-neutral-content rounded-lg p-8 md:p-16 max-w-lg mx-auto text-center text-lg bg-[#2E1A05]">
+          <div className="leading-relaxed space-y-4 md:space-y-6">
+            <div className="text-neutral-content/80 space-y-1">
+              <p>
+                <span className="text-red-400 font-medium">20 hrs</span>
+                problem 1...
+              </p>
+            </div>
+            <div className="text-xl font-semibold flex flex-col md:flex-row items-center justify-center gap-3">
+              <p>
+                <span className="text-red-400 font-medium">20 hrs</span>
+                problem 1...
+              </p>
+              <CloudRainWind />
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <ArrowDown /> There`s an easier way
+        </div>
+      </div>
 
-      <ProgressBar currentStep={currentStep} pathway={pathway} />
+      <div className="py-24">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-base-100 max-md:px-8 max-w-3xl">
+            <h2 className="font-bold text-3xl lg:text-5xl tracking-tight mb-8">
+              Supercharge your app instantly, launch faster, make $
+            </h2>
+            <div className="text-gray-400/80 leading-relaxed mb-8 lg:text-lg">
+              Login users, process payments and send emails at lightspeed. Spend
+              your time building your startup, not integrating APIs. ShipFast
+              provides you with the boilerplate code you need to launch, FAST.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-4 md:flex justify-start gap-4 md:gap-12 max-md:px-8 max-w-3xl mx-auto mb-8">
+        <div className="flex flex-col items-center justify-center gap-3 select-none cursor-pointer p-2 duration-100 text-gray-400/50">
+          <AlignVerticalDistributeCenter />
+          <span className="font-medium text-sm">Emails</span>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-3 select-none cursor-pointer p-2 duration-100 text-gray-400/50">
+          <AlignVerticalDistributeCenter />
+          <span className="font-medium text-sm">Emails</span>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-3 select-none cursor-pointer p-2 duration-100 text-gray-400/50">
+          <AlignVerticalDistributeCenter />
+          <span className="font-medium text-sm">Emails</span>
+        </div>
+      </div>
+      <div className="bg-muted">
+        <div className="max-w-3xl mx-auto flex flex-col md:flex-row justify-center md:justify-start md:items-center gap-12">
+          <div className="text-gray-400/80 leading-relaxed space-y-4 px-12 md:px-0 py-12 max-w-xl animate-opacity">
+            <p className="font-medium text-gray-400 text-lg">Title</p>
+            <ul className="space-y-1">
+              <li className="flex items-center gap-2">
+                <Check /> Send transactional emails
+              </li>
+              <li className="flex items-center gap-2 text-green-400 font-medium">
+                <Check /> Send transactional emails
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
-      {/* <div
-        className="h-24 bg-cover  bg-no-repeat bg-center w-full"
-        style={{ backgroundImage: `url(${pathway.background})` }}
-      ></div> */}
-
-      <TimerNew
-        timer={timer}
-        restartTimer={restartTimer}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
-        setTimer={setTimer}
-        timeOver={timeOver}
-      />
-
-      <h2 className="text-md mb-2">
-        <div>Step {currentStep + 1}:</div>
-        <div className="text-2xl my-2">{step.question}</div>
-
-        {step.context && <div className="py-2 text-sm">💡 {step.context}</div>}
-      </h2>
-
-      {step.responseType === "text" && (
-        <textarea
-          className="w-full p-3 border  rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent mb-4 min-h-[200px]"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Your response..."
-        />
-      )}
-
-      {step.responseType === "checklist" && (
-        <div className="my-4">
-          {step.options?.map((option, optionIndex) => (
-            <Checkbox1
-              key={optionIndex}
-              label={option}
-              checked={(userInputCheckbox || []).includes(option)}
-              onChange={() => {
-                setUserInputCheckbox((prevUserInput) =>
-                  prevUserInput.includes(option)
-                    ? prevUserInput.filter((item) => item !== option)
-                    : [...prevUserInput, option]
-                );
-              }}
+      <section className="bg-base-100">
+        <div className="py-24 max-md:px-8 max-w-3xl mx-auto">
+          <div className="leading-relaxed text-gray-400/80 mb-12 max-w-xl mx-auto">
+            <Image
+              src="/images/hero.png"
+              alt="Dejan Gavrilovic"
+              width={200}
+              height={200}
+              className="w-32 h-32 md:w-52 md:h-52 rounded-lg float-left mr-8 mb-8 object-center object-cover"
             />
-          ))}
+            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+              Hey, it's Marc 👋
+            </p>
+            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+              In 2018, I believed I was Mark Zuckerberg, built a startup for 1
+              year, and got 0 users...
+            </p>
+            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+              A few years after my burnout, I restarted the journey differently:
+              I shipped like a madman—
+            </p>
+            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+              A few years after my burnout, I restarted the journey differently:
+              I shipped like a madman—
+            </p>
+            <ul className="list-inside list-decimal space-y-1.5 ml-5 mb-5">
+              <li>
+                <span className="text-gray-400 font-medium">1. Save Time</span>
+                and focus on what matters: building a business
+              </li>
+              <li>
+                <span className="text-gray-400 font-medium">
+                  2. Avoid headaches
+                </span>
+                like emails ending in spam or handling Stripe subscriptions
+              </li>
+            </ul>
+          </div>
+
+          <YouTubeEmbed />
+
+          <QuoteSingle />
         </div>
-      )}
+      </section>
 
-      {step.responseType === "slider" && (
-        <div className="mb-8">
-          <Slider
-            defaultValue={[userInput || 1]}
-            max={step.sliderMax || 10}
-            step={step.sliderMin || 1}
-            onValueChange={(value) => {
-              setUserInput(value);
-            }}
-            className="mt-4"
-          />
-          <div className="flex justify-between mt-2">
-            <div>{step.sliderMin}</div>
-            <div>{step.sliderMax}</div>
+      <section className="bg-base-200 overflow-hidden" id="pricing">
+        <div className="py-24 pb-0 px-8 max-w-5xl mx-auto">
+          <div className="flex flex-col text-center w-full mb-20">
+            <p className="font-medium text-primary mb-8">Pricing</p>
+            <h2 className="font-bold text-3xl lg:text-5xl tracking-tight mb-8 max-w-2xl mx-auto">
+              Save hours of repetitive code, ship fast, get profitable!
+            </h2>
+            <p className="text-sm md:text-base flex justify-center items-center gap-2 md:text-sm">
+              <Gift className="text-primary" />
+              <span className="text-primary">$100 off </span>for the first 3150
+              customers (10 left)
+            </p>
           </div>
-          <div className="text-2xl w-full flex justify-center">
-            {userInput || 1} / {step.sliderMax || 10}
+
+          <div className="relative flex flex-col lg:flex-row items-center lg:items-stretch gap-8">
+            <PricingBox pricingData={freeFeatures} />
+            <PricingBox pricingData={premiumFeatures} />
           </div>
         </div>
-      )}
 
-      {step.responseType === "mood" && (
-        <MoodSelector
-          mood={userInput}
-          onSelectMood={(mood) => setUserInput(mood)}
-        />
-      )}
+        <div className="space-y-4 mx-auto max-w-md mt-24">
+          <QuoteSingle />
+        </div>
+      </section>
 
-      <div className="flex gap-2">
-        <Button className="w-full" onClick={handleNextStep}>
-          {/* {step.allowSkip && */}
-          {/* {step.buttonText || "Complete"} */}
-          <Check /> Complete
-        </Button>
-        <SkipDialog
-          handleSkipStep={handleSkipStep}
-          handleNextStep={handleNextStep}
-          step={step}
-        />
-      </div>
-    </div>
-  );
-});
-
-export const PathwayCard = observer(({ pathway, listId }) => {
-  const { name, description, emoji, time, duration, steps, backgroundColor } =
-    pathway;
-  const {
-    setIsPathwayEditView,
-    setPathwayPlaying,
-    isMobileOpen,
-    deletePathway,
-    removeFromList,
-  } = MobxStore;
-
-  const pathname = usePathname();
-
-  const isInList = pathname.includes("list") && listId;
-
-  const totalDurationCalced = formatTimeFromSteps(steps);
-
-  return (
-    !isMobileOpen && (
-      <Card className=" w-64 h-[350px] flex flex-col justify-between backdrop-blur-md relative">
-        <div className="relative h-full">
-          <div className="absolute  flex justify-center items-center space-x-4 top-[10px] left-[10px] z-[-100]">
-            {/* <div className="w-32 h-16 bg-yellow-500 rounded-full blur-md"></div>
-            <div className="w-32 h-16 bg-orange-500 rounded-lg blur-md"></div>
-             */}
-            <div
-              className="w-28 h-20  rounded-xl blur-lg"
-              style={{ backgroundColor: backgroundColor }}
-            ></div>
-          </div>
-          {/* <div className="absolute inset-0 flex justify-center items-center space-x-4 top-[260px] left-[150px] z-[-100]">
-            <div className="w-20 h-12 bg-yellow-500 rounded-xl blur-md"></div>
-          </div> */}
-
-          <div className="relative w-full h-full p-4 backdrop-blur-lg bg-white/30 rounded-lg  shadow-xl flex flex-col items-between z-100">
-            <div className="flex flex-grow flex-col">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="absolute top-[16px] right-[16px] p-2"
-                  >
-                    <MoreVertical className="h-4 w-4" />
-                    <span className="sr-only">More</span>
-                    {/* <HiOutlineCog6Tooth size={20} className="text-slate-600" /> */}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setPathwayPlaying(pathway);
-                      setIsPathwayEditView(false);
-                    }}
-                  >
-                    Edit
-                  </DropdownMenuItem>
-                  <Link href={`/analytics/?pathwayId=${pathway.id}`} passHref>
-                    <DropdownMenuItem>View Stats</DropdownMenuItem>
-                  </Link>
-                  {isInList ? (
-                    <DropdownMenuItem
-                      onClick={() => removeFromList(listId, pathway.id)}
-                    >
-                      Remove From List
-                    </DropdownMenuItem>
-                  ) : (
-                    <DropdownMenuItem onClick={() => deletePathway(pathway.id)}>
-                      Delete
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <div
-                className="flex justify-center items-center  w-fit p-4 text-4xl rounded-lg"
-                style={{ backgroundColor: backgroundColor }}
+      <section id="faq">
+        <div className="py-24 px-8 max-w-7xl mx-auto flex flex-col md:flex-row gap-12">
+          <div className="flex flex-col text-left basis-1/2">
+            <p className="sm:text-4xl text-3xl font-extrabold text-gray-400 mb-8">
+              Frequently Asked Questions
+            </p>
+            <div className="text-gray-400/80">
+              Have another question? Contact me on
+              <a
+                href="mailto:dejan.gavrilovikk@gmail.com"
+                className="text-primary"
               >
-                {emoji}
+                {" "}
+                Email
+              </a>{" "}
+              or
+              <a href="https://twitter.com/dekizeki" className="text-primary">
+                {" "}
+                Twitter
+              </a>
+            </div>
+          </div>
+          <ul className="basis-1/2">
+            <FaqItem />
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <div className="py-24 px-4 max-w-7xl mx-auto">
+          <div className="flex flex-col text-center w-full mb-20">
+            <div className="mb-8">
+              <h2 className="sm:text-5xl text-4xl font-extrabold text-gray-400">
+                100+ people apply wisdom into practice daily
+              </h2>
+            </div>
+            <p className="lg:w-2/3 mx-auto leading-relaxed text-base text-gray-400/80">
+              They optimize each day with PlayRoutines.
+            </p>
+          </div>
+
+          <ul className="max-w-7xl mx-auto md:columns-2 lg:columns-3 xl:columns-4 space-y-4 md:space-y-6 md:gap-6">
+            <li className="break-inside-avoid max-md:flex justify-center">
+              <figure className="relative h-full w-full max-w-[550px] p-6 rounded-xl border border-base-content/20 bg-[#2d1e1a] ">
+                <blockquote className="relative">
+                  {" "}
+                  <div className="text-base xl:text-sm text-gray-400">
+                    "Really easy to use. The tutorials are really useful and
+                    explains how everything works. Hope to ship my next project
+                    really fast!"
+                  </div>
+                </blockquote>
+                <figcaption className="relative flex items-center justify-start gap-4 pt-4 mt-4 border-t border-base-content/10">
+                  <div className="overflow-hidden rounded-full bg-base-300 shrink-0">
+                    <Avatar className="w-12 h-12" src="">
+                      <AvatarImage src="" />
+                      <AvatarFallback>MG</AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <div className="w-full flex items-end justify-between gap-2">
+                    <div>
+                      <div className="text-sm font-medium text-gray-400">
+                        Sergiu Chiriac
+                      </div>
+                      <div className="mt-0.5 text-sm text-gray-400/60">
+                        @sergi
+                      </div>
+                    </div>
+
+                    <a
+                      href="https://www.producthunt.com/posts/shipfast-2?comment=2707228"
+                      target="_blank"
+                      class="shrink-0 "
+                      aria-label="See user review on Product Hunt"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 26.245 26.256"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          d="M26.254 13.128c0 7.253-5.875 13.128-13.128 13.128S-.003 20.382-.003 13.128 5.872 0 13.125 0s13.128 5.875 13.128 13.128"
+                          fill="#da552f"
+                        ></path>
+                        <path
+                          d="M14.876 13.128h-3.72V9.2h3.72c1.083 0 1.97.886 1.97 1.97s-.886 1.97-1.97 1.97m0-6.564H8.53v13.128h2.626v-3.938h3.72c2.538 0 4.595-2.057 4.595-4.595s-2.057-4.595-4.595-4.595"
+                          fill="#fff"
+                        ></path>
+                      </svg>
+                    </a>
+                  </div>
+                </figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <div className="pb-32 pt-16 px-8 max-w-3xl mx-auto flex flex-col items-center gap-8 md:gap-12">
+          <div className="text-center">
+            <h2 className="relative font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-4 md:mb-8 ">
+              Turn notes into actionable routines
+            </h2>
+            <p className="relative text-lg text-gray-400/80">
+              Don`t let the hours spent reading and learning go to waste.
+            </p>
+          </div>
+          <Button>Get Play Routines</Button>
+        </div>
+      </section>
+
+      <footer className="bg-base-200 border-t border-base-content/10">
+        <div className="max-w-7xl mx-auto px-8 py-24">
+          <div className=" flex lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
+            <div className="w-80 max-w-full flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
+              <div className="flex gap-2 justify-center md:justify-start items-center">
+                <Image src={logoImage} alt="logo" width={24} height={24} />
+                <div className="font-extrabold tracking-tight text-base md:text-lg">
+                  PlayRoutines
+                </div>
               </div>
-              <div className="my-2">
-                <div className="text-xl bold mb-2">{name}</div>
-                <CardDescription className="text-foreground">
-                  {description}
-                </CardDescription>
-              </div>
-              <div className="my-2">
-                <Badge variant="screen" className="mr-2">
-                  {totalDurationCalced}
-                </Badge>
-                <Badge variant="screen" className="mr-2">
-                  {steps?.length} Steps
-                </Badge>
+              <p className="mt-3 text-sm text-gray-400/80 leading-relaxed">
+                Apply your knowledge, don`t accumulate it <br /> Copyright ©
+                2024 - All rights reserved
+              </p>
+              <div className="mt-8 space-y-2 md:hidden">
+                <p className="font-medium text-sm">
+                  We build together on Discord!
+                </p>
+                <div className="flex justify-center">
+                  <button className="flex p-2 rounded-[10px] text-sm items-center gap-2 btn text-white border-[#7289da] bg-[#7289da] hover:bg-[#596dac] active:bg-[#596dac] hover:border-[#596dac] active:border-[#596dac] btn-sm">
+                    <FaDiscord />
+                    Join Us
+                  </button>
+                </div>
               </div>
             </div>
-            {pathway.timeType == "time" && (
-              <div className="text-sm  text-center w-fit">
-                {pathway.progress || 0} / {pathway.completionLimit}{" "}
-                {frequencyLookup[pathway.frequency]}
+            <div className="flex-grow flex flex-wrap md:pl-24 -mb-10 md:mt-0 mt-10 text-center md:text-left">
+              <div className="lg:w-1/3 md:w-1/2 w-full px-4">
+                <div className="footer-title font-semibold text-gray-400 tracking-widest text-sm md:text-left mb-3">
+                  LINKS
+                </div>
+                <div className="flex flex-col justify-center items-center md:items-start gap-2 mb-10 text-sm">
+                  <a className="link link-hover" href="#pricing">
+                    Pricing
+                  </a>
+                  <a className="link link-hover" href="#faq">
+                    FAQ
+                  </a>
+                  <a
+                    href="mailto:dejan.gavrilovikk@gmail.com"
+                    target="_blank"
+                    class="link link-hover"
+                  >
+                    Support
+                  </a>
+                </div>
               </div>
-            )}
-
-            <Button
-              className="w-full mt-2"
-              onClick={() => MobxStore.setPathwayPlaying(pathway)}
-            >
-              <FaPlay className="mr-2 h-3 w-3" />
-              Play
-            </Button>
+              <div className="lg:w-1/3 md:w-1/2 w-full px-4">
+                <div className="footer-title font-semibold text-gray-400 tracking-widest text-sm md:text-left mb-3">
+                  LEGAL
+                </div>
+                <div className="flex flex-col justify-center items-center md:items-start gap-2 mb-10 text-sm">
+                  <Link className="link link-hover" target="blank" href="/tos">
+                    Terms of services
+                  </Link>
+                  <Link
+                    className="link link-hover"
+                    target="blank"
+                    href="/privacy-policy"
+                  >
+                    Privacy policy
+                  </Link>
+                </div>
+              </div>
+              <div className="lg:w-1/3 md:w-1/2 w-full px-4">
+                <div className="footer-title font-semibold text-gray-400 tracking-widest text-sm md:text-left mb-3">
+                  MORE
+                </div>
+                <div className="flex flex-col justify-center items-center md:items-start gap-2 mb-10 text-sm">
+                  <Link className="link link-hover" href="/mybooklist">
+                    My book list
+                  </Link>
+                  <Link className="link link-hover" href="/100questions">
+                    The 100 Questions
+                  </Link>
+                  <Link className="link link-hover" href="/routinesgallery">
+                    Routines Gallery
+                  </Link>
+                  <Link className="link link-hover" href="/routinesgallery">
+                    Use Cases
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </Card>
-    )
-  );
-});
-
-const QuestsBuilder = observer(() => {
-  const pathwaysNotOwnedByUser = MobxStore.pathways.filter(
-    (pathway) => pathway.creatorId !== MobxStore.user?.uid
-  );
-
-  const {
-    userPathways,
-    pathwayPlaying,
-    setPathwayPlaying,
-    setIsPathwayEditView,
-  } = MobxStore;
-  const pathname = usePathname();
-  useEffect(() => {
-    return () => {
-      setPathwayPlaying(null);
-      setIsPathwayEditView(false);
-    };
-  }, [pathname, setPathwayPlaying, setIsPathwayEditView]);
-
-  return (
-    <div className="m-0 sm:mx-8">
-      {/* <HeroSection bgImg={backgroundCover} logo={questsLogo} /> */}
-
-      {pathwayPlaying ? (
-        <PathwayPlayer pathway={pathwayPlaying} />
-      ) : (
-        <div className="m-4 sm:mx-0">
-          {/* <HorizontalPathwaysList
-            pathways={pathways}
-            title="Featured"
-            description="Get started with these pathways."
-          /> */}
-
-          <HorizontalPathwaysList
-            pathways={MobxStore.recentPathways}
-            title="Recently Played"
-            description="Continue where you left off..."
-          />
-
-          <HorizontalPathwaysList
-            pathways={MobxStore.topPlayedPathways}
-            title="Most Played"
-            description="Continue with your most played pathways."
-          />
-
-          <HorizontalPathwaysList
-            pathways={userPathways}
-            title="My Pathways"
-            description="From Subcollection Users"
-          />
-        </div>
-      )}
+      </footer>
     </div>
   );
-});
+};
 
-export default QuestsBuilder;
+export default LandingPage;

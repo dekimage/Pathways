@@ -2,7 +2,8 @@
 import { observer } from "mobx-react";
 import { useState } from "react";
 import MobxStore from "@/mobx";
-import { HorizontalPathwaysList, PathwayPlayer } from "../page";
+import { PathwayPlayer } from "../dashboard/page";
+import { HorizontalPathwaysList } from "../today/pathwaycomponents";
 
 const ExplorePage = observer(() => {
   const { pathwayPlaying } = MobxStore;

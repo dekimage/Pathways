@@ -58,7 +58,7 @@ const MobileHeader = observer(() => {
       </div>
 
       {isMobileOpen && user && (
-        <div className="absolute top-[52px] left-0 w-full h-screen flex flex-col items-start px-2 bg-background">
+        <div className="absolute top-[52px] left-0 w-full min-h-screen h-full flex flex-col items-start px-2 bg-background">
           <div className="flex w-full px-2 justify-between mt-2 mx-4">
             <div className="flex gap-2 items-center">
               <div className="flex items-center gap-1">
@@ -66,7 +66,11 @@ const MobileHeader = observer(() => {
 
                 <Flame />
               </div>
-              <Link href="/gamify" className="flex items-center gap-1">
+              <Link
+                href="/gamify"
+                className="flex items-center gap-1"
+                onClick={() => setIsMobileOpen(false)}
+              >
                 {user?.gold}
                 <Gem />
               </Link>
@@ -76,14 +80,17 @@ const MobileHeader = observer(() => {
               <UserNav user={user} logout={logout} />
             </div>
           </div>
+          <Link href="/premium" className="w-full">
+            <Button className="w-full">Upgrade Premium</Button>
+          </Link>
           <Separator />
           <VerticalNavbar
             links={[
               {
                 title: "Dashboard",
                 icon: LayoutDashboard,
-                variant: isRoute("/"),
-                href: "/",
+                variant: isRoute("Dashboard"),
+                href: "dashboard",
                 callBack: () => setIsMobileOpen(false),
               },
               {
@@ -123,7 +130,7 @@ const MobileHeader = observer(() => {
             onClick={() => setIsMobileOpen(false)}
           >
             <div className="flex justify-center items-center w-full">
-              <Button className="w-full">
+              <Button className="w-full" variant="outline">
                 <Plus size={16} className="mr-2" /> Create Routine
               </Button>
             </div>

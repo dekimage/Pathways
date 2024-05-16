@@ -61,7 +61,7 @@ export const LoginForm = observer(() => {
 
     if (isAuthenticated) {
       setIsLoading(false);
-      router.push("/");
+      router.push("/dashboard");
       return;
     }
 
@@ -70,12 +70,16 @@ export const LoginForm = observer(() => {
       password,
     });
     setIsLoading(false);
-    router.push("/");
+    router.push("/dashboard");
   }
 
   return (
     <Form {...form}>
-      <form id="login" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        id="login"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="email"
@@ -131,7 +135,7 @@ const LoginCard = observer(() => {
   const { signInWithGoogle } = MobxStore;
   const handleGoogleSignIn = async () => {
     await signInWithGoogle();
-    router.push("/");
+    router.push("/dashboard");
   };
   return (
     <Card className="min-w-3xl">

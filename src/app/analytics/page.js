@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { TitleDescription } from "../page";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
@@ -48,6 +48,9 @@ import {
 import { format } from "date-fns";
 import { PodcastEmptyPlaceholder } from "@/reusable-ui/EmptyList";
 import Link from "next/link";
+import { TitleDescription } from "../today/pathwaycomponents";
+import { PremiumLabel } from "@/reusable-ui/ReusableLayout";
+import { premiumUtil } from "@/utils/premium";
 
 const FancyTag = ({ color, text }) => {
   let backgroundColor, textColor;
@@ -377,8 +380,10 @@ const LogsPage = observer(() => {
     }
   };
 
+  const { analyticsOk } = premiumUtil();
+
   return (
-    <div className="h-[90vh] max-w-[600px] m-4 sm:mx-8">
+    <div className="h-full max-w-[600px] m-4 sm:mx-8">
       <TitleDescription
         title="Analysis"
         description="Analyse past data to improve your journey."
@@ -432,6 +437,16 @@ const LogsPage = observer(() => {
           </Popover>
         </div>
       </div>
+
+      {!analyticsOk.ok && (
+        <Link
+          href="/premium"
+          className="text-xs flex gap-2 items-center p-2 border rounded bg-yellow-100 mt-2 text-black"
+        >
+          You are currently limited to 7 days of analysis. Upgrade to
+          <Badge className="">Premium</Badge>to see all your logs.
+        </Link>
+      )}
 
       {(pathwayId || rewardId) && (
         <div className="my-4">
@@ -532,8 +547,8 @@ const LogsPage = observer(() => {
             title="No Logs Today"
             description="Play Routines to add logs."
           >
-            <Link href="/">
-              <Button>Go to Dashboard</Button>
+            <Link href="/dashboard">
+              <Button variant="outline">Go to Dashboard</Button>
             </Link>
           </PodcastEmptyPlaceholder>
         )}

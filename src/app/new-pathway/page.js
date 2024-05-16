@@ -17,7 +17,7 @@ import { usePathname, useRouter } from "next/navigation";
 import EmojiPicker from "emoji-picker-react";
 import { ChevronDown, ChevronLeft, ChevronUp, Gem } from "lucide-react";
 import Circle from "@uiw/react-color-circle";
-import { DEFAULT_COLORS, getRandomColor } from "../gamify/page";
+import { getRandomColor } from "../gamify/page";
 import { Slider } from "@/components/ui/slider";
 import { ComboBoxCreate } from "@/reusable-ui/ComboBoxCreate";
 import { addValueToObjects } from "@/utils/transformers";
@@ -25,6 +25,9 @@ import { observer } from "mobx-react";
 import Image from "next/image";
 import logoImg from "@/assets/logo.png";
 import randomUnicodeEmoji from "random-unicode-emoji";
+import { DEFAULT_COLORS } from "@/data";
+import { premiumUtil } from "@/utils/premium";
+import { PremiumLabel } from "@/reusable-ui/ReusableLayout";
 
 // add these to utils
 
@@ -607,6 +610,8 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
   const [openStepIndex, setOpenStepIndex] = useState(null);
   const stepRefs = useRef([]);
 
+  const { routinesOk } = premiumUtil();
+
   const pathname = usePathname();
 
   const {
@@ -722,7 +727,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
       // Create
       await MobxStore.addUserPathway(pathway);
       setPathway(DEFAULT_PATHWAY);
-      router.push("/");
+      router.push("/dashboard");
     }
   };
 
@@ -731,6 +736,17 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
     newSteps[stepIndex].options = newOptions;
     setPathway({ ...pathway, steps: newSteps });
   };
+
+  if (!routinesOk.ok && !pathwayToEdit) {
+    return (
+      <div className="m-4 sm:m-8 flex">
+        <div className="flex flex-col rounded-lg max-w-[480px] w-full">
+          <div className="text-2xl font-bold mb-4">Create New Routine</div>
+          <PremiumLabel label="routines" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="m-4 sm:m-8 flex">
@@ -1026,7 +1042,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
               if (pathname == "/new-pathway") {
                 setPathwayPlaying(false);
                 setIsPathwayEditView(false);
-                router.push("/");
+                router.push("/dashboard");
               }
               if (editFromInside) {
                 setIsPathwayEditView(false);

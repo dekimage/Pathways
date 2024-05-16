@@ -1,7 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TitleDescription } from "../page";
 import { DialogEmojiPicker } from "../new-pathway/page";
 import { useEffect, useState } from "react";
 import { Combobox } from "@/reusable-ui/ComboBox";
@@ -10,46 +9,11 @@ import Circle from "@uiw/react-color-circle";
 import MobxStore from "@/mobx";
 import { observer } from "mobx-react";
 import { ChevronLeft, Gem } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-
-export function SkeletonDemo() {
-  return (
-    <div className="flex items-center space-x-4 w-full">
-      <Skeleton className="h-12 w-full rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[250px]" />
-        <Skeleton className="h-4 w-full" />
-      </div>
-    </div>
-  );
-}
-
-export const DEFAULT_COLORS = [
-  "#F44E3B",
-  "#FE9200",
-  "#FCDC00",
-  "#edff86",
-  "#D6CE93",
-  "#EFEBCE",
-  "#D1F5BE",
-  "#9CDE9F",
-  "#B8F3FF",
-  "#907AD6",
-  "#DABFFF",
-  "#0E6BA8",
-  "#3160ED",
-  "#2a9d8f",
-  "#b5838d",
-  "#6d6875",
-  "#e5989b",
-  "#edf6f9",
-  "#f5ebe0",
-  "#ffb5a7",
-  "#adc178",
-  "#ca6702",
-  "#f5cac3",
-  "#e6ccb2",
-];
+import { TitleDescription } from "../today/pathwaycomponents";
+import { DEFAULT_COLORS } from "@/data";
+import { SkeletonDemo } from "@/reusable-ui/Skeleton";
+import Link from "next/link";
+import { premiumUtil } from "@/utils/premium";
 
 export function getRandomColor() {
   const randomIndex = Math.floor(Math.random() * DEFAULT_COLORS.length);
@@ -75,8 +39,14 @@ const defaultReward = {
   backgroundColor: "transparent",
 };
 
-const RewardBuilder = ({ setIsCreate, rewardState, setRewardState }) => {
+const RewardBuilder = ({
+  setIsCreate,
+  rewardState,
+  setRewardState,
+  gamifyOk,
+}) => {
   const [hex, setHex] = useState("#F44E3B");
+  console.log(rewardState);
   const [reward, setReward] = useState(
     rewardState ? rewardState : defaultReward
   );
@@ -111,7 +81,7 @@ const RewardBuilder = ({ setIsCreate, rewardState, setRewardState }) => {
         <ChevronLeft size="16" /> Back
       </Button>
       <TitleDescription
-        title="Create New Reward"
+        title={rewardState ? "Edit Reward" : "Create New Reward"}
         description="Buy rewards using coins you earn by completing pathways"
       />
       <div className="flex flex-col">
@@ -183,9 +153,15 @@ const RewardBuilder = ({ setIsCreate, rewardState, setRewardState }) => {
             <div>{reward.customDays > 1 ? "days" : "day"}</div>
           </div>
         )}
-        <Button className="mt-4" onClick={() => saveReward(reward)}>
-          Save
-        </Button>
+        {gamifyOk ? (
+          <Button className="mt-4" onClick={() => saveReward(reward)}>
+            Save
+          </Button>
+        ) : (
+          <Link href="/premium" className="mt-4 w-full">
+            <Button className="mt-4 w-full">Upgrade to Premium</Button>
+          </Link>
+        )}
 
         <Button
           variant="outline"
@@ -197,18 +173,19 @@ const RewardBuilder = ({ setIsCreate, rewardState, setRewardState }) => {
         >
           Cancel
         </Button>
-
-        <Button
-          variant="destructive"
-          className="mt-4"
-          onClick={() => {
-            MobxStore.deleteReward(reward);
-            setIsCreate(false);
-            setRewardState(null);
-          }}
-        >
-          Delete
-        </Button>
+        {rewardState && (
+          <Button
+            variant="destructive"
+            className="mt-4"
+            onClick={() => {
+              MobxStore.deleteReward(reward);
+              setIsCreate(false);
+              setRewardState(null);
+            }}
+          >
+            Delete
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -271,6 +248,7 @@ const Reward = ({
 const GamifyPage = observer(() => {
   const [isCreate, setIsCreate] = useState(false);
   const [rewardState, setRewardState] = useState(null);
+  const { gamifyOk } = premiumUtil();
   return (
     <div className="h-full max-w-[600px] m-4 sm:mx-8">
       {isCreate ? (
@@ -287,12 +265,25 @@ const GamifyPage = observer(() => {
             button={
               <Button
                 className="mt-2 sm:mt-0"
-                onClick={() => setIsCreate(true)}
+                onClick={() => {
+                  setRewardState(null);
+                  setIsCreate(true);
+                }}
               >
                 + Create Reward
               </Button>
             }
           />
+
+          {!gamifyOk && (
+            <Link
+              href="/premium"
+              className="text-xs flex gap-2 items-center p-2 border rounded bg-yellow-100 my-2 text-black"
+            >
+              Gamification is a premium feature. Upgrade to
+              <Badge>Premium</Badge> for unlimited rewards.
+            </Link>
+          )}
 
           <div className="flex flex-col gap-4 mb-4">
             {MobxStore.rewards.map((reward, index) => (

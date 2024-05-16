@@ -1,7 +1,7 @@
 "use client";
 import { observer } from "mobx-react";
 import MobxStore from "@/mobx";
-import { PathwayCard, PathwayPlayer, TitleDescription } from "../../page";
+
 import { PodcastEmptyPlaceholder } from "@/reusable-ui/EmptyList";
 import { MoreVertical, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,12 +23,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
+
 import { HiOutlineCog6Tooth } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { set } from "date-fns";
+import { PathwayPlayer } from "@/app/dashboard/page";
+import { PathwayCard, TitleDescription } from "@/app/today/pathwaycomponents";
 
 const CustomListPage = observer(({ params }) => {
   const {
@@ -157,7 +158,7 @@ const CustomListPage = observer(({ params }) => {
                   <DropdownMenuItem
                     onClick={() => {
                       deleteList(listId);
-                      router.push("/");
+                      router.push("/dashboard");
                     }}
                   >
                     Delete List

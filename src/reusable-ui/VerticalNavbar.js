@@ -19,10 +19,8 @@ export function VerticalNavbar({ links }) {
             href={`/${link.href}`}
             className={cn(
               buttonVariants({ variant: link.variant, size: "sm" }),
-              link.variant === "default",
-              // &&
-              //   "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-              "justify-start"
+              link.variant == "default" && "bg-muted border",
+              "justify-start hover:bg-muted dark:text-white"
             )}
           >
             <link.icon className="mr-2 h-4 w-4" />

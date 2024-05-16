@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import MobxStore from "../mobx";
 import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { observer } from "mobx-react";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -38,13 +38,50 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { ModeToggle } from "@/components/ui/themeButton";
+import { SkeletonDemo } from "./Skeleton";
+import withAuth from "@/hoc/withAuth";
+import { premiumUtil } from "@/utils/premium";
+import { Badge } from "@/components/ui/badge";
 
 const defaultLayout = [20, 80];
+
+export const PremiumLabel = ({ label }) => {
+  const router = useRouter();
+  const { listsOk, routinesOk } = premiumUtil();
+  let checker;
+  if (label === "lists") {
+    checker = listsOk;
+  }
+  if (label == "routines") {
+    checker = routinesOk;
+  }
+  return (
+    <div
+      className="text-xs flex gap-2 items-center p-2 border rounded bg-yellow-100 text-black"
+      onClick={() => {
+        if (!checker.ok) {
+          router.push("/premium");
+        }
+      }}
+    >
+      {checker.current} / {checker.limit}
+      {checker.ok ? (
+        <Badge className="">Free</Badge>
+      ) : (
+        <div>
+          Limit Reached. Upgrade to <Badge className="">Premium</Badge> for
+          unlimited lists.
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const CreateListDialog = () => {
   const [listName, setListName] = useState("");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { addList } = MobxStore;
+  const { listsOk } = premiumUtil();
 
   return (
     <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
@@ -59,6 +96,7 @@ export const CreateListDialog = () => {
           <DialogDescription>
             Store different routines across custom lists.
           </DialogDescription>
+          <PremiumLabel label="lists" />
         </DialogHeader>
         <div>
           <div className="space-y-4 py-2 pb-4">
@@ -80,15 +118,28 @@ export const CreateListDialog = () => {
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            onClick={() => {
-              setShowDeleteDialog(false);
-              addList(listName);
-            }}
-          >
-            Save
-          </Button>
+          {listsOk.ok ? (
+            <Button
+              type="submit"
+              onClick={() => {
+                setShowDeleteDialog(false);
+                addList(listName);
+              }}
+            >
+              Save
+            </Button>
+          ) : (
+            <Link href="/premium">
+              <Button
+                type="submit"
+                onClick={() => {
+                  setShowDeleteDialog(false);
+                }}
+              >
+                Upgrade
+              </Button>
+            </Link>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -101,9 +152,9 @@ const ReusableLayout = observer(({ children }) => {
   const pathname = usePathname();
 
   const isRoute = (route) => {
-    if (route === "/") {
-      return pathname === route ? "default" : "primary";
-    }
+    // if (route === "/") {
+    //   return pathname === route ? "default" : "primary";
+    // }
 
     return pathname.toLowerCase().includes(route.toLowerCase())
       ? "default"
@@ -135,8 +186,8 @@ const ReusableLayout = observer(({ children }) => {
                 {
                   title: "Dashboard",
                   icon: LayoutDashboard,
-                  variant: isRoute("/"),
-                  href: "",
+                  variant: isRoute("/dashboard"),
+                  href: "dashboard",
                 },
                 {
                   title: "Today",
@@ -164,6 +215,11 @@ const ReusableLayout = observer(({ children }) => {
                 },
               ]}
             />
+            <div className="flex justify-center items-center w-[185px] m-2">
+              <Link href="/premium" className="w-full">
+                <Button className="w-full">Upgrade Premium</Button>
+              </Link>
+            </div>
             <Separator />
             <div className="flex justify-center items-center w-[185px] m-2">
               <CreateListDialog />
@@ -233,17 +289,35 @@ const ReusableLayout = observer(({ children }) => {
                   </div>
                 )}
               </div>
-              <div className="">{children}</div>
+              {user ? (
+                <div className="">{children}</div>
+              ) : (
+                <div className="flex flex-col gap-2 p-4">
+                  <SkeletonDemo />
+                  <SkeletonDemo />
+                  <SkeletonDemo />
+                  <SkeletonDemo />
+                </div>
+              )}
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
       <div className="block sm:hidden">
         <MobileHeader />
-        {children}
+        {user ? (
+          <div>{children}</div>
+        ) : (
+          <div className="flex flex-col gap-2 p-4">
+            <SkeletonDemo />
+            <SkeletonDemo />
+            <SkeletonDemo />
+            <SkeletonDemo />
+          </div>
+        )}
       </div>
     </div>
   );
 });
 
-export default ReusableLayout;
+export default withAuth(ReusableLayout);

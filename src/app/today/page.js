@@ -1,14 +1,11 @@
 "use client";
 import { observer } from "mobx-react";
 import MobxStore from "@/mobx";
-import {
-  HorizontalPathwaysList,
-  PathwayCard,
-  PathwayPlayer,
-  TitleDescription,
-} from "../page";
+
 import { shouldShowToday } from "@/utils/date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PathwayCard, TitleDescription } from "./pathwaycomponents";
+import { PathwayPlayer } from "../dashboard/page";
 
 const TodayPage = observer(() => {
   const { userPathways, pathwayPlaying, loading } = MobxStore;

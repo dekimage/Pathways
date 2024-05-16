@@ -45,6 +45,7 @@ const ONE_DAY = 24 * 60 * 60 * 1000;
 
 class Store {
   // App Data
+  authLoading = true;
   logs = [];
   user = null;
   rewards = [];
@@ -66,7 +67,7 @@ class Store {
   constructor() {
     makeAutoObservable(this);
     this.initializeAuth();
-    this.fetchPathways();
+
     this.setPathwayPlaying = this.setPathwayPlaying.bind(this);
     this.setIsPathwayEditView = this.setIsPathwayEditView.bind(this);
     this.setIsMobileOpen = this.setIsMobileOpen.bind(this);
@@ -107,45 +108,64 @@ class Store {
     this.editListName = this.editListName.bind(this);
   }
 
-  initializeAuth() {
+  async initializeAuth() {
     const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userDocRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userDocRef);
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const userDoc = await getDoc(userDocRef);
 
-        runInAction(() => {
-          if (!userDoc.exists()) {
-            const newUser = {
-              ...DEFAULT_USER,
-              uid: user.uid,
-              provider: "anonymous",
-              username: "Guest",
-              createdAt: new Date(),
-            };
-            setDoc(userDocRef, newUser).then(() => {
-              this.user = newUser;
-            });
-          } else {
-            this.user = { uid: user.uid, ...userDoc.data() };
-          }
-          this.fetchUserPathways();
-          this.fetchUserRewards();
-          this.fetchLogs();
-          this.fetchTopPlayedPathways();
-          this.fetchRecentPathways();
-          this.fetchTriggers();
-          this.fetchLists();
-        });
+          runInAction(() => {
+            if (!userDoc.exists()) {
+              const newUser = {
+                ...DEFAULT_USER,
+                uid: user.uid,
+                provider: "anonymous",
+                username: "Guest",
+                createdAt: new Date(),
+              };
+              setDoc(userDocRef, newUser).then(() => {
+                this.user = newUser;
+              });
+            } else {
+              this.user = { uid: user.uid, ...userDoc.data() };
+            }
+
+            this.fetchUserData(); // Fetch all user-related data
+          });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          runInAction(() => {
+            this.user = null;
+          });
+        }
       } else {
         runInAction(() => {
           this.user = null;
         });
       }
       runInAction(() => {
-        this.loading = false;
+        this.authLoading = false;
       });
     });
+  }
+
+  async fetchUserData() {
+    try {
+      await Promise.all([
+        this.fetchPathways(),
+        this.fetchUserPathways(),
+        this.fetchUserRewards(),
+        this.fetchLogs(),
+        this.fetchTopPlayedPathways(),
+        this.fetchRecentPathways(),
+        this.fetchTriggers(),
+        this.fetchLists(),
+      ]);
+    } catch (error) {
+      console.error("Error fetching user-related data:", error);
+    }
   }
 
   //
@@ -512,7 +532,7 @@ class Store {
     }
   }
 
-  fetchPathways() {
+  async fetchPathways() {
     const q = query(collection(db, "pathways"));
     onSnapshot(q, (querySnapshot) => {
       runInAction(() => {
