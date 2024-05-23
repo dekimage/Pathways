@@ -66,6 +66,7 @@ export const PathwayCard = observer(({ pathway, listId }) => {
     isMobileOpen,
     deletePathway,
     removeFromList,
+    user,
   } = MobxStore;
 
   const pathname = usePathname();
@@ -175,12 +176,11 @@ export const PathwayCard = observer(({ pathway, listId }) => {
                 <Infinity size={16} />
               </div>
             )}
-            {isPremium && (
+            {isPremium && !user.isPremium ? (
               <Button className="mt-2">
                 <Lock size="14" className="mr-1" /> Upgrade Premium
               </Button>
-            )}
-            {!isPremium && (
+            ) : (
               <Button
                 variant="outline"
                 className="w-full mt-2"

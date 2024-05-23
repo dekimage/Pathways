@@ -152,10 +152,25 @@ export const TagsCarousel = ({
 };
 
 const ExplorePage = observer(() => {
-  const { pathwayPlaying } = MobxStore;
+  const { pathwayPlaying, userPathways } = MobxStore;
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTrigger, setSelectedTrigger] = useState(null);
   const [selectedDurations, setSelectedDurations] = useState(null);
+
+  const premiumUserPathways = userPathways.filter(
+    (pathway) => pathway.premiumId
+  );
+
+  const mergedRoutines = routines.map((routine) => {
+    const userPathway = premiumUserPathways.find(
+      (pathway) => pathway.premiumId === routine.premiumId
+    );
+    if (userPathway) {
+      return userPathway;
+    } else {
+      return routine;
+    }
+  });
 
   if (pathwayPlaying) {
     return <PathwayPlayer pathway={pathwayPlaying} />;
@@ -187,7 +202,7 @@ const ExplorePage = observer(() => {
       />
 
       <div className="flex flex-wrap gap-8 mt-8">
-        {routines.map((routine, i) => (
+        {mergedRoutines.map((routine, i) => (
           <PathwayCard key={i} pathway={routine} />
         ))}
       </div>

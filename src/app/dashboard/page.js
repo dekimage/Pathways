@@ -170,9 +170,27 @@ export const PathwayPlayer = observer(({ pathway }) => {
         </div>
         <Button
           className="w-full mt-2"
-          onClick={() => {
-            MobxStore.addLog(pathway, {
-              pathway: pathway,
+          onClick={async () => {
+            let pathwayPremiumCopy = false;
+            // for original pathways 1. check if original 2. check if already added
+            if (pathway.original) {
+              console.log("path original", pathway.original);
+              const isPathwayAlreadyAdded = MobxStore.userPathways.find(
+                (userPathway) => userPathway.premiumId == pathway.premiumId
+              );
+              console.log({ isPathwayAlreadyAdded });
+              if (!isPathwayAlreadyAdded) {
+                const newId = await MobxStore.addUserPathway(pathway);
+                console.log({ newId });
+                pathwayPremiumCopy = { ...pathway, id: newId };
+              }
+            }
+
+            let pathwayForLog = pathwayPremiumCopy || pathway;
+            console.log({ pathwayPremiumCopy });
+
+            MobxStore.addLog(pathwayForLog, {
+              pathway: pathwayForLog,
               startTime,
               totalDuration,
               timestamp: Date.now(),
@@ -329,12 +347,6 @@ const DashboardPage = observer(() => {
         <PathwayPlayer pathway={pathwayPlaying} />
       ) : (
         <div className="m-4 sm:mx-0">
-          {/* <HorizontalPathwaysList
-            pathways={pathways}
-            title="Featured"
-            description="Get started with these pathways."
-          /> */}
-
           <HorizontalPathwaysList
             pathways={MobxStore.recentPathways}
             title="Recently Played"

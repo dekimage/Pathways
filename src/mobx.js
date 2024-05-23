@@ -369,6 +369,7 @@ class Store {
   }
 
   async addLog(pathway, logData) {
+    console.log({ pathway, logData });
     const canSave = await this.canSaveLog(pathway.id);
     if (!canSave) {
       logger.error("Log limit reached for the day");
@@ -561,9 +562,8 @@ class Store {
 
   async fetchRecentPathways() {
     // Fetch Top 5 Most Recent Pathways
-    logger.debug(this.user.uid);
+
     try {
-      logger.debug(this.user.uid);
       const userPathwayRef = collection(
         db,
         `users/${this.user.uid}/myPathways`
@@ -576,7 +576,7 @@ class Store {
       );
 
       const querySnapshot = await getDocs(recentQuery);
-
+      console.log(querySnapshot);
       runInAction(() => {
         // Store recent pathways in MobX store
         this.recentPathways = querySnapshot.docs.map((doc) => ({
@@ -641,6 +641,7 @@ class Store {
   }
 
   addUserPathway = async (pathway) => {
+    console.log({ pathway });
     if (!this.user) {
       logger.debug("Error: User not authenticated.");
       return;

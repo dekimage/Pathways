@@ -1,9 +1,10 @@
 const originalRoutines = [
   {
-    id: "0z61W4UTnCpWufApKHrF",
+    premiumId: "0z61W4UTnCpWufApKHrF",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -43,15 +44,16 @@ const originalRoutines = [
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   },
   {
-    id: "86kePxu92pcRwXywGft4",
+    premiumId: "86kePxu92pcRwXywGft4",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     autoPlayMusic: false,
     timeType: "any",
     duration: "5",
     background: "",
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     emoji: "🍭",
@@ -95,9 +97,8 @@ const originalRoutines = [
     name: "Creativity Booster",
   },
   {
-    id: "AtOP0FktcVcoMq6x5SON",
+    premiumId: "AtOP0FktcVcoMq6x5SON",
     isPremium: false,
-    creatorId: "1XjK9K2Q178NEPexfIhu3xwuhgdg2",
     background:
       "https://cdn.midjourney.com/e9023bf4-7612-40dc-b88f-2e86b490ea66/0_0.png",
     steps: [
@@ -142,9 +143,9 @@ const originalRoutines = [
     playCount: 6,
   },
   {
-    id: "CfP7u06Bn5gLO59PuH9l",
+    premiumId: "CfP7u06Bn5gLO59PuH9l",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     steps: [
       {
         minText: 0,
@@ -225,6 +226,7 @@ const originalRoutines = [
     days: ["Saturday", "Sunday"],
     duration: "",
     reward: 50,
+    original: true,
     time: "",
     timeType: "time",
     description:
@@ -234,9 +236,8 @@ const originalRoutines = [
     name: "Create Weekly Plan",
   },
   {
-    id: "Jv79Z3PC7gqV7O9RCnAm",
+    premiumId: "Jv79Z3PC7gqV7O9RCnAm",
     isPremium: true,
-    creatorId: "1XjK9K2Q178NEPexfIhu3xwuhgdg2",
     duration: "90 min",
     isCopy: true,
     background:
@@ -328,15 +329,16 @@ const originalRoutines = [
     emoji: "👜",
   },
   {
-    id: "MPqzhxIL8Hm7uWEP3vnX",
+    premiumId: "MPqzhxIL8Hm7uWEP3vnX",
     isPremium: true,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     time: "",
     name: "Reading Routine",
     backgroundColor: "#2a9d8f",
     playCount: 1,
     timeType: "time",
     reward: 50,
+    original: true,
     days: [
       "Monday",
       "Tuesday",
@@ -389,9 +391,9 @@ const originalRoutines = [
     completionLimit: "2",
   },
   {
-    id: "XKIaO3moL4LPWZmGlw6B",
+    premiumId: "XKIaO3moL4LPWZmGlw6B",
     isPremium: true,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     autoPlayMusic: false,
     duration: "",
     emoji: "🔪",
@@ -439,13 +441,14 @@ const originalRoutines = [
     backgroundColor: "#d1f5be",
   },
   {
-    id: "ZdQ6pKPD8nGjmrH7Ze6X",
+    premiumId: "ZdQ6pKPD8nGjmrH7Ze6X",
     isPremium: true,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     background: "",
     autoPlayMusic: false,
     trigger: "",
     reward: 50,
+    original: true,
     timeType: "any",
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     backgroundColor: "#dabfff",
@@ -540,9 +543,9 @@ const originalRoutines = [
     duration: "",
   },
   {
-    id: "d6I4vz5wmaK9bbaoSWAg",
+    premiumId: "d6I4vz5wmaK9bbaoSWAg",
     isPremium: true,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     time: "",
     autoPlayMusic: false,
     emoji: "🧯",
@@ -583,6 +586,7 @@ const originalRoutines = [
       },
     ],
     reward: 50,
+    original: true,
     name: "Shutdown Ritual",
     duration: "",
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
@@ -593,9 +597,9 @@ const originalRoutines = [
     background: "",
   },
   {
-    id: "dRwiHxqqEXoQdCyVlHMy",
+    premiumId: "dRwiHxqqEXoQdCyVlHMy",
     isPremium: true,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     background:
       "https://cdn.midjourney.com/e9023bf4-7612-40dc-b88f-2e86b490ea66/0_3.png",
     backgroundColor: "#6d6875",
@@ -659,11 +663,12 @@ const originalRoutines = [
     timeType: "any",
     autoPlayMusic: false,
     reward: 50,
+    original: true,
   },
   {
-    id: "dZlt9YVeTxdOhN0l3rzR",
+    premiumId: "dZlt9YVeTxdOhN0l3rzR",
     isPremium: true,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     days: [
       "Monday",
       "Tuesday",
@@ -706,6 +711,7 @@ const originalRoutines = [
       },
     ],
     reward: 50,
+    original: true,
     autoPlayMusic: false,
     playCount: 1,
     time: "",
@@ -722,11 +728,12 @@ const originalRoutines = [
     emoji: "🪐",
   },
   {
-    id: "e1GhRdKYAZlkKVfpkgBz",
+    premiumId: "e1GhRdKYAZlkKVfpkgBz",
     isPremium: true,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     description: "Create few affirmations and recite them",
     reward: 50,
+    original: true,
     trigger: "",
     duration: "",
     completionLimit: "3",
@@ -782,9 +789,9 @@ const originalRoutines = [
     time: "",
   },
   {
-    id: "egJZRUh8h7lFBKc1e2ri",
+    premiumId: "egJZRUh8h7lFBKc1e2ri",
     isPremium: true,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     name: "Plan my Day",
     modifiedAt: {
       seconds: 1704480949,
@@ -839,9 +846,9 @@ const originalRoutines = [
     ],
   },
   {
-    id: "nRjUsyL5W97ZyhFrlEsk",
+    premiumId: "nRjUsyL5W97ZyhFrlEsk",
     isPremium: true,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     background:
       "https://cdn.midjourney.com/e9023bf4-7612-40dc-b88f-2e86b490ea66/0_2.png",
     description:
@@ -901,10 +908,11 @@ const originalRoutines = [
 
 const gptRoutines = [
   {
-    id: "1a2b3c4d5e6f7g8h9i0j",
+    premiumId: "1a2b3c4d5e6f7g8h9i0j",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -955,10 +963,11 @@ const gptRoutines = [
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   },
   {
-    id: "2b3c4d5e6f7g8h9i0j1a",
+    premiumId: "2b3c4d5e6f7g8h9i0j1a",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "once a week",
     autoPlayMusic: false,
@@ -1009,10 +1018,11 @@ const gptRoutines = [
     days: ["Sunday"],
   },
   {
-    id: "3c4d5e6f7g8h9i0j1a2b",
+    premiumId: "3c4d5e6f7g8h9i0j1a2b",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "once a month",
     autoPlayMusic: false,
@@ -1064,10 +1074,11 @@ const gptRoutines = [
     days: ["Saturday"],
   },
   {
-    id: "4d5e6f7g8h9i0j1a2b3c",
+    premiumId: "4d5e6f7g8h9i0j1a2b3c",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -1117,10 +1128,11 @@ const gptRoutines = [
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   },
   {
-    id: "5e6f7g8h9i0j1a2b3c4d",
+    premiumId: "5e6f7g8h9i0j1a2b3c4d",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "twice a week",
     autoPlayMusic: false,
@@ -1172,10 +1184,11 @@ const gptRoutines = [
     days: ["Tuesday", "Thursday"],
   },
   {
-    id: "6f7g8h9i0j1a2b3c4d5e",
+    premiumId: "6f7g8h9i0j1a2b3c4d5e",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -1237,10 +1250,11 @@ const gptRoutines = [
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   },
   {
-    id: "7g8h9i0j1a2b3c4d5e6f",
+    premiumId: "7g8h9i0j1a2b3c4d5e6f",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -1299,10 +1313,11 @@ const gptRoutines = [
     ],
   },
   {
-    id: "8h9i0j1a2b3c4d5e6f7g",
+    premiumId: "8h9i0j1a2b3c4d5e6f7g",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -1369,10 +1384,11 @@ const gptRoutines = [
     ],
   },
   {
-    id: "9i0j1a2b3c4d5e6f7g8h",
+    premiumId: "9i0j1a2b3c4d5e6f7g8h",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -1441,10 +1457,11 @@ const gptRoutines = [
     ],
   },
   {
-    id: "0a1b2c3d4e5f6g7h8i9j",
+    premiumId: "0a1b2c3d4e5f6g7h8i9j",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+    //
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -1503,10 +1520,11 @@ const gptRoutines = [
     ],
   },
   {
-    id: "1b2c3d4e5f6g7h8i9j0a",
+    premiumId: "1b2c3d4e5f6g7h8i9j0a",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "twice a week",
     autoPlayMusic: false,
@@ -1557,10 +1575,11 @@ const gptRoutines = [
     days: ["Tuesday", "Thursday"],
   },
   {
-    id: "2c3d4e5f6g7h8i9j0a1b",
+    premiumId: "2c3d4e5f6g7h8i9j0a1b",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "once a week",
     autoPlayMusic: false,
@@ -1611,10 +1630,11 @@ const gptRoutines = [
     days: ["Sunday"],
   },
   {
-    id: "3d4e5f6g7h8i9j0a1b2c",
+    premiumId: "3d4e5f6g7h8i9j0a1b2c",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -1666,10 +1686,11 @@ const gptRoutines = [
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   },
   {
-    id: "4e5f6g7h8i9j0a1b2c3d",
+    premiumId: "4e5f6g7h8i9j0a1b2c3d",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "twice a week",
     autoPlayMusic: false,
@@ -1721,10 +1742,11 @@ const gptRoutines = [
     days: ["Tuesday", "Thursday"],
   },
   {
-    id: "5f6g7h8i9j0a1b2c3d4e",
+    premiumId: "5f6g7h8i9j0a1b2c3d4e",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "once a week",
     autoPlayMusic: false,
@@ -1776,10 +1798,11 @@ const gptRoutines = [
     days: ["Sunday"],
   },
   {
-    id: "6g7h8i9j0a1b2c3d4e5f",
+    premiumId: "6g7h8i9j0a1b2c3d4e5f",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "once a week",
     autoPlayMusic: false,
@@ -1831,10 +1854,11 @@ const gptRoutines = [
     days: ["Monday", "Wednesday", "Friday"],
   },
   {
-    id: "7h8i9j0a1b2c3d4e5f6g",
+    premiumId: "7h8i9j0a1b2c3d4e5f6g",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "once a week",
     autoPlayMusic: false,
@@ -1886,10 +1910,11 @@ const gptRoutines = [
     days: ["Tuesday", "Thursday"],
   },
   {
-    id: "8i9j0a1b2c3d4e5f6g7h",
+    premiumId: "8i9j0a1b2c3d4e5f6g7h",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "once a week",
     autoPlayMusic: false,
@@ -1941,10 +1966,11 @@ const gptRoutines = [
     days: ["Sunday"],
   },
   {
-    id: "9j0a1b2c3d4e5f6g7h8i",
+    premiumId: "9j0a1b2c3d4e5f6g7h8i",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -2003,10 +2029,11 @@ const gptRoutines = [
     ],
   },
   {
-    id: "0b1c2d3e4f5g6h7i8j9k",
+    premiumId: "0b1c2d3e4f5g6h7i8j9k",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -2066,10 +2093,11 @@ const gptRoutines = [
     ],
   },
   {
-    id: "1c2d3e4f5g6h7i8j9k0l",
+    premiumId: "1c2d3e4f5g6h7i8j9k0l",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -2127,10 +2155,11 @@ const gptRoutines = [
     ],
   },
   {
-    id: "2d3e4f5g6h7i8j9k0l1m",
+    premiumId: "2d3e4f5g6h7i8j9k0l1m",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "weekly",
     autoPlayMusic: false,
@@ -2182,10 +2211,11 @@ const gptRoutines = [
     days: ["Saturday", "Sunday"],
   },
   {
-    id: "3e4f5g6h7i8j9k0l1m2n",
+    premiumId: "3e4f5g6h7i8j9k0l1m2n",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "monthly",
     autoPlayMusic: false,
@@ -2236,10 +2266,11 @@ const gptRoutines = [
     days: ["Saturday", "Sunday"],
   },
   {
-    id: "4f5g6h7i8j9k0l1m2n3o",
+    premiumId: "4f5g6h7i8j9k0l1m2n3o",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "monthly",
     autoPlayMusic: false,
@@ -2290,10 +2321,11 @@ const gptRoutines = [
     days: ["Saturday", "Sunday"],
   },
   {
-    id: "5g6h7i8j9k0l1m2n3o4p",
+    premiumId: "5g6h7i8j9k0l1m2n3o4p",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -2353,10 +2385,11 @@ const gptRoutines = [
     ],
   },
   {
-    id: "6h7i8j9k0l1m2n3o4p5q",
+    premiumId: "6h7i8j9k0l1m2n3o4p5q",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -2405,10 +2438,11 @@ const gptRoutines = [
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   },
   {
-    id: "7i8j9k0l1m2n3o4p5q6r",
+    premiumId: "7i8j9k0l1m2n3o4p5q6r",
     isPremium: false,
-    creatorId: "1XjK9KQ178NEPexfIhu3xwuhgdg2",
+
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "everyday",
     autoPlayMusic: false,
@@ -2470,9 +2504,9 @@ const gptRoutines = [
 
 const geminiRoutines = [
   {
-    id: "DeclutterPowerHour",
+    premiumId: "DeclutterPowerHour",
     isPremium: false,
-    creatorId: "YourCreatorID",
+    
     reward: 100,
     trigger: "",
     frequency: "weekly",
@@ -2532,9 +2566,9 @@ const geminiRoutines = [
     days: ["Saturday"],
   },
   {
-    id: "WardrobeCapsule",
+    premiumId: "WardrobeCapsule",
     isPremium: false,
-    creatorId: "YourCreatorID",
+    
     reward: 100,
     trigger: "",
     frequency: "seasonal",
@@ -2594,10 +2628,11 @@ const geminiRoutines = [
     days: [],
   },
   {
-    id: "MinimalistHomeReset",
+    premiumId: "MinimalistHomeReset",
     isPremium: false,
-    creatorId: "YourCreatorID",
+    
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "daily",
     autoPlayMusic: false,
@@ -2654,9 +2689,9 @@ const geminiRoutines = [
     ],
   },
   {
-    id: "ReclaimAttention",
+    premiumId: "ReclaimAttention",
     isPremium: false,
-    creatorId: "YourCreatorID",
+    
     reward: 150,
     trigger: "",
     frequency: "daily",
@@ -2726,9 +2761,9 @@ const geminiRoutines = [
     ],
   },
   {
-    id: "SimplifyCommitments",
+    premiumId: "SimplifyCommitments",
     isPremium: false,
-    creatorId: "YourCreatorID",
+    
     reward: 100,
     trigger: "",
     frequency: "weekly",
@@ -2788,10 +2823,11 @@ const geminiRoutines = [
     days: ["Sunday"],
   },
   {
-    id: "MindfulEating",
+    premiumId: "MindfulEating",
     isPremium: false,
-    creatorId: "YourCreatorID",
+    
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "with every meal",
     autoPlayMusic: false,
@@ -2851,10 +2887,11 @@ const geminiRoutines = [
     days: [],
   },
   {
-    id: "PlayfulCommute",
+    premiumId: "PlayfulCommute",
     isPremium: false,
-    creatorId: "YourCreatorID",
+    
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "daily",
     autoPlayMusic: true,
@@ -2914,10 +2951,11 @@ const geminiRoutines = [
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   },
   {
-    id: "PlaytimeRecharge",
+    premiumId: "PlaytimeRecharge",
     isPremium: false,
-    creatorId: "YourCreatorID",
+    
     reward: 50,
+    original: true,
     trigger: "",
     frequency: "daily",
     autoPlayMusic: false,
@@ -2979,9 +3017,9 @@ const geminiRoutines = [
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   },
   {
-    id: "PlayfulMindBreak",
+    premiumId: "PlayfulMindBreak",
     isPremium: false,
-    creatorId: "YourCreatorID",
+    
     reward: 25,
     trigger: "",
     frequency: "daily",
