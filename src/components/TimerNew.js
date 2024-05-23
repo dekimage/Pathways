@@ -14,7 +14,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-const AdjustTimeDrawer = ({ addTime, reduceTime }) => {
+const AdjustTimeDrawer = ({ addTime, reduceTime, timeOver, handleReset }) => {
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -25,12 +25,20 @@ const AdjustTimeDrawer = ({ addTime, reduceTime }) => {
           <DrawerHeader>
             <DrawerTitle>Adjust Time</DrawerTitle>
             <DrawerDescription>
-              Select the option you like best
+              Add or reduce time to the timer
             </DrawerDescription>
           </DrawerHeader>
 
           <div className="flex gap-2 justify-center">
-            <Button variant="outline" onClick={() => reduceTime(1)}>
+            <Button variant="outline" className="gap-1" onClick={handleReset}>
+              <RotateCcw size={14} />
+              <span className="ml-1">Reset</span>
+            </Button>
+            <Button
+              variant="outline"
+              disabled={timeOver}
+              onClick={() => reduceTime(1)}
+            >
               -1 min
             </Button>
             <Button variant="outline" onClick={() => addTime(1)}>
@@ -43,7 +51,7 @@ const AdjustTimeDrawer = ({ addTime, reduceTime }) => {
 
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button variant="outline">Done</Button>
+              <Button variant="outline">Close</Button>
             </DrawerClose>
           </DrawerFooter>
         </div>
@@ -59,6 +67,7 @@ const TimerNew = ({
   setIsPlaying,
   setTimer,
   timeOver,
+  setTimeOver,
 }) => {
   const handleStart = () => {
     setIsPlaying(true);
@@ -72,8 +81,21 @@ const TimerNew = ({
     restartTimer();
   };
 
-  const addTime = (amount) => setTimer((prev) => prev + amount * 60);
-  const reduceTime = (amount) => setTimer((prev) => prev - amount * 60);
+  const addTime = (amount) => {
+    if (timeOver) {
+      setTimer(amount * 60);
+      setTimeOver(false);
+    } else {
+      setTimer((prev) => prev + amount * 60);
+    }
+  };
+  const reduceTime = (amount) => {
+    if (timeOver) {
+      return;
+    } else {
+      setTimer((prev) => prev - amount * 60);
+    }
+  };
 
   const formatTime = (seconds) => {
     const sign = timeOver ? "+" : "";
@@ -112,7 +134,12 @@ const TimerNew = ({
           </Button>
         )}
 
-        <AdjustTimeDrawer addTime={addTime} reduceTime={reduceTime} />
+        <AdjustTimeDrawer
+          addTime={addTime}
+          reduceTime={reduceTime}
+          timerOver={timeOver}
+          handleReset={handleReset}
+        />
       </div>
     </div>
   );

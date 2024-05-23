@@ -69,8 +69,8 @@ export const PremiumLabel = ({ label }) => {
         <Badge className="">Free</Badge>
       ) : (
         <div>
-          Limit Reached. Upgrade to <Badge className="">Premium</Badge> for
-          unlimited lists.
+          Limit Reached. Upgrade to <Badge className="">Premium</Badge> for{" "}
+          {label == "lists" ? "unlimited lists." : "unlimited routines."}
         </div>
       )}
     </div>
@@ -80,7 +80,7 @@ export const PremiumLabel = ({ label }) => {
 export const CreateListDialog = () => {
   const [listName, setListName] = useState("");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const { addList } = MobxStore;
+  const { addList, user } = MobxStore;
   const { listsOk } = premiumUtil();
 
   return (
@@ -94,9 +94,9 @@ export const CreateListDialog = () => {
         <DialogHeader>
           <DialogTitle>Create New List</DialogTitle>
           <DialogDescription>
-            Store different routines across custom lists.
+            Organize your routines with custom lists.
           </DialogDescription>
-          <PremiumLabel label="lists" />
+          {!user.isPremium && <PremiumLabel label="lists" />}
         </DialogHeader>
         <div>
           <div className="space-y-4 py-2 pb-4">
@@ -216,9 +216,11 @@ const ReusableLayout = observer(({ children }) => {
               ]}
             />
             <div className="flex justify-center items-center w-[185px] m-2">
-              <Link href="/premium" className="w-full">
-                <Button className="w-full">Upgrade Premium</Button>
-              </Link>
+              {!user.isPremium && (
+                <Link href="/premium" className="w-full">
+                  <Button className="w-full">Upgrade Premium</Button>
+                </Link>
+              )}
             </div>
             <Separator />
             <div className="flex justify-center items-center w-[185px] m-2">
@@ -267,7 +269,7 @@ const ReusableLayout = observer(({ children }) => {
                       <Flame />
                     </div>
                     <Link href="/gamify" className="flex items-center gap-1">
-                      {MobxStore.user?.gold}
+                      {MobxStore.user?.gem}
                       <Gem />
                     </Link>
                     <Link href="/new-pathway">

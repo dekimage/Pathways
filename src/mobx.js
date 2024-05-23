@@ -33,7 +33,7 @@ import Logger from "@/utils/logger";
 import { shouldResetProgress } from "@/utils/date";
 
 const DEFAULT_USER = {
-  gold: 0,
+  gem: 0,
   level: 1,
   streak: 0,
   xp: 0,
@@ -67,7 +67,6 @@ class Store {
   constructor() {
     makeAutoObservable(this);
     this.initializeAuth();
-
     this.setPathwayPlaying = this.setPathwayPlaying.bind(this);
     this.setIsPathwayEditView = this.setIsPathwayEditView.bind(this);
     this.setIsMobileOpen = this.setIsMobileOpen.bind(this);
@@ -106,6 +105,7 @@ class Store {
     this.removeFromList = this.removeFromList.bind(this);
     this.deleteList = this.deleteList.bind(this);
     this.editListName = this.editListName.bind(this);
+    this.findPathwayById = this.findPathwayById.bind(this);
   }
 
   async initializeAuth() {
@@ -265,6 +265,10 @@ class Store {
   }
 
   async addList(listName) {
+    if (!this.user.isPremium && this.lists.length >= 2) {
+      alert("You need a premium plan to create more than 2 lists");
+      return;
+    }
     try {
       const userListsRef = collection(db, `users/${this.user.uid}/myLists`);
 
@@ -326,7 +330,22 @@ class Store {
   async fetchLogs() {
     try {
       const logRef = collection(db, `users/${this.user.uid}/activityLogs`);
-      const querySnapshot = await getDocs(logRef);
+
+      let querySnapshot;
+      if (!this.user.isPremium) {
+        // Fetch only logs from the last 7 days
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        querySnapshot = await getDocs(
+          query(logRef, where("timestamp", ">=", sevenDaysAgo))
+        );
+      } else {
+        // Fetch all logs
+        querySnapshot = await getDocs(logRef);
+      }
+
+      // const querySnapshot = await getDocs(logRef);
 
       runInAction(() => {
         this.logs = querySnapshot.docs.map((doc) => {
@@ -379,23 +398,17 @@ class Store {
         ...logData,
         timestamp: new Date(),
       });
+      const docSnap = await getDoc(docRef);
+      const newLogData = docSnap.data();
 
       runInAction(() => {
-        // Add the new log to the MobX store
-        const newLog = {
-          id: docRef.id,
-          pathwayId: pathway.id,
-          ...logData,
-          timestamp: new Date(),
-        };
-        // Assuming you have a logs array in your store
-        this.logs.push(newLog);
+        this.logs.push(newLogData);
       });
 
       //if time tracking - Update Progress +1
       if (
         pathway.timeType == "time" &&
-        pathway.progress < pathway.completionLimit
+        pathway.progress || 0 < pathway.completionLimit
       ) {
         const updatedPathwayRef = doc(
           db,
@@ -595,6 +608,14 @@ class Store {
         `users/${this.user.uid}/myPathways`
       );
       const docRef = await addDoc(userPathwayRef, pathway);
+      console.log({ pathway });
+      console.log({ id: docRef.id });
+      runInAction(() => {
+        this.userPathways.push({
+          id: docRef.id,
+          ...pathway,
+        });
+      });
       logger.debug("User pathway created with ID: ", docRef.id);
       return docRef.id; // Return the ID for further use
     } catch (error) {
@@ -827,6 +848,10 @@ class Store {
   }
 
   async addReward(reward) {
+    if (!this.user.isPremium) {
+      alert("You need a premium plan to add rewards");
+      return;
+    }
     try {
       const userRewardsRef = collection(db, `users/${this.user.uid}/rewards`);
 
@@ -887,21 +912,21 @@ class Store {
   }
 
   async buyReward(reward) {
-    if (reward.cost > this.user.gold) {
-      return { error: "Not enough gold" };
+    if (reward.cost > this.user.gem) {
+      return { error: "Not enough gems" };
     }
 
-    const newGoldAmount = this.user.gold - reward.cost;
+    const newgemAmount = this.user.gem - reward.cost;
 
-    // Update user's gold in Firebase
+    // Update user's gem in Firebase
     const userDocRef = doc(db, "users", this.user.uid);
-    await updateDoc(userDocRef, { gold: newGoldAmount });
+    await updateDoc(userDocRef, { gem: newgemAmount });
 
     // Add log entry for the reward purchase
     const rewardPurchaseLog = {
       reward: reward,
-      balanceBefore: this.user.gold,
-      balanceAfter: newGoldAmount,
+      balanceBefore: this.user.gem,
+      balanceAfter: newgemAmount,
       timestamp: new Date(),
     };
 
@@ -909,11 +934,12 @@ class Store {
     const logDocRef = await addDoc(logRef, rewardPurchaseLog);
 
     runInAction(() => {
-      this.user.gold = newGoldAmount;
+      this.user.gem = newgemAmount;
       this.logs.push({ id: logDocRef.id, ...rewardPurchaseLog });
     });
 
     logger.debug("Reward purchased successfully");
+    return { toast: "Reward purchased successfully" };
   }
 
   //
@@ -1008,6 +1034,13 @@ class Store {
         this.pathwayPlaying = false;
       }
     });
+  }
+
+  findPathwayById(pathwayId) {
+    const result = this.userPathways.find(
+      (pathway) => pathway.id === pathwayId
+    );
+    return result;
   }
 
   setIsPathwayEditView(editFromInside = true) {

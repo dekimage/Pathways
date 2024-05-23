@@ -71,7 +71,7 @@ const MobileHeader = observer(() => {
                 className="flex items-center gap-1"
                 onClick={() => setIsMobileOpen(false)}
               >
-                {user?.gold}
+                {user?.gem}
                 <Gem />
               </Link>
             </div>
@@ -80,9 +80,12 @@ const MobileHeader = observer(() => {
               <UserNav user={user} logout={logout} />
             </div>
           </div>
-          <Link href="/premium" className="w-full">
-            <Button className="w-full">Upgrade Premium</Button>
-          </Link>
+          {!user.isPremium && (
+            <Link href="/premium" className="w-full">
+              <Button className="w-full">Upgrade Premium</Button>
+            </Link>
+          )}
+
           <Separator />
           <VerticalNavbar
             links={[

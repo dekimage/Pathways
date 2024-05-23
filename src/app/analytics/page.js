@@ -29,15 +29,7 @@ import MobxStore from "@/mobx";
 import { observer } from "mobx-react";
 import { toJS } from "mobx";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import { Card } from "@/components/ui/card";
 
 import {
@@ -51,6 +43,8 @@ import Link from "next/link";
 import { TitleDescription } from "../today/pathwaycomponents";
 import { PremiumLabel } from "@/reusable-ui/ReusableLayout";
 import { premiumUtil } from "@/utils/premium";
+import { PathwayPlayer } from "../dashboard/page";
+import { DeleteDialog } from "@/components/Dialogs/DeleteDialog";
 
 const FancyTag = ({ color, text }) => {
   let backgroundColor, textColor;
@@ -97,10 +91,10 @@ const FancyTag = ({ color, text }) => {
   );
 };
 
-const LogDetails = ({ log }) => {
+const LogDetails = observer(({ log }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { deleteLog } = MobxStore;
+  const { deleteLog, setPathwayPlaying, findPathwayById } = MobxStore;
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const isSpecificPathway = searchParams.get("pathwayId");
@@ -144,38 +138,20 @@ const LogDetails = ({ log }) => {
           : "View all time analysis"}
       </Button>
 
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogTrigger>
-          <Button className="ml-2" variant="outline">
-            Delete
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              log.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowDeleteDialog(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                setShowDeleteDialog(false);
-                deleteLog(log.id);
-              }}
-            >
-              Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <Button
+        variant="outline"
+        className="ml-2"
+        onClick={() => setPathwayPlaying(findPathwayById(log.pathway.id))}
+      >
+        Play
+      </Button>
+
+      <DeleteDialog
+        onDelete={() => deleteLog(log.id)}
+        setShow={setShowDeleteDialog}
+        show={showDeleteDialog}
+        label="log"
+      />
 
       <div className="flex flex-col gap-2">
         {log.responses.map((step, index) => (
@@ -251,17 +227,17 @@ const LogDetails = ({ log }) => {
         </div>
       )}
 
-      {log.goldEarned && (
+      {log.gemEarned && (
         <div>
           <div className="text-lg font-semibold  border rounded py-1 px-2 w-fit h-fit">
             Loot
           </div>
-          {log.goldEarned && <div className="">+{log.goldEarned} 🥮</div>}
+          {log.gemEarned && <div className="">+{log.gemEarned} 🥮</div>}
         </div>
       )}
     </div>
   );
-};
+});
 
 const LogCard = ({ log }) => {
   const { totalDuration, stepsCompleted, pathway } = log;
@@ -334,9 +310,8 @@ const LogCardReward = ({ log }) => {
 
 const LogsPage = observer(() => {
   const [date, setDate] = useState(new Date());
-  const { isMobileOpen, logs } = MobxStore;
+  const { isMobileOpen, logs, pathwayPlaying } = MobxStore;
 
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -349,7 +324,6 @@ const LogsPage = observer(() => {
     .filter((log) => {
       const logDate = new Date(log.timestamp.seconds * 1000);
       const isSelectedDate = logDate.toDateString() === date?.toDateString();
-
       if (pathwayId) {
         return log.pathwayId === pathwayId;
       }
@@ -381,6 +355,10 @@ const LogsPage = observer(() => {
   };
 
   const { analyticsOk } = premiumUtil();
+
+  if (pathwayPlaying) {
+    return <PathwayPlayer pathway={pathwayPlaying} />;
+  }
 
   return (
     <div className="h-full max-w-[600px] m-4 sm:mx-8">

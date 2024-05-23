@@ -23,7 +23,7 @@ import logoImage from "@/assets/logo.png";
 
 const avatars = Array.from({ length: 5 });
 
-const FaqItem = () => {
+const FaqItem = ({ faq }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleFAQ = () => {
@@ -35,7 +35,7 @@ const FaqItem = () => {
         onClick={toggleFAQ}
         className="relative flex gap-2 items-center w-full py-5 text-base font-semibold text-left border-t md:text-lg border-base-content/10 plausible-event-name=What+do+I+get+exactly?"
       >
-        <span className="flex-1 text-gray-400 ">first questio</span>
+        <span className="flex-1 text-gray-400 ">{faq.question}</span>
 
         {isOpen ? (
           <Minus className="flex-shrink-0 w-4 h-4 ml-auto fill-current" />
@@ -50,14 +50,62 @@ const FaqItem = () => {
       >
         <div className="pb-5 leading-relaxed">
           <div className="space-y-4 leading-relaxed">
-            <p>
-              3/ Access to our Discord with makers who build fast to stay
-              accountable!
-            </p>
+            <p>{faq.answer}</p>
           </div>
         </div>
       </div>
     </li>
+  );
+};
+
+const FAQ = () => {
+  const faqData = [
+    {
+      question: "What do I get exactly?",
+      answer:
+        "1/ Access to 50+ premium routines from famous people and books. 2/ Unlimited custom routines. 3/ Unlimited lists. 4/ Unlimited analytics. 5/ Gamification feature.",
+    },
+    {
+      question: "How does the 7-day free trial work?",
+      answer:
+        "You get access to all the features in the Premium plan. If you cancel before the end of the trial, you won't be charged.",
+    },
+    {
+      question: "Can I cancel my subscription?",
+      answer:
+        "Yes, you can cancel your subscription at any time. Your subscription will remain active until the end of the billing cycle.",
+    },
+  ];
+  return (
+    <section id="faq">
+      <div className="py-24 px-8 max-w-7xl mx-auto flex flex-col md:flex-row gap-12">
+        <div className="flex flex-col text-left basis-1/2">
+          <p className="sm:text-4xl text-3xl font-extrabold text-gray-400 mb-8">
+            Frequently Asked Questions
+          </p>
+          <div className="text-gray-400/80">
+            Have another question? Contact me on
+            <a
+              href="mailto:dejan.gavrilovikk@gmail.com"
+              className="text-primary"
+            >
+              {" "}
+              Email
+            </a>{" "}
+            or
+            <a href="https://twitter.com/dekizeki" className="text-primary">
+              {" "}
+              Twitter
+            </a>
+          </div>
+        </div>
+        <ul className="basis-1/2">
+          {faqData.map((faq, i) => (
+            <FaqItem key={i} faq={faq} />
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 };
 
@@ -84,7 +132,7 @@ const QuoteSingle = () => {
     <div className="space-y-4 max-w-md mx-auto">
       <Quote />
       <p className="md:text-lg leading-relaxed">
-        It's a game changer. Comes with an easy-to-follow tutorial, and saves a
+        It`s a game changer. Comes with an easy-to-follow tutorial, and saves a
         ton of time.
       </p>
       <div className="flex items-center gap-2">
@@ -190,8 +238,138 @@ const PricingBox = ({ pricingData }) => {
   );
 };
 
+const CheckoutButton = () => {
+  return <Button className="">Get PlayRoutines</Button>;
+};
+
+const ProblemsSection = () => {
+  const problemsData = {
+    title: "97% of visitors aren't ready to buy",
+    description:
+      "All the time and money spent on ads, SEO, and content marketing goes to waste. Potential customers leave and never come back.",
+    problems: [
+      {
+        icon: "😬",
+        text: "Potential customer is interested",
+      },
+      {
+        icon: "arrow",
+      },
+      {
+        icon: "😬",
+        text: "Doesn't find a reason to buy right now",
+      },
+      {
+        icon: "arrow",
+      },
+      {
+        icon: "😬",
+        text: "Leaves and never comes back",
+      },
+    ],
+  };
+  const { title, description, problems } = problemsData;
+  return (
+    <section id="problems">
+      <div className="max-w-7xl mx-auto px-8 py-16 md:py-40 text-center">
+        <p className="font-extrabold mb-6 md:mb-8 text-4xl">{title}</p>
+        <p className="max-w-xl mx-auto text-lg opacity-80 leading-relaxed mb-12 md:mb-20">
+          {description}
+        </p>
+        <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-6">
+          {problems.map((problem, i) =>
+            problem.icon === "arrow" ? (
+              <div
+                key={i}
+                className="shrink-0 w-12 fill-neutral-content opacity-70 max-md:-scale-x-100 md:-rotate-90"
+              >
+                <ArrowDown />
+              </div>
+            ) : (
+              <div
+                key={i}
+                className="w-full md:w-48 flex flex-col gap-2 items-center justify-center"
+              >
+                <span className="text-4xl">{problem.icon}</span>
+                <p className="font-bold">{problem.text}</p>
+              </div>
+            )
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const ProblemRedSection = () => {
+  const problems = [
+    {
+      highlight: "5 hrs",
+      text: "to set up emails",
+    },
+    {
+      highlight: "4 hrs",
+      text: "designing a landing page",
+    },
+    {
+      highlight: "3 hrs",
+      text: "to handle Stripe webhooks",
+    },
+    {
+      highlight: "∞ hrs",
+      text: "overthinking...",
+    },
+  ];
+  return (
+    <div className="relative py-24 px-8">
+      <div className="relative bg-neutral text-neutral-content rounded-lg p-8 md:p-16 max-w-lg mx-auto text-center text-lg bg-[#2E1A05]">
+        <div className="leading-relaxed space-y-4 md:space-y-6">
+          <div className="text-neutral-content/80 space-y-1">
+            {problems.map((problem, i) => (
+              <p key={i}>
+                <span className="text-red-400 font-medium">
+                  {problem.highlight}
+                </span>{" "}
+                {problem.text}
+              </p>
+            ))}
+          </div>
+          <div className="text-xl font-semibold flex flex-col md:flex-row items-center justify-center gap-3">
+            <p>
+              <span className="text-red-400 font-medium"> = 20 hrs</span> of
+              headaches
+            </p>
+            <CloudRainWind />
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center gap-2 mt-16">
+        <ArrowDown /> There`s an easier way
+      </div>
+    </div>
+  );
+};
+
+const UseCases = () => {
+  return (
+    <section className="py-24 md:py-32 space-y-24 md:space-y-32 bg-base-100 ">
+      <div className="px-8">
+        <div className="mb-16 md:mb-24 space-y-8 md:space-y-10">
+          <div className=" md:text-center max-w-2xl md:mx-auto text-4xl font-bold">
+            Use cases
+          </div>
+          <p className="max-w-2xl mx-auto text-lg md:text-center text-base-content-secondary leading-relaxed">
+            There are millions of ways to agitate a problem and drive action.
+            Here are examples of 3 products:
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const LandingPage = () => {
-  return <div>Landing page in progress</div>;
+  // return <div>Landing page in progress</div>;
   return (
     <div>
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-20 lg:items-start px-8 py-8 lg:py-20">
@@ -206,7 +384,7 @@ const LandingPage = () => {
           </p>
 
           <div className="space-y-4">
-            <Button className="">Get PlayRoutines</Button>
+            <CheckoutButton />
             <p className="text-sm md:text-base flex justify-center items-center gap-2 md:text-sm">
               <Gift className="text-primary" />
               <span className="text-primary">$100 off </span>for the first 3150
@@ -249,9 +427,8 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
+        <div>Image here</div>
       </div>
-      <div>Image here</div>
-
       <div className="p-8 md:p-12 flex flex-wrap items-center justify-center gap-4 md:gap-8">
         <span className="text-xs text-[10px] opacity-50"> Featured on</span>
         <Link href="https://www.producthunt.com/posts/playroutines">
@@ -267,30 +444,8 @@ const LandingPage = () => {
           <Reddit />
         </Link>
       </div>
-
-      <div className="relative py-24 px-8">
-        <div className="relative bg-neutral text-neutral-content rounded-lg p-8 md:p-16 max-w-lg mx-auto text-center text-lg bg-[#2E1A05]">
-          <div className="leading-relaxed space-y-4 md:space-y-6">
-            <div className="text-neutral-content/80 space-y-1">
-              <p>
-                <span className="text-red-400 font-medium">20 hrs</span>
-                problem 1...
-              </p>
-            </div>
-            <div className="text-xl font-semibold flex flex-col md:flex-row items-center justify-center gap-3">
-              <p>
-                <span className="text-red-400 font-medium">20 hrs</span>
-                problem 1...
-              </p>
-              <CloudRainWind />
-            </div>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <ArrowDown /> There`s an easier way
-        </div>
-      </div>
-
+      <ProblemsSection />
+      <ProblemRedSection />
       <div className="py-24">
         <div className="max-w-3xl mx-auto">
           <div className="bg-base-100 max-md:px-8 max-w-3xl">
@@ -335,6 +490,8 @@ const LandingPage = () => {
         </div>
       </div>
 
+      <UseCases />
+
       <section className="bg-base-100">
         <div className="py-24 max-md:px-8 max-w-3xl mx-auto">
           <div className="leading-relaxed text-gray-400/80 mb-12 max-w-xl mx-auto">
@@ -346,7 +503,7 @@ const LandingPage = () => {
               className="w-32 h-32 md:w-52 md:h-52 rounded-lg float-left mr-8 mb-8 object-center object-cover"
             />
             <p className="mb-4 text-gray-400 md:text-lg font-medium">
-              Hey, it's Marc 👋
+              Hey, it`s Marc 👋
             </p>
             <p className="mb-4 text-gray-400 md:text-lg font-medium">
               In 2018, I believed I was Mark Zuckerberg, built a startup for 1
@@ -405,33 +562,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section id="faq">
-        <div className="py-24 px-8 max-w-7xl mx-auto flex flex-col md:flex-row gap-12">
-          <div className="flex flex-col text-left basis-1/2">
-            <p className="sm:text-4xl text-3xl font-extrabold text-gray-400 mb-8">
-              Frequently Asked Questions
-            </p>
-            <div className="text-gray-400/80">
-              Have another question? Contact me on
-              <a
-                href="mailto:dejan.gavrilovikk@gmail.com"
-                className="text-primary"
-              >
-                {" "}
-                Email
-              </a>{" "}
-              or
-              <a href="https://twitter.com/dekizeki" className="text-primary">
-                {" "}
-                Twitter
-              </a>
-            </div>
-          </div>
-          <ul className="basis-1/2">
-            <FaqItem />
-          </ul>
-        </div>
-      </section>
+      <FAQ />
 
       <section>
         <div className="py-24 px-4 max-w-7xl mx-auto">
@@ -450,11 +581,10 @@ const LandingPage = () => {
             <li className="break-inside-avoid max-md:flex justify-center">
               <figure className="relative h-full w-full max-w-[550px] p-6 rounded-xl border border-base-content/20 bg-[#2d1e1a] ">
                 <blockquote className="relative">
-                  {" "}
                   <div className="text-base xl:text-sm text-gray-400">
-                    "Really easy to use. The tutorials are really useful and
+                    Really easy to use. The tutorials are really useful and
                     explains how everything works. Hope to ship my next project
-                    really fast!"
+                    really fast!
                   </div>
                 </blockquote>
                 <figcaption className="relative flex items-center justify-start gap-4 pt-4 mt-4 border-t border-base-content/10">
@@ -502,7 +632,6 @@ const LandingPage = () => {
           </ul>
         </div>
       </section>
-
       <section>
         <div className="pb-32 pt-16 px-8 max-w-3xl mx-auto flex flex-col items-center gap-8 md:gap-12">
           <div className="text-center">
@@ -513,10 +642,9 @@ const LandingPage = () => {
               Don`t let the hours spent reading and learning go to waste.
             </p>
           </div>
-          <Button>Get Play Routines</Button>
+          <CheckoutButton />
         </div>
       </section>
-
       <footer className="bg-base-200 border-t border-base-content/10">
         <div className="max-w-7xl mx-auto px-8 py-24">
           <div className=" flex lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">

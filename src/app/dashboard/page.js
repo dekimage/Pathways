@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import MobxStore from "@/mobx";
 
 import { Slider } from "@/components/ui/slider";
-import { Check } from "lucide-react";
+import { Check, StepForward } from "lucide-react";
 
 import { usePathname } from "next/navigation";
 import TimerNew from "@/components/TimerNew";
@@ -177,7 +177,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
               totalDuration,
               timestamp: Date.now(),
 
-              ...(pathway.gold && { goldEarned: pathway.gold }),
+              ...(pathway.gem && { gemEarned: pathway.gem }),
               responses,
             });
             setPathwayPlaying(false);
@@ -188,6 +188,8 @@ export const PathwayPlayer = observer(({ pathway }) => {
       </div>
     );
   }
+
+  const isNotLastStep = currentStep < pathway.steps.length - 1;
 
   return (
     <div className="flex flex-col max-w-lg p-4 sm:mt-8 m-0 sm:rounded-lg sm:shadow-md sm:border border-gray">
@@ -219,6 +221,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
         setIsPlaying={setIsPlaying}
         setTimer={setTimer}
         timeOver={timeOver}
+        setTimeOver={setTimeOver}
       />
 
       <h2 className="text-md mb-2">
@@ -286,7 +289,8 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
       <div className="flex gap-2">
         <Button className="w-full" onClick={handleNextStep}>
-          <Check /> Complete
+          {isNotLastStep ? <StepForward size={14} /> : <Check size={14} />}{" "}
+          <span className="ml-1">{isNotLastStep ? "Next" : "Finish"}</span>
         </Button>
         <SkipDialog
           handleSkipStep={handleSkipStep}

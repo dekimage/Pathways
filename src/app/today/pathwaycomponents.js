@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical } from "lucide-react";
+import { Lock, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { FaPlay } from "react-icons/fa";
@@ -16,6 +16,8 @@ import { formatTimeFromSteps } from "@/utils/transformers";
 import { observer } from "mobx-react";
 import MobxStore from "@/mobx";
 import { frequencyLookup } from "@/data";
+import { DeleteDialog } from "@/components/Dialogs/DeleteDialog";
+import { useState } from "react";
 
 export const TitleDescription = ({ title, description, button }) => {
   return (
@@ -46,8 +48,16 @@ export const HorizontalPathwaysList = ({ pathways, title, description }) => {
 };
 
 export const PathwayCard = observer(({ pathway, listId }) => {
-  const { name, description, emoji, time, duration, steps, backgroundColor } =
-    pathway;
+  const {
+    name,
+    description,
+    emoji,
+    time,
+    duration,
+    steps,
+    backgroundColor,
+    isPremium,
+  } = pathway;
 
   const {
     setIsPathwayEditView,
@@ -62,10 +72,11 @@ export const PathwayCard = observer(({ pathway, listId }) => {
   const isInList = pathname.includes("list") && listId;
 
   const totalDurationCalced = formatTimeFromSteps(steps);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   return (
     !isMobileOpen && (
-      <Card className=" w-64 h-[350px] flex flex-col justify-between backdrop-blur-md relative">
+      <Card className=" w-64 h-[375px] flex flex-col justify-between backdrop-blur-md relative">
         <div className="relative h-full">
           <div className="absolute  flex justify-center items-center space-x-4 top-[10px] left-[10px] z-[-100]">
             <div
@@ -74,7 +85,7 @@ export const PathwayCard = observer(({ pathway, listId }) => {
             ></div>
           </div>
 
-          <div className="relative w-full h-full p-4 backdrop-blur-lg bg-white/30 rounded-lg  shadow-xl flex flex-col items-between z-100">
+          <div className="relative w-full h-full p-4 backdrop-blur-lg bg-background/30 rounded-lg  shadow-xl flex flex-col items-between z-100">
             <div className="flex flex-grow flex-col">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -107,9 +118,19 @@ export const PathwayCard = observer(({ pathway, listId }) => {
                       Remove From List
                     </DropdownMenuItem>
                   ) : (
-                    <DropdownMenuItem onClick={() => deletePathway(pathway.id)}>
-                      Delete
-                    </DropdownMenuItem>
+                    <DeleteDialog
+                      trigger={
+                        <div className="w-full hover:bg-accent cursor-pointer relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                          Delete
+                        </div>
+                      }
+                      onDelete={() => {
+                        deletePathway(pathway.id);
+                      }}
+                      setShow={setShowDeleteDialog}
+                      show={showDeleteDialog}
+                      label="routine"
+                    />
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -141,14 +162,21 @@ export const PathwayCard = observer(({ pathway, listId }) => {
                 {frequencyLookup[pathway.frequency]}
               </div>
             )}
-
-            <Button
-              className="w-full mt-2"
-              onClick={() => MobxStore.setPathwayPlaying(pathway)}
-            >
-              <FaPlay className="mr-2 h-3 w-3" />
-              Play
-            </Button>
+            {isPremium && (
+              <Button>
+                <Lock size="14" className="mr-1" /> Upgrade Premium
+              </Button>
+            )}
+            {!isPremium && (
+              <Button
+                variant="outline"
+                className="w-full mt-2"
+                onClick={() => MobxStore.setPathwayPlaying(pathway)}
+              >
+                <FaPlay className="mr-2 h-3 w-3" />
+                Play
+              </Button>
+            )}
           </div>
         </div>
       </Card>

@@ -4,7 +4,7 @@ import { PricingBox } from "@/landingpage/PricingBox";
 import MobxStore from "@/mobx";
 import { LoadingSpinner } from "@/reusable-ui/LoadingSpinner";
 
-const freeData = {
+export const freeData = {
   title: "Free",
   description: "Try the app with limited features",
   price: "$0",
@@ -17,7 +17,7 @@ const freeData = {
   cta: "Start for Free",
 };
 
-const proData = {
+export const proData = {
   title: "Premium",
   description: "One time payment for one year",
   price: "$99",

@@ -18,7 +18,7 @@ export const PricingBox = ({ data, isAuthenticated }) => {
   const isPremium = data.title === "Premium";
   return (
     <Card
-      className="lg:w-1/3 md:w-1/2"
+      className="min-w-[300px]"
       style={isPremium ? { border: "1px solid yellow" } : {}}
     >
       <div className="flex justify-start items-center w-full h-[100px] pl-8">

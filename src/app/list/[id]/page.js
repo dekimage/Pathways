@@ -30,6 +30,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { PathwayPlayer } from "@/app/dashboard/page";
 import { PathwayCard, TitleDescription } from "@/app/today/pathwaycomponents";
+import { DeleteDialog } from "@/components/Dialogs/DeleteDialog";
 
 const CustomListPage = observer(({ params }) => {
   const {
@@ -42,6 +43,7 @@ const CustomListPage = observer(({ params }) => {
     editListName,
   } = MobxStore;
   const [showDialog, setShowDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditListDialog, setShowEditListDialog] = useState(false);
 
   const listId = params.id;
@@ -155,14 +157,28 @@ const CustomListPage = observer(({ params }) => {
                       Edit List
                     </DialogTrigger>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
+                  {/* <DropdownMenuItem
                     onClick={() => {
                       deleteList(listId);
                       router.push("/dashboard");
                     }}
                   >
                     Delete List
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
+                  <DeleteDialog
+                    trigger={
+                      <div className="w-full hover:bg-accent cursor-pointer relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                        Delete List
+                      </div>
+                    }
+                    onDelete={() => {
+                      deleteList(listId);
+                      router.push("/dashboard");
+                    }}
+                    setShow={setShowDeleteDialog}
+                    show={showDeleteDialog}
+                    label="list"
+                  />
                 </DropdownMenuContent>
               </DropdownMenu>
               {/* 🔴 DialogContent ouside of DropdownMenuContent */}

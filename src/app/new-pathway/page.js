@@ -28,6 +28,9 @@ import randomUnicodeEmoji from "random-unicode-emoji";
 import { DEFAULT_COLORS } from "@/data";
 import { premiumUtil } from "@/utils/premium";
 import { PremiumLabel } from "@/reusable-ui/ReusableLayout";
+import { PricingBox } from "@/landingpage/PricingBox";
+import { proData } from "../premium/page";
+import { useToast } from "@/components/ui/use-toast";
 
 // add these to utils
 
@@ -600,6 +603,7 @@ const Step = forwardRef(
 );
 
 const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
+  const { toast } = useToast();
   const router = useRouter();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [openMusic, setOpenMusic] = useState(false);
@@ -620,6 +624,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
     setIsPathwayEditView,
     triggeredEvents,
     addTrigger,
+    user,
   } = MobxStore;
 
   useEffect(() => {
@@ -692,6 +697,9 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
         setPathwayPlaying(false);
         setIsPathwayEditView(false);
       }
+      toast({
+        title: "✔️ Routine Saved",
+      });
       return;
 
       if (
@@ -743,6 +751,8 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
         <div className="flex flex-col rounded-lg max-w-[480px] w-full">
           <div className="text-2xl font-bold mb-4">Create New Routine</div>
           <PremiumLabel label="routines" />
+          <div className="my-2"></div>
+          <PricingBox data={proData} />
         </div>
       </div>
     );
@@ -1027,6 +1037,9 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
           onClick={addStep}
         >
           + Add Step
+        </Button>
+        <Button className="mt-4 border-dashed" onClick={handleSubmit}>
+          Save Changes
         </Button>
       </div>
       <div class="fixed h-[53px] top-0 left-0 w-full bg-background border b-top flex justify-between items-center">

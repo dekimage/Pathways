@@ -14,6 +14,8 @@ import { DEFAULT_COLORS } from "@/data";
 import { SkeletonDemo } from "@/reusable-ui/Skeleton";
 import Link from "next/link";
 import { premiumUtil } from "@/utils/premium";
+import { useToast } from "@/components/ui/use-toast";
+import { DeleteDialog } from "@/components/Dialogs/DeleteDialog";
 
 export function getRandomColor() {
   const randomIndex = Math.floor(Math.random() * DEFAULT_COLORS.length);
@@ -46,7 +48,8 @@ const RewardBuilder = ({
   gamifyOk,
 }) => {
   const [hex, setHex] = useState("#F44E3B");
-  console.log(rewardState);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
   const [reward, setReward] = useState(
     rewardState ? rewardState : defaultReward
   );
@@ -174,17 +177,25 @@ const RewardBuilder = ({
           Cancel
         </Button>
         {rewardState && (
-          <Button
-            variant="destructive"
-            className="mt-4"
-            onClick={() => {
+          <DeleteDialog
+            trigger={
+              <Button
+                variant="destructive"
+                className="w-full mt-4"
+                onClick={() => {}}
+              >
+                Delete
+              </Button>
+            }
+            onDelete={() => {
               MobxStore.deleteReward(reward);
               setIsCreate(false);
               setRewardState(null);
             }}
-          >
-            Delete
-          </Button>
+            setShow={setShowDeleteDialog}
+            show={showDeleteDialog}
+            label="reward"
+          />
         )}
       </div>
     </div>
@@ -206,6 +217,7 @@ const Reward = ({
     maxPurchaseLimit,
     isPathway, // if its pathway - play pathway, disable only after completed!
   } = reward;
+  const { toast } = useToast();
   return (
     <div className="flex items-center justify-between  p-2 border rounded-md">
       <div className="flex items-center">
@@ -237,7 +249,32 @@ const Reward = ({
         >
           Edit
         </Button>
-        <Button onClick={() => MobxStore.buyReward(reward)}>Buy</Button>
+        <Button
+          onClick={async () => {
+            if (!MobxStore.user.isPremium) {
+              alert("Upgrade to premium to buy rewards");
+              return;
+            }
+            const res = await MobxStore.buyReward(reward);
+            if (res.error) {
+              toast({
+                title: res.error,
+              });
+            } else {
+              toast({
+                title: res.toast,
+                description: (
+                  <div className="flex gap-1 items-center">
+                    {" "}
+                    - {cost} <Gem size={12} />
+                  </div>
+                ),
+              });
+            }
+          }}
+        >
+          Buy
+        </Button>
 
         {/* <div className="text-lg ml-2">{timesPurchased}</div> */}
       </div>
@@ -249,6 +286,7 @@ const GamifyPage = observer(() => {
   const [isCreate, setIsCreate] = useState(false);
   const [rewardState, setRewardState] = useState(null);
   const { gamifyOk } = premiumUtil();
+
   return (
     <div className="h-full max-w-[600px] m-4 sm:mx-8">
       {isCreate ? (
@@ -256,6 +294,7 @@ const GamifyPage = observer(() => {
           setIsCreate={setIsCreate}
           rewardState={rewardState}
           setRewardState={setRewardState}
+          gamifyOk={gamifyOk}
         />
       ) : (
         <>
