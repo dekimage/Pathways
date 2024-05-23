@@ -28,9 +28,11 @@ const TodayPage = observer(() => {
             title="Daily"
             description="Start your day with these routines"
           />
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-4">
             {userPathways
-              ?.filter((p) => shouldShowToday(p.days))
+              ?.filter(
+                (p) => shouldShowToday(p.days) && p.frequency == "everyday"
+              )
               .map((pathway, i) => (
                 <PathwayCard key={i} pathway={pathway} />
               ))}
@@ -41,9 +43,11 @@ const TodayPage = observer(() => {
             title="Weekly"
             description="Make your weekly routine"
           />
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-4">
             {userPathways
-              ?.filter((p) => shouldShowToday(p.days))
+              ?.filter(
+                (p) => shouldShowToday(p.days) && p.frequency == "everyweek"
+              )
               .map((pathway, i) => (
                 <PathwayCard key={i} pathway={pathway} />
               ))}
@@ -52,9 +56,11 @@ const TodayPage = observer(() => {
 
         <TabsContent value="monthly">
           <TitleDescription title="Monthly" description="Once a month stuff" />
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-4">
             {userPathways
-              ?.filter((p) => shouldShowToday(p.days))
+              ?.filter(
+                (p) => shouldShowToday(p.days) && p.frequency == "everymonth"
+              )
               .map((pathway, i) => (
                 <PathwayCard key={i} pathway={pathway} />
               ))}
@@ -66,9 +72,13 @@ const TodayPage = observer(() => {
             title="Anytime"
             description="Home of flexible routines"
           />
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-4">
             {userPathways
-              ?.filter((p) => shouldShowToday(p.days))
+              ?.filter(
+                (p) =>
+                  shouldShowToday(p.days) &&
+                  (p.frequency == "unlimited" || p.timeType == "anytime")
+              )
               .map((pathway, i) => (
                 <PathwayCard key={i} pathway={pathway} />
               ))}

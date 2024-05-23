@@ -42,6 +42,7 @@ import { SkeletonDemo } from "./Skeleton";
 import withAuth from "@/hoc/withAuth";
 import { premiumUtil } from "@/utils/premium";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
 
 const defaultLayout = [20, 80];
 
@@ -82,6 +83,7 @@ export const CreateListDialog = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { addList, user } = MobxStore;
   const { listsOk } = premiumUtil();
+  const { toast } = useToast();
 
   return (
     <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
@@ -124,6 +126,7 @@ export const CreateListDialog = () => {
               onClick={() => {
                 setShowDeleteDialog(false);
                 addList(listName);
+                toast({ title: "✔️ List Added" });
               }}
             >
               Save

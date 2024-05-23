@@ -280,9 +280,14 @@ const LogCard = ({ log }) => {
 
 const LogCardReward = ({ log }) => {
   const { reward } = log;
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { deleteLog } = MobxStore;
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const searchParams = useSearchParams();
+  const isSpecificReward = searchParams.get("rewardId");
+  const router = useRouter();
+
   return (
-    <div className="flex flex-col  justify-between p-2 border rounded-md">
+    <div className="flex  justify-between p-2 border rounded-md">
       <div className="flex items-center">
         <div className="flex items-center">
           <div
@@ -303,6 +308,27 @@ const LogCardReward = ({ log }) => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex gap-2 items-center">
+        <Button
+          className="w-1/2"
+          onClick={() =>
+            isSpecificReward
+              ? router.replace("/analytics", undefined, {
+                  shallow: true,
+                })
+              : router.push(`/analytics?rewardId=${log.reward.id}`)
+          }
+        >
+          {isSpecificReward ? "Hide All" : "View All"}
+        </Button>
+
+        <DeleteDialog
+          onDelete={() => deleteLog(log.id)}
+          setShow={setShowDeleteDialog}
+          show={showDeleteDialog}
+          label="log"
+        />
       </div>
     </div>
   );
@@ -328,7 +354,7 @@ const LogsPage = observer(() => {
         return log.pathwayId === pathwayId;
       }
       if (rewardId) {
-        return log.rewardId === rewardId;
+        return log.reward?.id === rewardId;
       }
 
       if (filterType === "all") {
@@ -371,13 +397,23 @@ const LogsPage = observer(() => {
         <Tabs defaultValue="pathways">
           <TabsList>
             <TabsTrigger
-              onClick={() => setFilterType("pathways")}
+              onClick={() => {
+                setFilterType("pathways");
+                router.replace("/analytics", undefined, {
+                  shallow: true,
+                });
+              }}
               value="pathways"
             >
               Routines
             </TabsTrigger>
             <TabsTrigger
-              onClick={() => setFilterType("rewards")}
+              onClick={() => {
+                setFilterType("rewards");
+                router.replace("/analytics", undefined, {
+                  shallow: true,
+                });
+              }}
               value="rewards"
             >
               Rewards

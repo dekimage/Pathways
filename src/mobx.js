@@ -106,6 +106,8 @@ class Store {
     this.deleteList = this.deleteList.bind(this);
     this.editListName = this.editListName.bind(this);
     this.findPathwayById = this.findPathwayById.bind(this);
+    this.updateStreak = this.updateStreak.bind(this);
+    this.checkAndResetStreak = this.checkAndResetStreak.bind(this);
   }
 
   async initializeAuth() {
@@ -133,6 +135,7 @@ class Store {
             }
 
             this.fetchUserData(); // Fetch all user-related data
+            this.checkAndResetStreak();
           });
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -391,6 +394,8 @@ class Store {
       return;
     }
 
+    await this.updateStreak();
+
     try {
       const logRef = collection(db, `users/${this.user.uid}/activityLogs`);
       const docRef = await addDoc(logRef, {
@@ -407,8 +412,8 @@ class Store {
 
       //if time tracking - Update Progress +1
       if (
-        pathway.timeType == "time" &&
-        pathway.progress || 0 < pathway.completionLimit
+        (pathway.timeType == "time" && pathway.progress) ||
+        0 < pathway.completionLimit
       ) {
         const updatedPathwayRef = doc(
           db,
@@ -430,7 +435,8 @@ class Store {
           runInAction(() => {
             // Update the pathway data in the MobX store
             // Assuming you have a method or logic to update the pathway
-            this.updatePathwayData(pathway.id, {
+
+            this.updatePathwayInState(pathway.id, {
               progress: newProgress,
               lastCompleted: lastCompleted,
             });
@@ -444,29 +450,67 @@ class Store {
     } catch (error) {
       logger.error("Error saving session log:", error);
     }
-
-    // update streak 9MAKE IT AS SEPERATE STREAK FUNCTION
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const lastPlayed = new Date(this.user.lastPlayed);
-    lastPlayed.setHours(0, 0, 0, 0);
-
-    if (today - lastPlayed === ONE_DAY) {
-      0;
-      this.user.streak++;
-    } else if (today - lastPlayed > ONE_DAY) {
-      this.user.streak = 1;
-    }
-
-    this.user.lastPlayed = today;
-
-    // Update the user's streak in Firestore
-    const userRef = doc(db, "users", this.user.uid);
-    await updateDoc(userRef, {
-      streak: this.user.streak,
-      lastPlayed: today,
-    });
   }
+
+  async checkAndResetStreak() {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+      const lastPlayedTimestamp = this.user.lastPlayed;
+
+      if (!lastPlayedTimestamp) {
+        console.error("Last played date not found in user document");
+        return;
+      }
+
+      const lastPlayed = lastPlayedTimestamp.toDate(); // Convert Firestore Timestamp to JavaScript Date
+      lastPlayed.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+      if (today.getTime() - lastPlayed.getTime() > ONE_DAY) {
+        this.user.streak = 0;
+
+        // Update the user's streak in Firestore
+        const userRef = doc(db, "users", this.user.uid);
+        await updateDoc(userRef, {
+          streak: this.user.streak,
+        });
+
+        console.log("Streak has been reset");
+      } else {
+        console.log("Streak is up to date");
+      }
+    } catch (error) {
+      console.error("Error checking and resetting streak:", error);
+    }
+  }
+
+  updateStreak = async () => {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+      const lastPlayed = new Date(this.user.lastPlayed.toDate());
+      lastPlayed.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+      if (today.getTime() - lastPlayed.getTime() === ONE_DAY) {
+        this.user.streak++;
+      } else if (today.getTime() - lastPlayed.getTime() > ONE_DAY) {
+        this.user.streak = 1;
+      }
+
+      this.user.lastPlayed = today;
+
+      // Update the user's streak in Firestore
+      const userRef = doc(db, "users", this.user.uid);
+      await updateDoc(userRef, {
+        streak: this.user.streak,
+        lastPlayed: today,
+      });
+    } catch (error) {
+      console.error("Error updating streak:", error);
+    }
+  };
 
   async deleteLog(logId) {
     try {
@@ -933,9 +977,12 @@ class Store {
     const logRef = collection(db, `users/${this.user.uid}/activityLogs`);
     const logDocRef = await addDoc(logRef, rewardPurchaseLog);
 
+    const docSnap = await getDoc(logDocRef);
+    const newLogData = docSnap.data();
+
     runInAction(() => {
       this.user.gem = newgemAmount;
-      this.logs.push({ id: logDocRef.id, ...rewardPurchaseLog });
+      this.logs.push(newLogData);
     });
 
     logger.debug("Reward purchased successfully");

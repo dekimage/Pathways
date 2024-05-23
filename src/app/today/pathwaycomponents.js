@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Lock, MoreVertical } from "lucide-react";
+import { Check, Infinity, Lock, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { FaPlay } from "react-icons/fa";
@@ -18,6 +18,7 @@ import MobxStore from "@/mobx";
 import { frequencyLookup } from "@/data";
 import { DeleteDialog } from "@/components/Dialogs/DeleteDialog";
 import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export const TitleDescription = ({ title, description, button }) => {
   return (
@@ -68,6 +69,7 @@ export const PathwayCard = observer(({ pathway, listId }) => {
   } = MobxStore;
 
   const pathname = usePathname();
+  const { toast } = useToast();
 
   const isInList = pathname.includes("list") && listId;
 
@@ -113,7 +115,10 @@ export const PathwayCard = observer(({ pathway, listId }) => {
                   </Link>
                   {isInList ? (
                     <DropdownMenuItem
-                      onClick={() => removeFromList(listId, pathway.id)}
+                      onClick={() => {
+                        removeFromList(listId, pathway.id);
+                        toast({ title: "✔️ Routine Removed" });
+                      }}
                     >
                       Remove From List
                     </DropdownMenuItem>
@@ -157,13 +162,21 @@ export const PathwayCard = observer(({ pathway, listId }) => {
               </div>
             </div>
             {pathway.timeType == "time" && (
-              <div className="text-sm  text-center w-fit">
+              <div className="text-sm  text-center w-fit border rounded-md p-1 flex gap-1 items-center">
                 {pathway.progress || 0} / {pathway.completionLimit}{" "}
                 {frequencyLookup[pathway.frequency]}
+                {(pathway.progress || 0) >= pathway.completionLimit && (
+                  <Check size={16} />
+                )}
+              </div>
+            )}
+            {pathway.timeType != "time" && (
+              <div className="text-sm  text-center w-fit border rounded-md p-1">
+                <Infinity size={16} />
               </div>
             )}
             {isPremium && (
-              <Button>
+              <Button className="mt-2">
                 <Lock size="14" className="mr-1" /> Upgrade Premium
               </Button>
             )}

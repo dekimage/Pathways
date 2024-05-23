@@ -31,6 +31,7 @@ import { Input } from "@/components/ui/input";
 import { PathwayPlayer } from "@/app/dashboard/page";
 import { PathwayCard, TitleDescription } from "@/app/today/pathwaycomponents";
 import { DeleteDialog } from "@/components/Dialogs/DeleteDialog";
+import { useToast } from "@/components/ui/use-toast";
 
 const CustomListPage = observer(({ params }) => {
   const {
@@ -46,6 +47,8 @@ const CustomListPage = observer(({ params }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditListDialog, setShowEditListDialog] = useState(false);
 
+  const { toast } = useToast();
+
   const listId = params.id;
   const list = lists.filter((list) => list.id === listId)[0];
   const listPathways = findPathwaysByListId(listId);
@@ -55,9 +58,6 @@ const CustomListPage = observer(({ params }) => {
   const onListNameChange = (e) => {
     setListName(e.target.value);
   };
-
-  const [isPathwayListEditNameDialogOpen, setIsPathwayListEditNameDialogOpen] =
-    useState(false);
 
   const userPathwaysInCombobox = userPathways
     .filter((p) => !listPathways.some((lp) => lp.id === p.id))
@@ -124,6 +124,7 @@ const CustomListPage = observer(({ params }) => {
               onClick={() => {
                 addPathwayToList(listId, selectedPathway.id);
                 setShowDialog(false);
+                toast({ title: "✔️ Routine Added" });
               }}
             >
               Add
@@ -223,6 +224,7 @@ const CustomListPage = observer(({ params }) => {
                     onClick={() => {
                       editListName(listId, listName);
                       setShowEditListDialog(false);
+                      toast({ title: "✔️ List Name Changed" });
                     }}
                   >
                     Save changes

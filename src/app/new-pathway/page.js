@@ -114,9 +114,9 @@ const DEFAULT_PATHWAY = {
   background: "",
   steps: [],
   //new
-  timeType: "time",
+  timeType: "anytime",
   days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-  frequency: "everyday",
+  frequency: "unlimited",
   completionLimit: 1,
   reward: 50,
   trigger: "",
@@ -857,12 +857,16 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
 
             <ComboBoxWithHelper
               title="Frequency"
-              value={pathway.frequency}
+              value={pathway.frequency || "unlimited"}
               setValue={(value) => {
                 handleInputChange("frequency", value);
               }}
               searchLabel={"Frequency"}
               options={[
+                {
+                  value: "unlimited",
+                  label: "Unlimited",
+                },
                 {
                   value: "everyday",
                   label: "Every Day",
@@ -878,10 +882,6 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
                 {
                   value: "everyyear",
                   label: "Every Year",
-                },
-                {
-                  value: "unlimited",
-                  label: "Unlimited",
                 },
               ]}
               helperChildren={"When will you do this pathway?"}

@@ -8,7 +8,7 @@ import { Combobox } from "@/reusable-ui/ComboBox";
 import Circle from "@uiw/react-color-circle";
 import MobxStore from "@/mobx";
 import { observer } from "mobx-react";
-import { ChevronLeft, Gem } from "lucide-react";
+import { ChevronLeft, Gem, MoreVertical } from "lucide-react";
 import { TitleDescription } from "../today/pathwaycomponents";
 import { DEFAULT_COLORS } from "@/data";
 import { SkeletonDemo } from "@/reusable-ui/Skeleton";
@@ -16,6 +16,13 @@ import Link from "next/link";
 import { premiumUtil } from "@/utils/premium";
 import { useToast } from "@/components/ui/use-toast";
 import { DeleteDialog } from "@/components/Dialogs/DeleteDialog";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function getRandomColor() {
   const randomIndex = Math.floor(Math.random() * DEFAULT_COLORS.length);
@@ -37,7 +44,7 @@ const defaultReward = {
   name: "",
   emoji: "🎁",
   timesPurchased: 0,
-  maxPurchaseLimit: "unlimited",
+  // maxPurchaseLimit: "unlimited",
   backgroundColor: "transparent",
 };
 
@@ -127,14 +134,15 @@ const RewardBuilder = ({
             <Gem />
           </div>
         </div>
-        <label className="mt-4 text-md font-medium">Max Purchase Limit</label>
+        {/* FEATURE: */}
+        {/* <label className="mt-4 text-md font-medium">Max Purchase Limit</label>
         <Combobox
           value={reward.maxPurchaseLimit}
           setValue={(value) => handleInputChange("maxPurchaseLimit", value)}
           options={STATIC_MAX_PURCHASE_LIMITS}
           select
-        />
-        {reward.maxPurchaseLimit === "custom" && (
+        /> */}
+        {/* {reward.maxPurchaseLimit === "custom" && (
           <div className="flex items-center gap-2 mt-4 ml-4">
             <input
               type="number"
@@ -155,7 +163,7 @@ const RewardBuilder = ({
             />
             <div>{reward.customDays > 1 ? "days" : "day"}</div>
           </div>
-        )}
+        )} */}
         {gamifyOk ? (
           <Button className="mt-4" onClick={() => saveReward(reward)}>
             Save
@@ -202,6 +210,50 @@ const RewardBuilder = ({
   );
 };
 
+const OptionsDropDown = ({ reward, setIsCreate, setRewardState }) => {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon" className="p-2">
+          <MoreVertical className="h-4 w-4" />
+          <span className="sr-only">More</span>
+          {/* <HiOutlineCog6Tooth size={20} className="text-slate-600" /> */}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem
+          onClick={() => {
+            setRewardState(reward);
+            setIsCreate(true);
+          }}
+        >
+          Edit
+        </DropdownMenuItem>
+        <Link href={`/analytics/?rewardId=${reward.id}`} passHref>
+          <DropdownMenuItem>View Stats</DropdownMenuItem>
+        </Link>
+        <DeleteDialog
+          trigger={
+            <div className="w-full hover:bg-accent cursor-pointer relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+              Delete
+            </div>
+          }
+          onDelete={() => {
+            MobxStore.deleteReward(reward);
+            setIsCreate(false);
+            setRewardState(null);
+          }}
+          setShow={setShowDeleteDialog}
+          show={showDeleteDialog}
+          label="reward"
+        />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 const Reward = ({
   reward,
   setIsCreate,
@@ -231,24 +283,25 @@ const Reward = ({
       <div className="flex flex-col gap-1 flex-grow">
         <div className="text-md">{name}</div>
         <div className="flex gap-2">
-          <div className="flex justify-center items-center gap-1">
-            {cost} <Gem size={16} />
-          </div>
-          <Badge variant="outline" className="">
-            {maxPurchaseLimit}
+          <Badge
+            variant="outline"
+            className="text-sm px-2 flex justify-center items-center gap-1"
+          >
+            {cost} <Gem size={14} />
           </Badge>
+
+          {/* <Badge variant="outline" className="">
+            {maxPurchaseLimit}
+          </Badge> */}
         </div>
       </div>
       <div className="flex items-center flex-grow justify-end gap-2 sm:flex-row flex-col">
-        <Button
-          variant="outline"
-          onClick={() => {
-            setRewardState(reward);
-            setIsCreate(true);
-          }}
-        >
-          Edit
-        </Button>
+        <OptionsDropDown
+          reward={reward}
+          setIsCreate={setIsCreate}
+          setRewardState={setRewardState}
+        />
+
         <Button
           onClick={async () => {
             if (!MobxStore.user.isPremium) {
