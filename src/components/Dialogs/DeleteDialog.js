@@ -15,7 +15,7 @@ export const DeleteDialog = ({ trigger, onDelete, setShow, show, label }) => {
     <Dialog open={show} onOpenChange={setShow}>
       <DialogTrigger>
         {trigger ? (
-          trigger
+          <div className="w-[120px]">{trigger}</div>
         ) : (
           <Button className="ml-2" variant="outline">
             Delete

@@ -3,11 +3,7 @@ import { observer } from "mobx-react";
 import { useState } from "react";
 import MobxStore from "@/mobx";
 import { PathwayPlayer } from "../dashboard/page";
-import {
-  HorizontalPathwaysList,
-  PathwayCard,
-  TitleDescription,
-} from "../today/pathwaycomponents";
+import { PathwayCard, TitleDescription } from "../today/pathwaycomponents";
 import { routines } from "@/data/routines";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +15,6 @@ import {
   Minimize2,
   ScanEye,
 } from "lucide-react";
-import { Combobox } from "@/reusable-ui/ComboBox";
 
 export const CATEGORIES = [
   {

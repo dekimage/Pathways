@@ -40,12 +40,12 @@ const STATIC_MAX_PURCHASE_LIMITS = [
 ];
 
 const defaultReward = {
-  cost: null,
+  cost: 10,
   name: "",
   emoji: "🎁",
   timesPurchased: 0,
-  // maxPurchaseLimit: "unlimited",
   backgroundColor: "transparent",
+  // maxPurchaseLimit: "unlimited",
 };
 
 const RewardBuilder = ({
@@ -236,7 +236,7 @@ const OptionsDropDown = ({ reward, setIsCreate, setRewardState }) => {
         </Link>
         <DeleteDialog
           trigger={
-            <div className="w-full hover:bg-accent cursor-pointer relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+            <div className="w-full hover:bg-accent cursor-pointer flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
               Delete
             </div>
           }

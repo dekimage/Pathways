@@ -3,13 +3,12 @@ import { observer } from "mobx-react";
 import MobxStore from "@/mobx";
 
 import { PodcastEmptyPlaceholder } from "@/reusable-ui/EmptyList";
-import { MoreVertical, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/reusable-ui/ComboBox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -70,16 +69,6 @@ const CustomListPage = observer(({ params }) => {
   const [selectedPathway, setSelectedPathway] = useState(
     userPathwaysInCombobox[0]
   );
-
-  // THIS SETS IT TO DEFAULT CORRECTLY 1ST PATHWAY BUT PRODUCES BUG
-  // useEffect(() => {
-  //   if (
-  //     userPathwaysInCombobox.length > 0 &&
-  //     selectedPathway?.id !== userPathwaysInCombobox[0].id
-  //   ) {
-  //     setSelectedPathway(userPathwaysInCombobox[0]);
-  //   }
-  // }, [userPathwaysInCombobox, selectedPathway]);
 
   if (pathwayPlaying) {
     return <PathwayPlayer pathway={pathwayPlaying} />;
@@ -158,17 +147,9 @@ const CustomListPage = observer(({ params }) => {
                       Edit List
                     </DialogTrigger>
                   </DropdownMenuItem>
-                  {/* <DropdownMenuItem
-                    onClick={() => {
-                      deleteList(listId);
-                      router.push("/dashboard");
-                    }}
-                  >
-                    Delete List
-                  </DropdownMenuItem> */}
                   <DeleteDialog
                     trigger={
-                      <div className="w-full hover:bg-accent cursor-pointer relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                      <div className="w-[120px] hover:bg-accent cursor-pointer relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                         Delete List
                       </div>
                     }
@@ -182,22 +163,7 @@ const CustomListPage = observer(({ params }) => {
                   />
                 </DropdownMenuContent>
               </DropdownMenu>
-              {/* 🔴 DialogContent ouside of DropdownMenuContent */}
               <DialogContent>
-                {/* DELETE LIST DIALOG ----> */}
-                {/* <DialogHeader>
-                  <DialogTitle>Are you sure?</DialogTitle>
-                  <DialogDescription>
-                    Do you want to delete the entry? Deleting this entry cannot
-                    be undone.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
-                  </DialogClose>
-                  <Button>Delete</Button>
-                </DialogFooter> */}
                 <DialogHeader>
                   <DialogTitle>Edit List Name</DialogTitle>
                   <DialogDescription>
