@@ -369,7 +369,6 @@ class Store {
   }
 
   async addLog(pathway, logData) {
-    console.log({ pathway, logData });
     const canSave = await this.canSaveLog(pathway.id);
     if (!canSave) {
       logger.error("Log limit reached for the day");
@@ -434,9 +433,6 @@ class Store {
           });
 
           runInAction(() => {
-            // Update the pathway data in the MobX store
-            // Assuming you have a method or logic to update the pathway
-
             this.updatePathwayInState(pathway.id, {
               progress: newProgress,
               lastCompleted: lastCompleted,
@@ -571,12 +567,12 @@ class Store {
 
       const recentQuery = query(
         userPathwayRef,
-        orderBy("modifiedAt", "desc"),
+        orderBy("lastCompleted", "desc"),
         limit(5)
       );
 
       const querySnapshot = await getDocs(recentQuery);
-      console.log(querySnapshot);
+
       runInAction(() => {
         // Store recent pathways in MobX store
         this.recentPathways = querySnapshot.docs.map((doc) => ({
@@ -710,6 +706,7 @@ class Store {
     };
 
     this.pathways = updatePathwayInArray(this.pathways);
+
     this.recentPathways = updatePathwayInArray(this.recentPathways);
     this.topPlayedPathways = updatePathwayInArray(this.topPlayedPathways);
     this.userPathways = updatePathwayInArray(this.userPathways);
