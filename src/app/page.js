@@ -3,13 +3,19 @@ import { Button } from "@/components/ui/button";
 import {
   AlignVerticalDistributeCenter,
   ArrowDown,
+  Briefcase,
   Check,
   CloudRainWind,
   Cross,
+  Flower,
+  Gamepad2,
   Gift,
+  HeartHandshake,
+  Minimize2,
   Minus,
   Plus,
   Quote,
+  ScanEye,
   X,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,8 +26,14 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { FaDiscord } from "react-icons/fa";
 import logoImage from "@/assets/logo.png";
+import heroImg from "@/assets/hero.png";
 
-const avatars = Array.from({ length: 5 });
+const avatars = [
+  { avatar: "RB" },
+  { avatar: "CN" },
+  { avatar: "JM" },
+  { avatar: "MG" },
+];
 
 const FaqItem = ({ faq }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -127,21 +139,34 @@ function YouTubeEmbed() {
   );
 }
 
-const QuoteSingle = () => {
+const testemonials = [
+  {
+    person: "James Morris",
+    role: "Developer",
+    content:
+      "As someone who constantly seeks self-improvement, PlayRoutines is the tool I`ve been waiting for. It takes the overwhelming amount of information from books and breaks it down into simple, guided routines. I`ve finally started seeing the results I`ve been aiming for.",
+  },
+  {
+    person: "Andrew Klisiak",
+    role: "Founder",
+    content:
+      "PlayRoutines has transformed my daily habits. The guided routines are exactly what I needed to stay on track and achieve my goals. It's like having a personal coach guiding me through each step.",
+  },
+];
+
+const QuoteSingle = ({ quote }) => {
+  const { person, role, content } = quote;
   return (
-    <div className="space-y-4 max-w-md mx-auto">
+    <div className="space-y-4 max-w-md mx-auto mt-8">
       <Quote />
-      <p className="md:text-lg leading-relaxed">
-        It`s a game changer. Comes with an easy-to-follow tutorial, and saves a
-        ton of time.
-      </p>
+      <p className="md:text-lg leading-relaxed">{content}</p>
       <div className="flex items-center gap-2">
         <Avatar className="w-12 h-12">
           <AvatarImage src="" />
-          <AvatarFallback>MG</AvatarFallback>
+          <AvatarFallback>JM</AvatarFallback>
         </Avatar>
-        <p>Yifan Goh</p>
-        <Badge className="bg-green-500">Founder</Badge>
+        <p>{person}</p>
+        <Badge className="bg-green-500">{role}</Badge>
       </div>
     </div>
   );
@@ -244,27 +269,27 @@ const CheckoutButton = () => {
 
 const ProblemsSection = () => {
   const problemsData = {
-    title: "97% of visitors aren't ready to buy",
+    title: "Transform Your Daily Life with Actionable Routines",
     description:
-      "All the time and money spent on ads, SEO, and content marketing goes to waste. Potential customers leave and never come back.",
+      "Are you tired of wasting time on content that never leads to real change? With PlayRoutines, turn valuable insights from top self-improvement books into actionable routines you can follow in real time.",
     problems: [
       {
-        icon: "😬",
-        text: "Potential customer is interested",
+        icon: "📘",
+        text: "Excited to improve yourself",
       },
       {
         icon: "arrow",
       },
       {
         icon: "😬",
-        text: "Doesn't find a reason to buy right now",
+        text: "Spend hours reading and learning",
       },
       {
         icon: "arrow",
       },
       {
-        icon: "😬",
-        text: "Leaves and never comes back",
+        icon: "🚫",
+        text: "End up with 0 action and change",
       },
     ],
   };
@@ -281,7 +306,7 @@ const ProblemsSection = () => {
             problem.icon === "arrow" ? (
               <div
                 key={i}
-                className="shrink-0 w-12 fill-neutral-content opacity-70 max-md:-scale-x-100 md:-rotate-90"
+                className="shrink-0 w-12 fill-neutral-content opacity-70 max-md:-scale-x-100 md:-rotate-90 flex justify-center"
               >
                 <ArrowDown />
               </div>
@@ -304,16 +329,16 @@ const ProblemsSection = () => {
 const ProblemRedSection = () => {
   const problems = [
     {
-      highlight: "5 hrs",
-      text: "to set up emails",
+      highlight: "100+ hrs",
+      text: "reading books",
     },
     {
-      highlight: "4 hrs",
-      text: "designing a landing page",
+      highlight: "100+ hrs",
+      text: "listening podcasts",
     },
     {
-      highlight: "3 hrs",
-      text: "to handle Stripe webhooks",
+      highlight: "10+ hrs",
+      text: "taking notes",
     },
     {
       highlight: "∞ hrs",
@@ -322,7 +347,7 @@ const ProblemRedSection = () => {
   ];
   return (
     <div className="relative py-24 px-8">
-      <div className="relative bg-neutral text-neutral-content rounded-lg p-8 md:p-16 max-w-lg mx-auto text-center text-lg bg-[#2E1A05]">
+      <div className="dark:bg-neutral relative bg-yellow-200 text-neutral-content rounded-lg p-8 md:p-16 max-w-lg mx-auto text-center text-lg bg-[#2E1A05]">
         <div className="leading-relaxed space-y-4 md:space-y-6">
           <div className="text-neutral-content/80 space-y-1">
             {problems.map((problem, i) => (
@@ -336,7 +361,7 @@ const ProblemRedSection = () => {
           </div>
           <div className="text-xl font-semibold flex flex-col md:flex-row items-center justify-center gap-3">
             <p>
-              <span className="text-red-400 font-medium"> = 20 hrs</span> of
+              <span className="text-red-400 font-medium"> = 250 hrs</span> of
               headaches
             </p>
             <CloudRainWind />
@@ -387,8 +412,8 @@ const LandingPage = () => {
             <CheckoutButton />
             <p className="text-sm md:text-base flex justify-center items-center gap-2 md:text-sm">
               <Gift className="text-primary" />
-              <span className="text-primary">$100 off </span>for the first 3150
-              customers (10 left)
+              <span className="text-primary">$100 off </span>for the first 50
+              customers (38 left)
             </p>
           </div>
 
@@ -422,12 +447,18 @@ const LandingPage = () => {
             </div>
 
             <div className="text-base text-gray-400/80">
-              <span className="font-semibold text-gray-400">94</span> people put
+              <span className="font-semibold text-gray-400">12</span> people put
               wisdom into practice
             </div>
           </div>
         </div>
-        <div>Image here</div>
+        <Image
+          src={heroImg}
+          alt="hero"
+          width={1000}
+          height={1000}
+          className="w-[400px] h-[400px] sm:w-[800px] sm:h-[800px] rounded-lg object-center object-cover"
+        />
       </div>
       <div className="p-8 md:p-12 flex flex-wrap items-center justify-center gap-4 md:gap-8">
         <span className="text-xs text-[10px] opacity-50"> Featured on</span>
@@ -462,16 +493,28 @@ const LandingPage = () => {
       </div>
       <div className="grid grid-cols-4 md:flex justify-start gap-4 md:gap-12 max-md:px-8 max-w-3xl mx-auto mb-8">
         <div className="flex flex-col items-center justify-center gap-3 select-none cursor-pointer p-2 duration-100 text-gray-400/50">
-          <AlignVerticalDistributeCenter />
-          <span className="font-medium text-sm">Emails</span>
+          <Briefcase size={20} />
+          <span className="font-medium text-sm">Work</span>
         </div>
         <div className="flex flex-col items-center justify-center gap-3 select-none cursor-pointer p-2 duration-100 text-gray-400/50">
-          <AlignVerticalDistributeCenter />
-          <span className="font-medium text-sm">Emails</span>
+          <ScanEye size={20} />
+          <span className="font-medium text-sm">Self-Know</span>
         </div>
         <div className="flex flex-col items-center justify-center gap-3 select-none cursor-pointer p-2 duration-100 text-gray-400/50">
-          <AlignVerticalDistributeCenter />
-          <span className="font-medium text-sm">Emails</span>
+          <Minimize2 size={20} />
+          <span className="font-medium text-sm">Minimize</span>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-3 select-none cursor-pointer p-2 duration-100 text-gray-400/50">
+          <Flower size={20} />
+          <span className="font-medium text-sm">Calm</span>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-3 select-none cursor-pointer p-2 duration-100 text-gray-400/50">
+          <HeartHandshake size={20} />
+          <span className="font-medium text-sm">Connect</span>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-3 select-none cursor-pointer p-2 duration-100 text-gray-400/50">
+          <Gamepad2 size={20} />
+          <span className="font-medium text-sm">Play</span>
         </div>
       </div>
       <div className="bg-muted">
@@ -503,37 +546,42 @@ const LandingPage = () => {
               className="w-32 h-32 md:w-52 md:h-52 rounded-lg float-left mr-8 mb-8 object-center object-cover"
             />
             <p className="mb-4 text-gray-400 md:text-lg font-medium">
-              Hey, it`s Marc 👋
+              Hey, it’s Dejan 👋
             </p>
             <p className="mb-4 text-gray-400 md:text-lg font-medium">
-              In 2018, I believed I was Mark Zuckerberg, built a startup for 1
-              year, and got 0 users...
+              In my quest for self-improvement, I’ve read over 150 books, but
+              after five long years, I had little to show for it.
             </p>
             <p className="mb-4 text-gray-400 md:text-lg font-medium">
-              A few years after my burnout, I restarted the journey differently:
-              I shipped like a madman—
+              All that changed when I shifted my focus from theory to actionable
+              steps—real actions that lead to actual changes in life.
             </p>
             <p className="mb-4 text-gray-400 md:text-lg font-medium">
-              A few years after my burnout, I restarted the journey differently:
-              I shipped like a madman—
+              At first, I started writing these actionable steps for myself,
+              compressing the wisdom of countless books into small, guided
+              routines.
+            </p>
+            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+              These step-by-step packages, which I call routines, transformed my
+              life by helping me execute and achieve real results in anything I
+              pursued.
             </p>
             <ul className="list-inside list-decimal space-y-1.5 ml-5 mb-5">
               <li>
-                <span className="text-gray-400 font-medium">1. Save Time</span>
-                and focus on what matters: building a business
+                <span className="text-gray-400 font-medium">Analyse </span>
+                and track the routines.
               </li>
               <li>
-                <span className="text-gray-400 font-medium">
-                  2. Avoid headaches
-                </span>
-                like emails ending in spam or handling Stripe subscriptions
+                <span className="text-gray-400 font-medium">Guided App</span>
+                that takes you by the hand and guides me through each step of
+                every routine.
               </li>
             </ul>
           </div>
 
           <YouTubeEmbed />
 
-          <QuoteSingle />
+          <QuoteSingle quote={testemonials[0]} />
         </div>
       </section>
 
@@ -542,12 +590,12 @@ const LandingPage = () => {
           <div className="flex flex-col text-center w-full mb-20">
             <p className="font-medium text-primary mb-8">Pricing</p>
             <h2 className="font-bold text-3xl lg:text-5xl tracking-tight mb-8 max-w-2xl mx-auto">
-              Save hours of repetitive code, ship fast, get profitable!
+              Save Time, Stay Focused, See Actual Change!
             </h2>
             <p className="text-sm md:text-base flex justify-center items-center gap-2 md:text-sm">
               <Gift className="text-primary" />
-              <span className="text-primary">$100 off </span>for the first 3150
-              customers (10 left)
+              <span className="text-primary">$100 off </span>for the first 50
+              customers (38 left)
             </p>
           </div>
 
@@ -558,7 +606,7 @@ const LandingPage = () => {
         </div>
 
         <div className="space-y-4 mx-auto max-w-md mt-24">
-          <QuoteSingle />
+          <QuoteSingle quote={testemonials[1]} />
         </div>
       </section>
 
