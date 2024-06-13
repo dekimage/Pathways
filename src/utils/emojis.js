@@ -1,3 +1,5 @@
+import { randomUnicodeEmoji } from "random-unicode-emoji";
+
 function isSingleEmoji(emoji) {
   const baseEmoji = emoji.replace(/[\u{1F3FB}-\u{1F3FF}\u{FE0F}]/gu, "");
   return !baseEmoji.includes("\u200D") && Array.from(baseEmoji).length === 1;
