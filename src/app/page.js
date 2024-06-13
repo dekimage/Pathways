@@ -26,7 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { FaDiscord } from "react-icons/fa";
 import logoImage from "@/assets/logo.png";
-import heroImg from "@/assets/hero.png";
+import heroImg from "@/assets/hero-1.png";
 
 const avatars = [
   { avatar: "RB" },
@@ -264,7 +264,13 @@ const PricingBox = ({ pricingData }) => {
 };
 
 const CheckoutButton = () => {
-  return <Button className="">Get PlayRoutines</Button>;
+  return (
+    <Button className="">
+      <a className="link link-hover" href="#pricing">
+        Get PlayRoutines
+      </a>
+    </Button>
+  );
 };
 
 const ProblemsSection = () => {
@@ -549,7 +555,7 @@ const LandingPage = () => {
               Hey, it’s Dejan 👋
             </p>
             <p className="mb-4 text-gray-400 md:text-lg font-medium">
-              In my quest for self-improvement, I’ve read over 150 books, but
+              In my pursuit for self-improvement, I’ve read over 150 books, but
               after five long years, I had little to show for it.
             </p>
             <p className="mb-4 text-gray-400 md:text-lg font-medium">

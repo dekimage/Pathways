@@ -25,9 +25,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider("6LcF8PcpAAAAALe4uhuIAovCkUsp3z-1vT4aSwfE"),
-  isTokenAutoRefreshEnabled: true, // Optionally enable auto-refresh.
-});
+if (typeof window !== "undefined") {
+  // Initialize App Check with reCAPTCHA v3 provider using the Site Key
+  const appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(
+      "6LcF8PcpAAAAALe4uhuIAovCkUsp3z-1vT4aSwfE"
+    ),
+    isTokenAutoRefreshEnabled: true, // Optionally enable auto-refresh.
+  });
+}
 
 export { auth, app, db };
