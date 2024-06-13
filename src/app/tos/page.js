@@ -32,8 +32,8 @@ const PrivacyPolicyPage = () => {
           PlayRoutines offers a free access tier that provides limited access to
           our features and services. Additionally, you can purchase a one-year
           access license, which grants unrestricted access to all of
-          PlayRoutines' comprehensive functionalities for the duration of one
-          year from the date of purchase.
+          PlayRoutines&apos; comprehensive functionalities for the duration of
+          one year from the date of purchase.
           <br />
           <br />
           This license entails a straightforward and flexible arrangement,
@@ -45,9 +45,9 @@ const PrivacyPolicyPage = () => {
           <br />
           <br />
           Opting for the PlayRoutines one-year access license enables users to
-          enjoy the benefits of the software while recognizing the licensor's
-          unrestricted termination rights, which provide adaptability and
-          address potential unforeseen circumstances.
+          enjoy the benefits of the software while recognizing the
+          licensor&apos;s unrestricted termination rights, which provide
+          adaptability and address potential unforeseen circumstances.
           <br />
           <br />
           <div className="font-bold">4. Refunds</div>
@@ -78,15 +78,15 @@ const PrivacyPolicyPage = () => {
           representation (unless fraudulent), or any implied warranty, condition
           or other term, or any duty at common law, for any loss of profit or
           any indirect, special, or consequential loss, damage, costs, expenses,
-          or other claims (whether caused by PlayRoutines' negligence or the
-          negligence of its servants or agents or otherwise) which arise out of
-          or in connection with the provision of any goods or services by
+          or other claims (whether caused by PlayRoutines&apos; negligence or
+          the negligence of its servants or agents or otherwise) which arise out
+          of or in connection with the provision of any goods or services by
           PlayRoutines. PlayRoutines shall not be liable or deemed to be in
           breach of contract by reason of any delay in performing, or failure to
           perform, any of its obligations if the delay or failure was due to any
           cause beyond its reasonable control. Notwithstanding contrary clauses
           in this Agreement, in the event that PlayRoutines are deemed liable to
-          you for breach of this Agreement, you agree that PlayRoutines'
+          you for breach of this Agreement, you agree that PlayRoutines&apos;
           liability is limited to the amount actually paid by you for your
           services or software, which amount calculated in reliance upon this
           clause. You hereby release PlayRoutines from any and all obligations,

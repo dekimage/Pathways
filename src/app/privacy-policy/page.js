@@ -14,17 +14,17 @@ const PrivacyPolicyPage = () => {
 
         <h1 className="text-3xl font-medium pb-6">Privacy Policy</h1>
         <div className="leading-relaxed">
-          Your privacy is important to us. It is PlayRoutines' policy to respect
-          your privacy regarding any information we may collect from you across
-          our website, app, and other sites we own and operate.
+          Your privacy is important to us. It is PlayRoutines&apos; policy to
+          respect your privacy regarding any information we may collect from you
+          across our website, app, and other sites we own and operate.
           <br />
           <br />
           <div className="font-bold">1. Information Collection and Use</div>
           <br />
           We only ask for personal information when we truly need it to provide
           a service to you. We collect it by fair and lawful means, with your
-          knowledge and consent. We also let you know why we're collecting it
-          and how it will be used.
+          knowledge and consent. We also let you know why we&apos;re collecting
+          it and how it will be used.
           <br />
           <br />
           You can sign up with your Google account, and your PlayRoutines
@@ -35,16 +35,16 @@ const PrivacyPolicyPage = () => {
           <div className="font-bold">2. Data Retention</div>
           <br />
           We only retain collected information for as long as necessary to
-          provide you with your requested service. What data we store, we'll
-          protect within commercially acceptable means to prevent loss and
-          theft, as well as unauthorized access, disclosure, copying, use, or
-          modification.
+          provide you with your requested service. What data we store,
+          we&apos;ll protect within commercially acceptable means to prevent
+          loss and theft, as well as unauthorized access, disclosure, copying,
+          use, or modification.
           <br />
           <br />
           <div className="font-bold">3. Data Sharing</div>
           <br />
-          We don't share any personally identifying information publicly or with
-          third parties, except when required by law.
+          We don&apos;t share any personally identifying information publicly or
+          with third parties, except when required by law.
           <br />
           <br />
           <div className="font-bold">4. Data Protection Laws</div>
