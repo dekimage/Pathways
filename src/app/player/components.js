@@ -18,6 +18,15 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp, Hourglass } from "lucide-react";
 import { FancyTag } from "../analytics/page";
 import { formatSecondsToHumanReadable } from "@/utils/date";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const MoodSelector = ({ mood, onSelectMood, showSingle = false }) => {
   const moodEmojis = [
@@ -169,7 +178,9 @@ export const PathwayPlayerHeader = ({
   handlePreviousStep,
   setIsMusicPlaying,
   setIsPathwayEditView,
+  setPathwayPlaying,
 }) => {
+  const [show, setShow] = useState(false);
   return (
     <div className="flex justify-between items-center mb-4">
       <button
@@ -206,14 +217,44 @@ export const PathwayPlayerHeader = ({
         >
           <HiOutlineCog6Tooth size={20} className="text-slate-600" />
         </button>
-        <button
-          className="rounded-full hover:bg-gray-100"
-          onClick={() => setPathwayPlaying(null)}
-        >
-          <MdClose size={20} className="text-slate-600" />
-        </button>
+
+        <ClosePlayerDialog
+          show={show}
+          setShow={setShow}
+          handleClose={() => setPathwayPlaying(null)}
+        />
       </div>
     </div>
+  );
+};
+
+const ClosePlayerDialog = ({ handleClose, show, setShow }) => {
+  return (
+    <Dialog open={show} onOpenChange={setShow}>
+      <DialogTrigger>
+        <button className="rounded-full hover:bg-gray-100">
+          <MdClose size={20} className="text-slate-600" />
+        </button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Do you want to end this session?</DialogTitle>
+          <DialogDescription>All progress will be lost.</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setShow(false)}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleClose();
+            }}
+          >
+            Close Player
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -277,6 +277,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
         handlePreviousStep={handlePreviousStep}
         setIsMusicPlaying={setIsMusicPlaying}
         setIsPathwayEditView={setIsPathwayEditView}
+        setPathwayPlaying={setPathwayPlaying}
       />
 
       <ProgressBar currentStep={currentStep} pathway={pathway} />
