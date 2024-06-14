@@ -108,7 +108,52 @@ class Store {
     this.findPathwayById = this.findPathwayById.bind(this);
     this.updateStreak = this.updateStreak.bind(this);
     this.checkAndResetStreak = this.checkAndResetStreak.bind(this);
+    this.checkAndResetProgress = this.checkAndResetProgress.bind(this);
   }
+
+  // async initializeAuth() {
+  //   const auth = getAuth();
+  //   onAuthStateChanged(auth, async (user) => {
+  //     if (user) {
+  //       try {
+  //         const userDocRef = doc(db, "users", user.uid);
+  //         const userDoc = await getDoc(userDocRef);
+
+  //         runInAction(() => {
+  //           if (!userDoc.exists()) {
+  //             const newUser = {
+  //               ...DEFAULT_USER,
+  //               uid: user.uid,
+  //               provider: "anonymous",
+  //               username: "Guest",
+  //               createdAt: new Date(),
+  //             };
+  //             setDoc(userDocRef, newUser).then(() => {
+  //               this.user = newUser;
+  //             });
+  //           } else {
+  //             this.user = { uid: user.uid, ...userDoc.data() };
+  //           }
+
+  //           this.fetchUserData(); // Fetch all user-related data
+  //           this.checkAndResetStreak();
+  //         });
+  //       } catch (error) {
+  //         console.error("Error fetching user data:", error);
+  //         runInAction(() => {
+  //           this.user = null;
+  //         });
+  //       }
+  //     } else {
+  //       runInAction(() => {
+  //         this.user = null;
+  //       });
+  //     }
+  //     runInAction(() => {
+  //       this.authLoading = false;
+  //     });
+  //   });
+  // }
 
   async initializeAuth() {
     const auth = getAuth();
@@ -133,10 +178,11 @@ class Store {
             } else {
               this.user = { uid: user.uid, ...userDoc.data() };
             }
-
-            this.fetchUserData(); // Fetch all user-related data
-            this.checkAndResetStreak();
           });
+
+          await this.fetchUserData(); // Fetch all user-related data
+          await this.checkAndResetStreak();
+          await this.checkAndResetProgress(); // Ensure this runs after fetching data
         } catch (error) {
           console.error("Error fetching user data:", error);
           runInAction(() => {
@@ -168,6 +214,165 @@ class Store {
       ]);
     } catch (error) {
       console.error("Error fetching user-related data:", error);
+    }
+  }
+  async checkAndResetProgress(overrideDate = null) {
+    try {
+      const today =
+        overrideDate ||
+        new Date(
+          new Date().toLocaleString("en-US", {
+            timeZone: this.user.timezone || "UTC",
+          })
+        );
+      today.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+      const lastDailyReset = this.user.lastDailyReset
+        ? this.user.lastDailyReset.toDate()
+        : null;
+      const lastWeeklyReset = this.user.lastWeeklyReset
+        ? this.user.lastWeeklyReset.toDate()
+        : null;
+      const lastMonthlyReset = this.user.lastMonthlyReset
+        ? this.user.lastMonthlyReset.toDate()
+        : null;
+      const lastYearlyReset = this.user.lastYearlyReset
+        ? this.user.lastYearlyReset.toDate()
+        : null;
+
+      const dailyResetRequired =
+        !lastDailyReset ||
+        today.getTime() - lastDailyReset.getTime() >= ONE_DAY;
+      const weeklyResetRequired =
+        !lastWeeklyReset ||
+        today.getTime() - lastWeeklyReset.getTime() >= 7 * ONE_DAY;
+      const monthlyResetRequired =
+        !lastMonthlyReset ||
+        today.getMonth() !== lastMonthlyReset.getMonth() ||
+        today.getFullYear() !== lastMonthlyReset.getFullYear();
+      const yearlyResetRequired =
+        !lastYearlyReset ||
+        today.getFullYear() !== lastYearlyReset.getFullYear();
+
+      console.log("dailyResetRequired:", dailyResetRequired);
+      console.log("weeklyResetRequired:", weeklyResetRequired);
+      console.log("monthlyResetRequired:", monthlyResetRequired);
+      console.log("yearlyResetRequired:", yearlyResetRequired);
+
+      const updates = [];
+      const updatedPathways = [];
+
+      this.userPathways.forEach((pathway) => {
+        let resetRequired = false;
+
+        switch (pathway.frequency) {
+          case "everyday":
+            resetRequired = dailyResetRequired;
+            break;
+          case "everyweek":
+            resetRequired = weeklyResetRequired;
+            break;
+          case "everymonth":
+            resetRequired = monthlyResetRequired;
+            break;
+          case "everyyear":
+            resetRequired = yearlyResetRequired;
+            break;
+          default:
+            console.error("Unknown frequency:", pathway.frequency);
+        }
+
+        if (resetRequired && pathway.progress !== 0) {
+          const pathwayRef = doc(
+            db,
+            `users/${this.user.uid}/myPathways`,
+            pathway.id
+          );
+          updates.push(updateDoc(pathwayRef, { progress: 0 }));
+          updatedPathways.push({ ...pathway, progress: 0 });
+          console.log(`Resetting progress for pathway: ${pathway.id}`);
+        } else {
+          updatedPathways.push(pathway);
+        }
+      });
+
+      await Promise.all(updates);
+
+      const userUpdates = {};
+      if (dailyResetRequired) {
+        userUpdates.lastDailyReset = today;
+      }
+      if (weeklyResetRequired) {
+        userUpdates.lastWeeklyReset = today;
+      }
+      if (monthlyResetRequired) {
+        userUpdates.lastMonthlyReset = today;
+      }
+      if (yearlyResetRequired) {
+        userUpdates.lastYearlyReset = today;
+      }
+
+      if (Object.keys(userUpdates).length > 0) {
+        await updateDoc(doc(db, "users", this.user.uid), userUpdates);
+      }
+
+      runInAction(() => {
+        this.userPathways = updatedPathways;
+      });
+
+      console.log("Progress has been reset where necessary");
+    } catch (error) {
+      console.error("Error checking and resetting progress:", error);
+    }
+  }
+
+  async forceResetProgress() {
+    try {
+      const today = new Date(
+        new Date().toLocaleString("en-US", {
+          timeZone: this.user.timezone || "UTC",
+        })
+      );
+      today.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+      console.log("Force resetting progress for all pathways");
+
+      const updates = [];
+      const updatedPathways = [];
+
+      this.userPathways.forEach((pathway) => {
+        if (pathway.progress !== 0) {
+          const pathwayRef = doc(
+            db,
+            `users/${this.user.uid}/myPathways`,
+            pathway.id
+          );
+          updates.push(updateDoc(pathwayRef, { progress: 0 }));
+          updatedPathways.push({ ...pathway, progress: 0 });
+          console.log(`Force resetting progress for pathway: ${pathway.id}`);
+        } else {
+          updatedPathways.push(pathway);
+        }
+      });
+
+      await Promise.all(updates);
+
+      // Update the last reset dates to today
+      const userUpdates = {
+        lastDailyReset: today,
+        lastWeeklyReset: today,
+        lastMonthlyReset: today,
+        lastYearlyReset: today,
+      };
+      await updateDoc(doc(db, "users", this.user.uid), userUpdates);
+
+      runInAction(() => {
+        this.userPathways = updatedPathways;
+      });
+
+      console.log("Force reset progress completed successfully");
+    } catch (error) {
+      console.error("Error force resetting progress:", error);
     }
   }
 
@@ -369,7 +574,6 @@ class Store {
   }
 
   async addLog(pathway, logData) {
-    console.log({ pathway, logData });
     const canSave = await this.canSaveLog(pathway.id);
     if (!canSave) {
       logger.error("Log limit reached for the day");
@@ -412,10 +616,7 @@ class Store {
       });
 
       //if time tracking - Update Progress +1
-      if (
-        (pathway.timeType == "time" && pathway.progress) ||
-        0 < pathway.completionLimit
-      ) {
+      if (pathway.progress || 0 < pathway.completionLimit) {
         const updatedPathwayRef = doc(
           db,
           `users/${this.user.uid}/myPathways`,

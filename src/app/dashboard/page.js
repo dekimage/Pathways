@@ -386,6 +386,39 @@ const DashboardPage = observer(() => {
 
   const pathname = usePathname();
 
+  // async function testCheckAndResetProgress() {
+  //   // Simulate end of day
+  //   const endOfDay = new Date();
+  //   endOfDay.setDate(endOfDay.getDate() + 1);
+  //   endOfDay.setHours(0, 0, 0, 0);
+  //   console.log("Testing end of day reset:");
+  //   await MobxStore.checkAndResetProgress(endOfDay);
+
+  //   // Simulate end of week
+  //   const endOfWeek = new Date();
+  //   endOfWeek.setDate(endOfWeek.getDate() + 7);
+  //   endOfWeek.setHours(0, 0, 0, 0);
+  //   console.log("Testing end of week reset:");
+  //   await MobxStore.checkAndResetProgress(endOfWeek);
+
+  //   // Simulate end of month
+  //   const endOfMonth = new Date();
+  //   endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+  //   endOfMonth.setDate(1);
+  //   endOfMonth.setHours(0, 0, 0, 0);
+  //   console.log("Testing end of month reset:");
+  //   await MobxStore.checkAndResetProgress(endOfMonth);
+
+  //   // Simulate end of year
+  //   const endOfYear = new Date();
+  //   endOfYear.setFullYear(endOfYear.getFullYear() + 1);
+  //   endOfYear.setMonth(0);
+  //   endOfYear.setDate(1);
+  //   endOfYear.setHours(0, 0, 0, 0);
+  //   console.log("Testing end of year reset:");
+  //   await MobxStore.checkAndResetProgress(endOfYear);
+  // }
+
   useEffect(() => {
     return () => {
       setPathwayPlaying(null);
@@ -393,12 +426,15 @@ const DashboardPage = observer(() => {
     };
   }, [pathname, setPathwayPlaying, setIsPathwayEditView]);
 
+  console.log(MobxStore.recentPathways.map((pathway) => pathway.lastCompleted));
+
   return (
     <div className="m-0 sm:ml-8">
       {pathwayPlaying ? (
         <PathwayPlayer pathway={pathwayPlaying} />
       ) : (
         <div className="m-4 sm:mx-0">
+          {/* <Button onClick={() => MobxStore.forceResetProgress()}>test</Button> */}
           <HorizontalPathwaysList
             pathways={MobxStore.recentPathways}
             title="Recently Played"
