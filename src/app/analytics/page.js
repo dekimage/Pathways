@@ -21,6 +21,7 @@ import {
   Clock4,
   Gem,
   Hourglass,
+  RefreshCcw,
   Sigma,
   WalletCards,
   X,
@@ -123,36 +124,39 @@ const LogDetails = observer(({ log, setIsExpanded }) => {
         </div>
       </div>
 
-      <Button
-        className="w-1/2"
-        onClick={() => {
-          isSpecificPathway
-            ? router.replace("/analytics", undefined, {
-                shallow: true,
-              })
-            : router.push(`/analytics?pathwayId=${log.pathway.id}`);
-          setIsExpanded(false);
-        }}
-      >
-        {isSpecificPathway
-          ? "Hide all time analysis"
-          : "View all time analysis"}
-      </Button>
+      <div className="flex gap-2 sm:flex-row flex-wrap">
+        <Button
+          className="w-full px-2"
+          onClick={() => {
+            isSpecificPathway
+              ? router.replace("/analytics", undefined, {
+                  shallow: true,
+                })
+              : router.push(`/analytics?pathwayId=${log.pathway.id}`);
+            setIsExpanded(false);
+          }}
+        >
+          {isSpecificPathway
+            ? "Hide all time analysis"
+            : "View all time analysis"}
+        </Button>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            className="sm:ml-2 ml-0"
+            onClick={() => setPathwayPlaying(findPathwayById(log.pathway.id))}
+          >
+            Play Again <RefreshCcw size={14} className="ml-1" />
+          </Button>
 
-      <Button
-        variant="outline"
-        className="ml-2"
-        onClick={() => setPathwayPlaying(findPathwayById(log.pathway.id))}
-      >
-        Play
-      </Button>
-
-      <DeleteDialog
-        onDelete={() => deleteLog(log.id)}
-        setShow={setShowDeleteDialog}
-        show={showDeleteDialog}
-        label="log"
-      />
+          <DeleteDialog
+            onDelete={() => deleteLog(log.id)}
+            setShow={setShowDeleteDialog}
+            show={showDeleteDialog}
+            label="log"
+          />
+        </div>
+      </div>
 
       <div className="flex flex-col gap-2">
         {log.responses.map((step, index) => (
@@ -162,7 +166,7 @@ const LogDetails = observer(({ log, setIsExpanded }) => {
                 <div className="text-lg font-semibold  rounded  px-2 w-fit h-fit">
                   {index + 1}.
                 </div>
-                <div className="text-xl">{step.question}</div>
+                <div className="sm:text-xl text-sm">{step.question}</div>
               </div>
 
               <div className="mt-4 text-md bg-muted p-2 rounded">

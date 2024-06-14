@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
+import { Trash2 } from "lucide-react";
 export const DeleteDialog = ({ trigger, onDelete, setShow, show, label }) => {
   const { toast } = useToast();
   return (
@@ -18,7 +19,7 @@ export const DeleteDialog = ({ trigger, onDelete, setShow, show, label }) => {
           <div className="w-[120px]">{trigger}</div>
         ) : (
           <Button className="ml-2" variant="outline">
-            Delete
+            Delete <Trash2 size={14} className="ml-1" />
           </Button>
         )}
       </DialogTrigger>

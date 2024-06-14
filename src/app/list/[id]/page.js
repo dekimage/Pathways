@@ -125,7 +125,7 @@ const CustomListPage = observer(({ params }) => {
   };
 
   return (
-    <div className="h-full m-4 sm:mx-8">
+    <div className="h-full m-2 sm:mx-8">
       <TitleDescription
         title={list?.name}
         button={

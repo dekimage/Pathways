@@ -271,7 +271,7 @@ const Reward = ({
   } = reward;
   const { toast } = useToast();
   return (
-    <div className="flex items-center justify-between  p-2 border rounded-md">
+    <div className="flex sm:items-center items-start justify-between p-2 border rounded-md">
       <div className="flex items-center">
         <div
           className="text-2xl mr-2 border-gray border p-4 rounded"
@@ -295,7 +295,7 @@ const Reward = ({
           </Badge> */}
         </div>
       </div>
-      <div className="flex items-center flex-grow justify-end gap-2 sm:flex-row flex-col">
+      <div className="flex items-end flex-grow justify-end gap-2 sm:flex-row flex-col">
         <OptionsDropDown
           reward={reward}
           setIsCreate={setIsCreate}

@@ -79,23 +79,23 @@ export const PathwayCard = observer(({ pathway, listId }) => {
 
   return (
     !isMobileOpen && (
-      <Card className=" w-64 h-[375px] flex flex-col justify-between backdrop-blur-md relative">
+      <Card className=" sm:w-64 w-40 sm:h-[340px] h-[320px] flex flex-col justify-between backdrop-blur-md relative">
         <div className="relative h-full">
           <div className="absolute  flex justify-center items-center space-x-4 top-[10px] left-[10px] z-[-100]">
             <div
-              className="w-28 h-20  rounded-xl blur-lg"
+              className="sm:w-28 w-14 sm:h-20 h-10  rounded-xl blur-lg"
               style={{ backgroundColor: backgroundColor }}
             ></div>
           </div>
 
-          <div className="relative w-full h-full p-4 backdrop-blur-lg bg-background/30 rounded-lg  shadow-xl flex flex-col items-between z-100">
+          <div className="relative w-full h-full sm:p-4 p-2 backdrop-blur-lg bg-background/30 rounded-lg  shadow-xl flex flex-col items-between z-100">
             <div className="flex flex-grow flex-col">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
                     size="icon"
-                    className="absolute top-[16px] right-[16px] p-2"
+                    className="absolute sm:top-[16px] sm:right-[16px] top-[8px] right-[8px] p-2"
                   >
                     <MoreVertical className="h-4 w-4" />
                     <span className="sr-only">More</span>
@@ -142,30 +142,38 @@ export const PathwayCard = observer(({ pathway, listId }) => {
               </DropdownMenu>
 
               <div
-                className="flex justify-center items-center  w-fit p-4 text-4xl rounded-lg"
+                className="flex justify-center items-center  w-fit sm:p-4 px-3 py-2 sm:text-4xl text-xl rounded-lg"
                 style={{ backgroundColor: backgroundColor }}
               >
                 {emoji}
               </div>
               <div className="my-2">
-                <div className="text-xl bold mb-2">{name}</div>
-                <CardDescription className="text-foreground">
-                  {description.length > 115
-                    ? description.slice(0, 115) + "..."
+                <div className="sm:text-xl text-md font-bold sm:mb-2 mb-1">
+                  {name}
+                </div>
+                <CardDescription className="text-foreground sm:text-md text-xs">
+                  {description.length > 100
+                    ? description.slice(0, 100) + "..."
                     : description}
                 </CardDescription>
               </div>
               <div className="mb-2">
-                <Badge variant="screen" className="mr-2">
+                <Badge
+                  variant="screen"
+                  className="sm:mr-2 mr-1 sm:text-md text-xs"
+                >
                   {totalDurationCalced}
                 </Badge>
-                <Badge variant="screen" className="mr-2">
+                <Badge
+                  variant="screen"
+                  className="sm:mr-2 mr-1 sm:text-md text-xs"
+                >
                   {steps?.length} Steps
                 </Badge>
               </div>
             </div>
             {pathway.frequency !== "unlimited" && (
-              <div className="text-sm px-3  text-center w-fit border rounded-md p-1 flex gap-1 items-center">
+              <div className="sm:text-sm text-xs px-3  text-center w-fit border rounded-md p-1 flex gap-1 items-center">
                 {pathway.progress || 0} / {pathway.completionLimit}{" "}
                 {frequencyLookup[pathway.frequency]}
                 {(pathway.progress || 0) >= pathway.completionLimit && (
@@ -185,10 +193,10 @@ export const PathwayCard = observer(({ pathway, listId }) => {
             ) : (
               <Button
                 variant="outline"
-                className="w-full mt-2"
+                className="w-full mt-2 sm:text-md text-xs"
                 onClick={() => MobxStore.setPathwayPlaying(pathway)}
               >
-                <FaPlay className="mr-2 h-3 w-3" />
+                <FaPlay className="mr-2 sm:h-3 sm:w-3 h-2 w-2" />
                 Play
               </Button>
             )}

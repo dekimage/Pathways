@@ -254,10 +254,10 @@ class Store {
         !lastYearlyReset ||
         today.getFullYear() !== lastYearlyReset.getFullYear();
 
-      console.log("dailyResetRequired:", dailyResetRequired);
-      console.log("weeklyResetRequired:", weeklyResetRequired);
-      console.log("monthlyResetRequired:", monthlyResetRequired);
-      console.log("yearlyResetRequired:", yearlyResetRequired);
+      // console.log("dailyResetRequired:", dailyResetRequired);
+      // console.log("weeklyResetRequired:", weeklyResetRequired);
+      // console.log("monthlyResetRequired:", monthlyResetRequired);
+      // console.log("yearlyResetRequired:", yearlyResetRequired);
 
       const updates = [];
       const updatedPathways = [];

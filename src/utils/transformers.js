@@ -29,10 +29,10 @@ export function formatTimeFromSteps(steps) {
 
   let formattedTime = "";
   if (hours > 0) {
-    formattedTime += `${hours}h `;
+    formattedTime += `${hours} h `;
   }
   if (minutes > 0) {
-    formattedTime += `${minutes}min`;
+    formattedTime += `${minutes} min`;
   }
   return formattedTime.trim();
 }

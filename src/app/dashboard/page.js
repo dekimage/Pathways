@@ -23,6 +23,8 @@ import {
   ProgressBar,
   ResponseItem,
 } from "../player/components";
+import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
 
 const backgroundCover = "";
 
@@ -47,6 +49,8 @@ export const PathwayPlayer = observer(({ pathway }) => {
   const audioRef = useRef(null);
 
   const { isPathwayEditView, setIsPathwayEditView } = MobxStore;
+
+  const { toast } = useToast();
 
   useEffect(() => {
     let interval = null;
@@ -126,7 +130,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
   const handlePreviousStep = () => {
     if (sessionComplete) {
-      setSessionComplete(false);
+      return setSessionComplete(false);
     }
 
     if (currentStep > 0) {
@@ -239,6 +243,14 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
               ...(pathway.gem && { gemEarned: pathway.gem }),
               responses,
+            });
+            toast({
+              title: `Routine Completed!`,
+              description: (
+                <div className="underline text-blue-400">
+                  <Link href={`/analytics`}> View Log</Link>
+                </div>
+              ),
             });
             setPathwayPlaying(false);
           }}
@@ -362,11 +374,14 @@ export const PathwayPlayer = observer(({ pathway }) => {
           {isNotLastStep ? <StepForward size={14} /> : <Check size={14} />}{" "}
           <span className="ml-1">{isNotLastStep ? "Next" : "Finish"}</span>
         </Button>
-        <SkipDialog
+        <Button onClick={() => handleSkipStep()} variant="outline">
+          Skip
+        </Button>
+        {/* <SkipDialog
           handleSkipStep={handleSkipStep}
           handleNextStep={handleNextStep}
           step={step}
-        />
+        /> */}
       </div>
     </div>
   );
@@ -425,8 +440,6 @@ const DashboardPage = observer(() => {
       setIsPathwayEditView(false);
     };
   }, [pathname, setPathwayPlaying, setIsPathwayEditView]);
-
-  console.log(MobxStore.recentPathways.map((pathway) => pathway.lastCompleted));
 
   return (
     <div className="m-0 sm:ml-8">

@@ -241,83 +241,84 @@ export const ProgressBar = ({ currentStep, pathway }) => {
   );
 };
 
-export const SkipDialog = ({ handleSkipStep, handleNextStep, step }) => {
-  const [selectedOption, setSelectedOption] = useState("skip");
+// FEATURE : SKIP STEP
+// export const SkipDialog = ({ handleSkipStep, handleNextStep, step }) => {
+//   const [selectedOption, setSelectedOption] = useState("skip");
 
-  const handleSelect = () => {
-    if (selectedOption === "skip") {
-      handleSkipStep();
-    } else if (selectedOption === "change") {
-      handleNextStep();
-    } else if (selectedOption === "move") {
-      handleNextStep();
-    }
-  };
+//   const handleSelect = () => {
+//     if (selectedOption === "skip") {
+//       handleSkipStep();
+//     } else if (selectedOption === "change") {
+//       handleNextStep();
+//     } else if (selectedOption === "move") {
+//       handleNextStep();
+//     }
+//   };
 
-  const isSkip = selectedOption === "skip";
-  const isChange = selectedOption === "change";
-  const isMove = selectedOption === "move";
-  return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button variant="outline">Skip</Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
-          <DrawerHeader>
-            <DrawerTitle>Do you want to skip?</DrawerTitle>
-            <DrawerDescription>
-              Select the option you like best
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="p-4 pb-0">
-            <div className="flex flex-col items-center justify-center gap-2">
-              <div
-                className={`px-6 py-2 rounded border flex items-center w-[350px] cursor-pointer ${
-                  isSkip && "border border-2 border-primary"
-                }`}
-                onClick={() => setSelectedOption("skip")}
-              >
-                {isSkip && (
-                  <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
-                )}
-                Skip today
-              </div>
-              <div
-                className={`px-6 py-2 rounded border flex items-center  w-[350px] cursor-pointer ${
-                  isChange && "border border-2 border-primary"
-                }`}
-                onClick={() => setSelectedOption("change")}
-              >
-                {isChange && (
-                  <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
-                )}
-                Change the order
-              </div>
-              <div
-                className={`px-6 py-2 rounded border flex items-center  w-[350px] cursor-pointer ${
-                  isMove && "border border-2 border-primary"
-                }`}
-                onClick={() => setSelectedOption("move")}
-              >
-                {isMove && (
-                  <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
-                )}
-                Move step to end
-              </div>
-            </div>
-          </div>
-          <DrawerFooter>
-            <DrawerClose asChild>
-              <Button onClick={handleSelect}>Select</Button>
-            </DrawerClose>
+//   const isSkip = selectedOption === "skip";
+//   const isChange = selectedOption === "change";
+//   const isMove = selectedOption === "move";
+//   return (
+//     <Drawer>
+//       <DrawerTrigger asChild>
+//         <Button variant="outline">Skip</Button>
+//       </DrawerTrigger>
+//       <DrawerContent>
+//         <div className="mx-auto w-full max-w-sm">
+//           <DrawerHeader>
+//             <DrawerTitle>Do you want to skip?</DrawerTitle>
+//             <DrawerDescription>
+//               Select the option you like best
+//             </DrawerDescription>
+//           </DrawerHeader>
+//           <div className="p-4 pb-0">
+//             <div className="flex flex-col items-center justify-center gap-2">
+//               <div
+//                 className={`px-6 py-2 rounded border flex items-center w-[350px] cursor-pointer ${
+//                   isSkip && "border border-2 border-primary"
+//                 }`}
+//                 onClick={() => setSelectedOption("skip")}
+//               >
+//                 {isSkip && (
+//                   <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
+//                 )}
+//                 Skip today
+//               </div>
+//               <div
+//                 className={`px-6 py-2 rounded border flex items-center  w-[350px] cursor-pointer ${
+//                   isChange && "border border-2 border-primary"
+//                 }`}
+//                 onClick={() => setSelectedOption("change")}
+//               >
+//                 {isChange && (
+//                   <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
+//                 )}
+//                 Change the order
+//               </div>
+//               <div
+//                 className={`px-6 py-2 rounded border flex items-center  w-[350px] cursor-pointer ${
+//                   isMove && "border border-2 border-primary"
+//                 }`}
+//                 onClick={() => setSelectedOption("move")}
+//               >
+//                 {isMove && (
+//                   <div className="bg-primary w-4 h-4 rounded-full mr-2"></div>
+//                 )}
+//                 Move step to end
+//               </div>
+//             </div>
+//           </div>
+//           <DrawerFooter>
+//             <DrawerClose asChild>
+//               <Button onClick={handleSelect}>Select</Button>
+//             </DrawerClose>
 
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </div>
-      </DrawerContent>
-    </Drawer>
-  );
-};
+//             <DrawerClose asChild>
+//               <Button variant="outline">Cancel</Button>
+//             </DrawerClose>
+//           </DrawerFooter>
+//         </div>
+//       </DrawerContent>
+//     </Drawer>
+//   );
+// };
