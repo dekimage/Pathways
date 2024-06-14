@@ -702,7 +702,8 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
             </div>
           </div>
 
-          <div className="mt-4 text-md font-medium ">Show on Days:</div>
+          {/* FEATURE DISABLED: Show days */}
+          {/* <div className="mt-4 text-md font-medium ">Show on Days:</div>
           <div className="flex justify-between items-center">
             <DaysOptions
               options={
@@ -716,7 +717,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
               }
               setOptions={(value) => handleInputChange("days", value)}
             />
-          </div>
+          </div> */}
         </div>
 
         <SwitchWithHelper

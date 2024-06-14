@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { ChevronDown, ChevronUp, Hourglass } from "lucide-react";
+import { FancyTag } from "../analytics/page";
+import { formatSecondsToHumanReadable } from "@/utils/date";
 
 export const MoodSelector = ({ mood, onSelectMood, showSingle = false }) => {
   const moodEmojis = [
@@ -99,28 +102,51 @@ export const ResponseItem = ({ response, index }) => {
   const [isShowing, setIsShowing] = useState(false);
 
   return (
-    <div className="flex flex-col bg-gray-100 mb-2 p-2 rounded-lg w-full">
+    <div className="flex flex-col  mb-4 p-2 rounded-lg w-full border">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700">
-          Step {index + 1}:
+        <span className="text-sm font-medium">
+          {index + 1}. {response.question}
         </span>
-        <span className="text-sm text-gray-500">
-          {response.timeSpent} seconds
-        </span>
+        {/* <span className="text-sm">{response.timeSpent} seconds</span> */}
 
-        {response.skipped ? (
-          <div className="w-[60px]"></div>
-        ) : (
-          <button
-            className="py-2 px-4 text-white rounded text-sm"
-            onClick={() => setIsShowing(!isShowing)}
-          >
-            {isShowing ? "Hide" : "View"}
-          </button>
-        )}
+        <Button
+          variant="ghost"
+          className="flex gap-2 items-center"
+          onClick={() => setIsShowing(!isShowing)}
+        >
+          {isShowing ? "Hide" : "View"}{" "}
+          {isShowing ? <ChevronUp /> : <ChevronDown />}
+        </Button>
       </div>
       {isShowing && (
-        <div className="rounded-lg mt-2 p-4">
+        <div className="flex flex-col gap-2">
+          <div className="border-t mt-3">
+            <div className="mt-3">
+              {!response.skipped && (
+                <div className="mt-4 text-md bg-muted p-2 rounded">
+                  {response.response}
+                </div>
+              )}
+
+              {response.skipped ? (
+                <FancyTag color="red" text="Skipped" />
+              ) : (
+                <div className="flex gap-2 mt-4 items-center">
+                  <FancyTag color="green" text="Completed" />
+                  <div className="border border-slate-200 p-1 rounded">
+                    <Hourglass size="16px" />
+                  </div>
+                  <div className="text-sm">
+                    {formatSecondsToHumanReadable(response.timeSpent)}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* {isShowing && (
+        <div className="rounded-lg mt-2 p-4 bg-muted">
           {response.responseType == "checklist" &&
             response.response.map((r) => <div key={r}>{r}</div>)}
 
@@ -132,7 +158,7 @@ export const ResponseItem = ({ response, index }) => {
             <MoodSelector mood={response.response} showSingle />
           )}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

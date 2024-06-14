@@ -54,7 +54,7 @@ export const PricingBox = ({ data, isAuthenticated }) => {
               {/* <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" /> */}
               <GiCheckMark />
               <div className="space-y-1">
-                <p className="text-sm  leading-none">{feature}</p>
+                <div className="text-sm  leading-none">{feature}</div>
               </div>
             </div>
           ))}

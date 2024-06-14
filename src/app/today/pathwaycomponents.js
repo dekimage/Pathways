@@ -25,7 +25,7 @@ export const TitleDescription = ({ title, description, button }) => {
     <div className="flex sm:items-center justify-between mb-4 sm:flex-row flex-col items-start">
       <div className="space-y-1 mr-4">
         <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <div className="text-sm text-muted-foreground">{description}</div>
       </div>
       {button && button}
     </div>
@@ -150,10 +150,12 @@ export const PathwayCard = observer(({ pathway, listId }) => {
               <div className="my-2">
                 <div className="text-xl bold mb-2">{name}</div>
                 <CardDescription className="text-foreground">
-                  {description}
+                  {description.length > 115
+                    ? description.slice(0, 115) + "..."
+                    : description}
                 </CardDescription>
               </div>
-              <div className="my-2">
+              <div className="mb-2">
                 <Badge variant="screen" className="mr-2">
                   {totalDurationCalced}
                 </Badge>
@@ -162,8 +164,8 @@ export const PathwayCard = observer(({ pathway, listId }) => {
                 </Badge>
               </div>
             </div>
-            {pathway.timeType == "time" && (
-              <div className="text-sm  text-center w-fit border rounded-md p-1 flex gap-1 items-center">
+            {pathway.frequency !== "unlimited" && (
+              <div className="text-sm px-3  text-center w-fit border rounded-md p-1 flex gap-1 items-center">
                 {pathway.progress || 0} / {pathway.completionLimit}{" "}
                 {frequencyLookup[pathway.frequency]}
                 {(pathway.progress || 0) >= pathway.completionLimit && (
@@ -171,7 +173,7 @@ export const PathwayCard = observer(({ pathway, listId }) => {
                 )}
               </div>
             )}
-            {pathway.timeType != "time" && (
+            {pathway.frequency == "unlimited" && (
               <div className="text-sm  text-center w-fit border rounded-md p-1">
                 <Infinity size={16} />
               </div>

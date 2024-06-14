@@ -369,6 +369,7 @@ class Store {
   }
 
   async addLog(pathway, logData) {
+    console.log({ pathway, logData });
     const canSave = await this.canSaveLog(pathway.id);
     if (!canSave) {
       logger.error("Log limit reached for the day");

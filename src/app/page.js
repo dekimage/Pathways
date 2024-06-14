@@ -62,7 +62,7 @@ const FaqItem = ({ faq }) => {
       >
         <div className="pb-5 leading-relaxed">
           <div className="space-y-4 leading-relaxed">
-            <p>{faq.answer}</p>
+            <div>{faq.answer}</div>
           </div>
         </div>
       </div>
@@ -92,9 +92,9 @@ const FAQ = () => {
     <section id="faq">
       <div className="py-24 px-8 max-w-7xl mx-auto flex flex-col md:flex-row gap-12">
         <div className="flex flex-col text-left basis-1/2">
-          <p className="sm:text-4xl text-3xl font-extrabold text-gray-400 mb-8">
+          <div className="sm:text-4xl text-3xl font-extrabold text-gray-400 mb-8">
             Frequently Asked Questions
-          </p>
+          </div>
           <div className="text-gray-400/80">
             Have another question? Contact me on
             <a
@@ -159,13 +159,13 @@ const QuoteSingle = ({ quote }) => {
   return (
     <div className="space-y-4 max-w-md mx-auto mt-8">
       <Quote />
-      <p className="md:text-lg leading-relaxed">{content}</p>
+      <div className="md:text-lg leading-relaxed">{content}</div>
       <div className="flex items-center gap-2">
         <Avatar className="w-12 h-12">
           <AvatarImage src="" />
           <AvatarFallback>JM</AvatarFallback>
         </Avatar>
-        <p>{person}</p>
+        <div>{person}</div>
         <Badge className="bg-green-500">{role}</Badge>
       </div>
     </div>
@@ -219,15 +219,17 @@ const PricingBox = ({ pricingData }) => {
 
         <div className="flex gap-2">
           <div className="flex flex-col justify-end mb-[4px] text-lg">
-            <p className="relative opacity-80">
+            <div className="relative opacity-80">
               <span className="absolute bg-base-content h-[1.5px] inset-x-0 top-[48%]"></span>
               {isPremium && <span className="line-through">$199</span>}
-            </p>
+            </div>
           </div>
 
-          <p className="text-5xl tracking-tight font-extrabold">${price}</p>
+          <div className="text-5xl tracking-tight font-extrabold">${price}</div>
           <div className="flex flex-col justify-end mb-[4px]">
-            <p className="text-xs opacity-60 uppercase font-semibold">USD</p>
+            <div className="text-xs opacity-60 uppercase font-semibold">
+              USD
+            </div>
           </div>
         </div>
 
@@ -252,11 +254,11 @@ const PricingBox = ({ pricingData }) => {
 
         <div className="space-y-2">
           <Button className="w-full">Get Started</Button>
-          <p className="flex items-center justify-center gap-2 text-sm text-center text-gray-400/80 font-medium relative">
+          <div className="flex items-center justify-center gap-2 text-sm text-center text-gray-400/80 font-medium relative">
             {isPremium
               ? "Pay once. Build unlimited routines."
               : "Try for free with limited features."}
-          </p>
+          </div>
         </div>
       </div>
     </div>
@@ -303,10 +305,10 @@ const ProblemsSection = () => {
   return (
     <section id="problems">
       <div className="max-w-7xl mx-auto px-8 py-16 md:py-40 text-center">
-        <p className="font-extrabold mb-6 md:mb-8 text-4xl">{title}</p>
-        <p className="max-w-xl mx-auto text-lg opacity-80 leading-relaxed mb-12 md:mb-20">
+        <div className="font-extrabold mb-6 md:mb-8 text-4xl">{title}</div>
+        <div className="max-w-xl mx-auto text-lg opacity-80 leading-relaxed mb-12 md:mb-20">
           {description}
-        </p>
+        </div>
         <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-6">
           {problems.map((problem, i) =>
             problem.icon === "arrow" ? (
@@ -322,7 +324,7 @@ const ProblemsSection = () => {
                 className="w-full md:w-48 flex flex-col gap-2 items-center justify-center"
               >
                 <span className="text-4xl">{problem.icon}</span>
-                <p className="font-bold">{problem.text}</p>
+                <div className="font-bold">{problem.text}</div>
               </div>
             )
           )}
@@ -357,19 +359,19 @@ const ProblemRedSection = () => {
         <div className="leading-relaxed space-y-4 md:space-y-6">
           <div className="text-neutral-content/80 space-y-1">
             {problems.map((problem, i) => (
-              <p key={i}>
+              <div key={i}>
                 <span className="text-red-400 font-medium">
                   {problem.highlight}
                 </span>{" "}
                 {problem.text}
-              </p>
+              </div>
             ))}
           </div>
           <div className="text-xl font-semibold flex flex-col md:flex-row items-center justify-center gap-3">
-            <p>
+            <div>
               <span className="text-red-400 font-medium"> = 250 hrs</span> of
               headaches
-            </p>
+            </div>
             <CloudRainWind />
           </div>
         </div>
@@ -389,10 +391,10 @@ const UseCases = () => {
           <div className=" md:text-center max-w-2xl md:mx-auto text-4xl font-bold">
             Use cases
           </div>
-          <p className="max-w-2xl mx-auto text-lg md:text-center text-base-content-secondary leading-relaxed">
+          <div className="max-w-2xl mx-auto text-lg md:text-center text-base-content-secondary leading-relaxed">
             There are millions of ways to agitate a problem and drive action.
             Here are examples of 3 products:
-          </p>
+          </div>
         </div>
       </div>
     </section>
@@ -409,18 +411,18 @@ const LandingPage = () => {
             Transform Knowledge into Action with PlayRoutines
           </h1>
 
-          <p className="text-lg opacity-80 leading-relaxed">
+          <div className="text-lg opacity-80 leading-relaxed">
             The Only Self Improvement Platform that helps you apply knowledge,
             and not accumulate it.
-          </p>
+          </div>
 
           <div className="space-y-4">
             <CheckoutButton />
-            <p className="text-sm md:text-base flex justify-center items-center gap-2 md:text-sm">
+            <div className="text-sm md:text-base flex justify-center items-center gap-2 md:text-sm">
               <Gift className="text-primary" />
               <span className="text-primary">$100 off </span>for the first 50
               customers (38 left)
-            </p>
+            </div>
           </div>
 
           <div className="flex flex-col md:flex-row justify-center items-center align-center gap-3">
@@ -526,7 +528,7 @@ const LandingPage = () => {
       <div className="bg-muted">
         <div className="max-w-3xl mx-auto flex flex-col md:flex-row justify-center md:justify-start md:items-center gap-12">
           <div className="text-gray-400/80 leading-relaxed space-y-4 px-12 md:px-0 py-12 max-w-xl animate-opacity">
-            <p className="font-medium text-gray-400 text-lg">Title</p>
+            <div className="font-medium text-gray-400 text-lg">Title</div>
             <ul className="space-y-1">
               <li className="flex items-center gap-2">
                 <Check /> Send transactional emails
@@ -551,27 +553,27 @@ const LandingPage = () => {
               height={200}
               className="w-32 h-32 md:w-52 md:h-52 rounded-lg float-left mr-8 mb-8 object-center object-cover"
             />
-            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+            <div className="mb-4 text-gray-400 md:text-lg font-medium">
               Hey, it’s Dejan 👋
-            </p>
-            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+            </div>
+            <div className="mb-4 text-gray-400 md:text-lg font-medium">
               In my pursuit for self-improvement, I’ve read over 150 books, but
               after five long years, I had little to show for it.
-            </p>
-            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+            </div>
+            <div className="mb-4 text-gray-400 md:text-lg font-medium">
               All that changed when I shifted my focus from theory to actionable
               steps—real actions that lead to actual changes in life.
-            </p>
-            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+            </div>
+            <div className="mb-4 text-gray-400 md:text-lg font-medium">
               At first, I started writing these actionable steps for myself,
               compressing the wisdom of countless books into small, guided
               routines.
-            </p>
-            <p className="mb-4 text-gray-400 md:text-lg font-medium">
+            </div>
+            <div className="mb-4 text-gray-400 md:text-lg font-medium">
               These step-by-step packages, which I call routines, transformed my
               life by helping me execute and achieve real results in anything I
               pursued.
-            </p>
+            </div>
             <ul className="list-inside list-decimal space-y-1.5 ml-5 mb-5">
               <li>
                 <span className="text-gray-400 font-medium">Analyse </span>
@@ -594,15 +596,15 @@ const LandingPage = () => {
       <section className="bg-base-200 overflow-hidden" id="pricing">
         <div className="py-24 pb-0 px-8 max-w-5xl mx-auto">
           <div className="flex flex-col text-center w-full mb-20">
-            <p className="font-medium text-primary mb-8">Pricing</p>
+            <div className="font-medium text-primary mb-8">Pricing</div>
             <h2 className="font-bold text-3xl lg:text-5xl tracking-tight mb-8 max-w-2xl mx-auto">
               Save Time, Stay Focused, See Actual Change!
             </h2>
-            <p className="text-sm md:text-base flex justify-center items-center gap-2 md:text-sm">
+            <div className="text-sm md:text-base flex justify-center items-center gap-2 md:text-sm">
               <Gift className="text-primary" />
               <span className="text-primary">$100 off </span>for the first 50
               customers (38 left)
-            </p>
+            </div>
           </div>
 
           <div className="relative flex flex-col lg:flex-row items-center lg:items-stretch gap-8">
@@ -626,9 +628,9 @@ const LandingPage = () => {
                 100+ people apply wisdom into practice daily
               </h2>
             </div>
-            <p className="lg:w-2/3 mx-auto leading-relaxed text-base text-gray-400/80">
+            <div className="lg:w-2/3 mx-auto leading-relaxed text-base text-gray-400/80">
               They optimize each day with PlayRoutines.
-            </p>
+            </div>
           </div>
 
           <ul className="max-w-7xl mx-auto md:columns-2 lg:columns-3 xl:columns-4 space-y-4 md:space-y-6 md:gap-6">
@@ -692,9 +694,9 @@ const LandingPage = () => {
             <h2 className="relative font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-4 md:mb-8 ">
               Turn notes into actionable routines
             </h2>
-            <p className="relative text-lg text-gray-400/80">
+            <div className="relative text-lg text-gray-400/80">
               Don`t let the hours spent reading and learning go to waste.
-            </p>
+            </div>
           </div>
           <CheckoutButton />
         </div>
@@ -709,14 +711,14 @@ const LandingPage = () => {
                   PlayRoutines
                 </div>
               </div>
-              <p className="mt-3 text-sm text-gray-400/80 leading-relaxed">
+              <div className="mt-3 text-sm text-gray-400/80 leading-relaxed">
                 Apply your knowledge, don`t accumulate it <br /> Copyright ©
                 2024 - All rights reserved
-              </p>
+              </div>
               <div className="mt-8 space-y-2 md:hidden">
-                <p className="font-medium text-sm">
+                <div className="font-medium text-sm">
                   We build together on Discord!
-                </p>
+                </div>
                 <div className="flex justify-center">
                   <button className="flex p-2 rounded-[10px] text-sm items-center gap-2 btn text-white border-[#7289da] bg-[#7289da] hover:bg-[#596dac] active:bg-[#596dac] hover:border-[#596dac] active:border-[#596dac] btn-sm">
                     <FaDiscord />

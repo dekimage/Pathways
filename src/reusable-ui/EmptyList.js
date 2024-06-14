@@ -18,7 +18,9 @@ export function PodcastEmptyPlaceholder({ title, description, children }) {
         </svg>
 
         <h3 className="mt-4 text-lg font-semibold">{title}</h3>
-        <p className="mb-4 mt-2 text-sm text-muted-foreground">{description}</p>
+        <div className="mb-4 mt-2 text-sm text-muted-foreground">
+          {description}
+        </div>
         {children}
       </div>
     </div>

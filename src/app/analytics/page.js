@@ -46,7 +46,7 @@ import { premiumUtil } from "@/utils/premium";
 import { PathwayPlayer } from "../dashboard/page";
 import { DeleteDialog } from "@/components/Dialogs/DeleteDialog";
 
-const FancyTag = ({ color, text }) => {
+export const FancyTag = ({ color, text }) => {
   let backgroundColor, textColor;
 
   switch (color) {
@@ -91,7 +91,7 @@ const FancyTag = ({ color, text }) => {
   );
 };
 
-const LogDetails = observer(({ log }) => {
+const LogDetails = observer(({ log, setIsExpanded }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { deleteLog, setPathwayPlaying, findPathwayById } = MobxStore;
@@ -125,13 +125,14 @@ const LogDetails = observer(({ log }) => {
 
       <Button
         className="w-1/2"
-        onClick={() =>
+        onClick={() => {
           isSpecificPathway
             ? router.replace("/analytics", undefined, {
                 shallow: true,
               })
-            : router.push(`/analytics?pathwayId=${log.pathway.id}`)
-        }
+            : router.push(`/analytics?pathwayId=${log.pathway.id}`);
+          setIsExpanded(false);
+        }}
       >
         {isSpecificPathway
           ? "Hide all time analysis"
@@ -237,10 +238,12 @@ const LogDetails = observer(({ log }) => {
       )}
     </div>
   );
+  ``;
 });
 
-const LogCard = ({ log }) => {
-  const { totalDuration, stepsCompleted, pathway } = log;
+export const LogCard = ({ log }) => {
+  const { pathway } = log;
+
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div className="flex flex-col  justify-between p-2 border  rounded-md">
@@ -273,7 +276,7 @@ const LogCard = ({ log }) => {
         </div>
       </div>
 
-      {isExpanded && <LogDetails log={log} />}
+      {isExpanded && <LogDetails setIsExpanded={setIsExpanded} log={log} />}
     </div>
   );
 };
@@ -383,7 +386,11 @@ const LogsPage = observer(() => {
   const { analyticsOk } = premiumUtil();
 
   if (pathwayPlaying) {
-    return <PathwayPlayer pathway={pathwayPlaying} />;
+    return (
+      <div className="sm:ml-8">
+        <PathwayPlayer pathway={pathwayPlaying} />
+      </div>
+    );
   }
 
   return (

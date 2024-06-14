@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import MobxStore from "@/mobx";
 
 import { Slider } from "@/components/ui/slider";
-import { Check, StepForward } from "lucide-react";
+import { Check, ChevronLeft, StepForward } from "lucide-react";
 
 import { usePathname } from "next/navigation";
 import TimerNew from "@/components/TimerNew";
@@ -39,6 +39,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(pathway.autoPlayMusic);
   const [startTime, setStartTime] = useState(Date.now());
 
+  const [userInputs, setUserInputs] = useState({});
   const [timeOver, setTimeOver] = useState(false);
 
   const { setPathwayPlaying } = MobxStore;
@@ -81,41 +82,39 @@ export const PathwayPlayer = observer(({ pathway }) => {
     };
   }, [isPlaying, timer, timeOver, sessionComplete]);
 
-  const handleNextStep = () => {
-    const newResponses = [
-      ...responses,
-      {
-        question: step.question,
-        responseType: step.responseType,
-        response: userInput || userInputCheckbox || "",
-        timeSpent: step.timer - timer,
-        skipped: false,
-        // idleTime: 0,
-      },
-    ];
-    setResponses(newResponses);
-
-    if (currentStep < pathway.steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-      setTimer(pathway.steps[currentStep + 1].timer);
-      setUserInput("");
-    } else {
-      setSessionComplete(true);
-    }
+  const getResponseForCurrentStep = () => {
+    return responses.find((response) => response.stepIndex === currentStep);
   };
 
-  const handleSkipStep = () => {
-    const newResponses = [
-      ...responses,
-      {
-        question: step.question,
-        responseType: step.responseType,
-        response: "",
-        timeSpent: 0,
-        skipped: true,
-      },
-    ];
-    setResponses(newResponses);
+  const handleNextStep = () => {
+    const newResponse = {
+      stepIndex: currentStep,
+      question: step.question,
+      responseType: step.responseType,
+      response: userInputs[currentStep] || "",
+      timeSpent: step.timer - timer,
+      skipped: false,
+    };
+
+    const existingResponseIndex = responses.findIndex(
+      (response) => response.stepIndex === currentStep
+    );
+
+    if (existingResponseIndex !== -1) {
+      // Update the existing response
+      const updatedResponses = [...responses];
+      updatedResponses[existingResponseIndex] = newResponse;
+      setResponses(updatedResponses);
+    } else {
+      // Add a new response
+      setResponses([...responses, newResponse]);
+    }
+
+    setUserInputs({
+      ...userInputs,
+      [currentStep]:
+        userInputs[currentStep] || userInput || userInputCheckbox || "",
+    });
 
     if (currentStep < pathway.steps.length - 1) {
       setCurrentStep(currentStep + 1);
@@ -126,11 +125,47 @@ export const PathwayPlayer = observer(({ pathway }) => {
   };
 
   const handlePreviousStep = () => {
+    if (sessionComplete) {
+      setSessionComplete(false);
+    }
+
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
       setTimer(pathway.steps[currentStep - 1].timer);
     } else {
       setPathwayPlaying(null);
+    }
+  };
+
+  const handleSkipStep = () => {
+    const newResponse = {
+      stepIndex: currentStep,
+      question: step.question,
+      responseType: step.responseType,
+      response: "",
+      timeSpent: 0,
+      skipped: true,
+    };
+
+    const existingResponseIndex = responses.findIndex(
+      (response) => response.stepIndex === currentStep
+    );
+
+    if (existingResponseIndex !== -1) {
+      // Update the existing response
+      const updatedResponses = [...responses];
+      updatedResponses[existingResponseIndex] = newResponse;
+      setResponses(updatedResponses);
+    } else {
+      // Add a new response
+      setResponses([...responses, newResponse]);
+    }
+
+    if (currentStep < pathway.steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+      setTimer(pathway.steps[currentStep + 1].timer);
+    } else {
+      setSessionComplete(true);
     }
   };
 
@@ -145,9 +180,16 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
   if (sessionComplete) {
     return (
-      <div className="flex flex-col max-w-lg  p-6 rounded-lg shadow-md mt-8 ml-8 border border-gray">
+      <div className="flex flex-col max-w-lg  p-4 rounded-lg shadow-md mt-8 ml-8 border border-gray">
+        <Button
+          onClick={() => handlePreviousStep()}
+          className="w-fit mb-2"
+          variant="outline"
+        >
+          <ChevronLeft /> Back
+        </Button>
         <h2 className="text-2xl font-semibold  mb-4">Congratulations!</h2>
-        <div className="flex justify-center mb-4">
+        {/* <div className="flex justify-center mb-4">
           {responses.map((res, i) => (
             <div key={i}>
               {!res.skipped && (
@@ -155,14 +197,14 @@ export const PathwayPlayer = observer(({ pathway }) => {
               )}
             </div>
           ))}
-        </div>
-        <p className="text-gray-700 mb-4">You ve completed the session!</p>
-        <p className="text-sm text-gray-600 mb-2">
+        </div> */}
+        <div className="mb-4">You ve completed the session!</div>
+        <div className="text-sm mb-2">
           Total Duration: {Math.floor(totalDuration / 60)}:
           {totalDuration % 60 < 10
             ? `0${totalDuration % 60}`
             : totalDuration % 60}
-        </p>
+        </div>
         <div className="flex flex-col w-full">
           {responses.map((response, index) => (
             <ResponseItem response={response} key={index} index={index} />
@@ -251,9 +293,11 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
       {step.responseType === "text" && (
         <textarea
-          className="w-full p-3 border  rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent mb-4 min-h-[200px]"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
+          className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent mb-4 min-h-[200px]"
+          value={userInputs[currentStep] || ""}
+          onChange={(e) =>
+            setUserInputs({ ...userInputs, [currentStep]: e.target.value })
+          }
           placeholder="Your response..."
         />
       )}
@@ -264,13 +308,19 @@ export const PathwayPlayer = observer(({ pathway }) => {
             <Checkbox1
               key={optionIndex}
               label={option}
-              checked={(userInputCheckbox || []).includes(option)}
+              checked={(userInputs[currentStep] || []).includes(option)}
               onChange={() => {
-                setUserInputCheckbox((prevUserInput) =>
-                  prevUserInput.includes(option)
-                    ? prevUserInput.filter((item) => item !== option)
-                    : [...prevUserInput, option]
-                );
+                const updatedCheckbox = (
+                  userInputs[currentStep] || []
+                ).includes(option)
+                  ? (userInputs[currentStep] || []).filter(
+                      (item) => item !== option
+                    )
+                  : [...(userInputs[currentStep] || []), option];
+                setUserInputs({
+                  ...userInputs,
+                  [currentStep]: updatedCheckbox,
+                });
               }}
             />
           ))}
@@ -280,11 +330,11 @@ export const PathwayPlayer = observer(({ pathway }) => {
       {step.responseType === "slider" && (
         <div className="mb-8">
           <Slider
-            defaultValue={[userInput || 1]}
+            defaultValue={[userInputs[currentStep] || 1]}
             max={step.sliderMax || 10}
             step={step.sliderMin || 1}
             onValueChange={(value) => {
-              setUserInput(value);
+              setUserInputs({ ...userInputs, [currentStep]: value[0] });
             }}
             className="mt-4"
           />
@@ -293,15 +343,17 @@ export const PathwayPlayer = observer(({ pathway }) => {
             <div>{step.sliderMax}</div>
           </div>
           <div className="text-2xl w-full flex justify-center">
-            {userInput || 1} / {step.sliderMax || 10}
+            {userInputs[currentStep] || 1} / {step.sliderMax || 10}
           </div>
         </div>
       )}
 
       {step.responseType === "mood" && (
         <MoodSelector
-          mood={userInput}
-          onSelectMood={(mood) => setUserInput(mood)}
+          mood={userInputs[currentStep]}
+          onSelectMood={(mood) =>
+            setUserInputs({ ...userInputs, [currentStep]: mood })
+          }
         />
       )}
 
@@ -356,13 +408,13 @@ const DashboardPage = observer(() => {
           <HorizontalPathwaysList
             pathways={MobxStore.topPlayedPathways}
             title="Most Played"
-            description="Continue with your most played pathways."
+            description="Continue with your most played routines."
           />
 
           <HorizontalPathwaysList
             pathways={userPathways}
-            title="My Pathways"
-            description="From Subcollection Users"
+            title="My Routines"
+            description="Routines you created or modified"
           />
         </div>
       )}
