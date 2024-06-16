@@ -5,7 +5,7 @@ import MobxStore from "@/mobx";
 import { PathwayPlayer } from "../dashboard/page";
 import { PathwayCard, TitleDescription } from "../today/pathwaycomponents";
 import { routines } from "@/data/routines";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import {
   Briefcase,
@@ -90,8 +90,8 @@ export const TriggersCarousel = ({
   setSelectedCategory,
 }) => {
   return (
-    <ScrollArea>
-      <div className="flex flex-wrap gap-2 items-center my-2">
+    <ScrollArea className="w-full whitespace-nowrap rounded-md">
+      <div className="flex w-max space-x-2 my-2">
         {tags.map((tag) => {
           const isSelected = selectedCategory === tag.id;
 
@@ -111,6 +111,7 @@ export const TriggersCarousel = ({
           );
         })}
       </div>
+      <ScrollBar orientation="horizontal" />
     </ScrollArea>
   );
 };
@@ -121,8 +122,8 @@ export const TagsCarousel = ({
   setSelectedCategory,
 }) => {
   return (
-    <ScrollArea>
-      <div className="flex flex-wrap gap-2 items-center my-4">
+    <ScrollArea className="w-full whitespace-nowrap rounded-md">
+      <div className="flex w-max space-x-2 my-2">
         {tags.map((tag) => {
           const isSelected = selectedCategory === tag.id;
 
@@ -142,8 +143,25 @@ export const TagsCarousel = ({
           );
         })}
       </div>
+      <ScrollBar orientation="horizontal" />
     </ScrollArea>
   );
+};
+
+const calculateDurationId = (steps) => {
+  const totalDuration = steps.reduce((acc, step) => acc + step.timer, 0);
+  if (totalDuration <= 5 * 60) return 1;
+  if (totalDuration <= 10 * 60) return 2;
+  if (totalDuration <= 15 * 60) return 3;
+  if (totalDuration <= 30 * 60) return 4;
+  return 5;
+};
+
+const enhancedRoutines = (routines) => {
+  return routines.map((routine) => ({
+    ...routine,
+    durationId: calculateDurationId(routine.steps),
+  }));
 };
 
 const ExplorePage = observer(() => {
@@ -156,7 +174,7 @@ const ExplorePage = observer(() => {
     (pathway) => pathway.premiumId
   );
 
-  const mergedRoutines = routines.map((routine) => {
+  const mergedRoutines = enhancedRoutines(routines).map((routine) => {
     const userPathway = premiumUserPathways.find(
       (pathway) => pathway.premiumId === routine.premiumId
     );
@@ -167,8 +185,27 @@ const ExplorePage = observer(() => {
     }
   });
 
+  const filterRoutines = () => {
+    return mergedRoutines.filter((routine) => {
+      if (selectedCategory && routine.categoryId !== selectedCategory) {
+        return false;
+      }
+      if (selectedTrigger && routine.triggerId !== selectedTrigger) {
+        return false;
+      }
+      if (selectedDurations && routine.durationId !== selectedDurations) {
+        return false;
+      }
+      return true;
+    });
+  };
+
   if (pathwayPlaying) {
-    return <PathwayPlayer pathway={pathwayPlaying} />;
+    return (
+      <div className="sm:px-8 px-0">
+        <PathwayPlayer pathway={pathwayPlaying} />
+      </div>
+    );
   }
 
   return (
@@ -196,8 +233,8 @@ const ExplorePage = observer(() => {
         setSelectedCategory={setSelectedDurations}
       />
 
-      <div className="flex flex-wrap gap-8 mt-8">
-        {mergedRoutines.map((routine, i) => (
+      <div className="flex flex-wrap sm:gap-8 gap-2 mt-8">
+        {filterRoutines().map((routine, i) => (
           <PathwayCard key={i} pathway={routine} />
         ))}
       </div>

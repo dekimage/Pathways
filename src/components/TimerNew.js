@@ -14,11 +14,11 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-const AdjustTimeDrawer = ({ addTime, reduceTime, timeOver, handleReset }) => {
+const AdjustTimeDrawer = ({ addTime, reduceTime, timerOver, handleReset }) => {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="outline">+/-</Button>
+        <Button variant="outline">+/- {timerOver && "Add Time"}</Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
@@ -36,7 +36,7 @@ const AdjustTimeDrawer = ({ addTime, reduceTime, timeOver, handleReset }) => {
             </Button>
             <Button
               variant="outline"
-              disabled={timeOver}
+              disabled={timerOver}
               onClick={() => reduceTime(1)}
             >
               -1 min

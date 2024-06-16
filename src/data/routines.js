@@ -6,7 +6,7 @@ const originalRoutines = [
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Find today's priority",
     completionLimit: "3",
 
@@ -41,10 +41,11 @@ const originalRoutines = [
   },
   {
     premiumId: "86kePxu92pcRwXywGft4",
+    triggerId: 3, // Before Work
+    categoryId: 3, // Calm
     isPremium: false,
 
     days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-    
 
     original: true,
     trigger: "",
@@ -88,6 +89,8 @@ const originalRoutines = [
   },
   {
     premiumId: "AtOP0FktcVcoMq6x5SON",
+    triggerId: 2, // Night
+    categoryId: 2, // Self Knowledge
     isPremium: false,
     steps: [
       {
@@ -115,9 +118,10 @@ const originalRoutines = [
     ],
     description: "Learn by reflection",
     originalPathwayId: "LiuGGIFtC38QfzZp93MP",
-    
-    isCopy: true,
 
+    isCopy: true,
+    frequency: "everyday",
+    completionLimit: "3",
     backgroundColor: "#0e6ba8",
     name: "Reflect on Learning",
     emoji: "📖",
@@ -127,6 +131,9 @@ const originalRoutines = [
   },
   {
     premiumId: "CfP7u06Bn5gLO59PuH9l",
+    premiumId: "CfP7u06Bn5gLO59PuH9l",
+    triggerId: 6, // Weekend
+    categoryId: 5, // Minimize
     isPremium: false,
 
     steps: [
@@ -206,14 +213,16 @@ const originalRoutines = [
     description:
       "Set your week for success with this powerful routine for setting a weekly plan",
     frequency: "everyweek",
-    
+
     name: "Create Weekly Plan",
   },
   {
     premiumId: "Jv79Z3PC7gqV7O9RCnAm",
+    triggerId: 1, // Morning
+    categoryId: 1, // Work
     isPremium: true,
     isCopy: true,
-    
+
     steps: [
       {
         autoplay: true,
@@ -285,6 +294,8 @@ const originalRoutines = [
       },
     ],
     name: "Deep Work",
+    frequency: "everyday",
+    completionLimit: 1,
     originalPathwayId: "LiuGGIFtC38QfzZp93MP",
     playCount: 1,
 
@@ -296,6 +307,8 @@ const originalRoutines = [
   },
   {
     premiumId: "MPqzhxIL8Hm7uWEP3vnX",
+    triggerId: 1, // Morning
+    categoryId: 2, // Self Knowledge
     isPremium: true,
 
     name: "Reading Routine",
@@ -350,14 +363,13 @@ const originalRoutines = [
     trigger: "",
     frequency: "everyweek",
 
-    
     completionLimit: "2",
   },
   {
     premiumId: "XKIaO3moL4LPWZmGlw6B",
+    triggerId: 4, // After Work
+    categoryId: 2, // Self Knowledge
     isPremium: true,
-
-    
 
     emoji: "🔪",
     completionLimit: "2",
@@ -400,9 +412,10 @@ const originalRoutines = [
   },
   {
     premiumId: "ZdQ6pKPD8nGjmrH7Ze6X",
+    triggerId: 1, // Morning
+    categoryId: 1, // Work
     isPremium: true,
 
-    
     trigger: "",
 
     original: true,
@@ -497,9 +510,10 @@ const originalRoutines = [
   },
   {
     premiumId: "d6I4vz5wmaK9bbaoSWAg",
+    triggerId: 4, // After Work
+    categoryId: 1, // Work
     isPremium: true,
 
-    
     emoji: "🧯",
 
     description:
@@ -548,6 +562,8 @@ const originalRoutines = [
   },
   {
     premiumId: "dRwiHxqqEXoQdCyVlHMy",
+    triggerId: 4, // After Work
+    categoryId: 1, // Work
     isPremium: true,
     backgroundColor: "#6d6875",
     days: [
@@ -567,7 +583,7 @@ const originalRoutines = [
         autoplay: false,
 
         context: "20 hours? 1 week? put details",
-        timer: "0",
+        timer: 60,
 
         question: "How much time it will take me to do this full version?",
         responseType: "text",
@@ -578,18 +594,18 @@ const originalRoutines = [
         autoplay: false,
         question: "What is the potential outcome?",
 
-        timer: 0,
+        timer: 45,
         responseType: "text",
       },
       {
-        timer: 0,
+        timer: 45,
         responseType: "text",
         autoplay: true,
 
         question: "How well is it aligned with my values/desires?",
       },
       {
-        timer: 0,
+        timer: 60,
         responseType: "text",
         context:
           "smallest validate feature, mini mvp explain and how long it can take my to do that? hours? days?",
@@ -604,19 +620,19 @@ const originalRoutines = [
         responseType: "text",
 
         autoplay: true,
-        timer: 0,
+        timer: 60,
       },
     ],
     emoji: "📐",
     frequency: "everyday",
     name: "Prioritize Project",
 
-    
-
     original: true,
   },
   {
     premiumId: "dZlt9YVeTxdOhN0l3rzR",
+    triggerId: 2, // Night
+    categoryId: 2, // Self Knowledge
     isPremium: true,
 
     days: [
@@ -659,7 +675,7 @@ const originalRoutines = [
     ],
 
     original: true,
-    
+
     playCount: 1,
 
     frequency: "everyyear",
@@ -674,6 +690,8 @@ const originalRoutines = [
   },
   {
     premiumId: "e1GhRdKYAZlkKVfpkgBz",
+    triggerId: 1, // Morning
+    categoryId: 2, // Self Knowledge
     isPremium: true,
 
     description: "Create few affirmations and recite them",
@@ -693,7 +711,7 @@ const originalRoutines = [
       "Sunday",
     ],
     emoji: "🏵️",
-    
+
     steps: [
       {
         question: "Choose Your Focus",
@@ -729,6 +747,8 @@ const originalRoutines = [
   },
   {
     premiumId: "egJZRUh8h7lFBKc1e2ri",
+    triggerId: 1, // Morning
+    categoryId: 1, // Work
     isPremium: true,
     name: "Plan my Day",
     description: "A simple process to help you focus on what matters most.",
@@ -736,9 +756,10 @@ const originalRoutines = [
     emoji: "📜",
     isCopy: true,
     originalPathwayId: "aHd3mnf2uw8Ixx7Lp8Ys",
-    
-    playCount: 8,
 
+    playCount: 8,
+    frequency: "everyday",
+    completionLimit: 1,
     time: "Morning",
     steps: [
       {
@@ -779,12 +800,14 @@ const originalRoutines = [
   },
   {
     premiumId: "nRjUsyL5W97ZyhFrlEsk",
+    triggerId: 2, // Night
+    categoryId: 3, // Calm
     isPremium: true,
     description:
       "Before going to bed, go over the day and ask yourself powerful questions to make your future better.",
     name: "Night Reflection",
-    
-
+    frequency: "everyday",
+    completionLimit: 1,
     backgroundColor: "#907ad6",
     emoji: "🌃",
     steps: [
@@ -833,12 +856,14 @@ const originalRoutines = [
 const gptRoutines = [
   {
     premiumId: "1a2b3c4d5e6f7g8h9i0j",
+    triggerId: 1, // Morning
+    categoryId: 5, // Minimize
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Declutter Your Space",
     completionLimit: "1",
 
@@ -883,12 +908,14 @@ const gptRoutines = [
   },
   {
     premiumId: "2b3c4d5e6f7g8h9i0j1a",
+    triggerId: 6, // Weekend
+    categoryId: 3, // Calm
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "once a week",
-    
+    frequency: "everyweek",
+
     name: "Digital Detox",
     completionLimit: "1",
 
@@ -933,10 +960,12 @@ const gptRoutines = [
   },
   {
     premiumId: "3c4d5e6f7g8h9i0j1a2b",
+    triggerId: 6, // Weekend
+    categoryId: 5, // Minimize
     isPremium: false,
     original: true,
     trigger: "",
-    frequency: "once a month",
+    frequency: "everymonth",
     name: "Simplify Your Wardrobe",
     completionLimit: "1",
     emoji: "👗",
@@ -980,11 +1009,13 @@ const gptRoutines = [
   },
   {
     premiumId: "4d5e6f7g8h9i0j1a2b3c",
+    triggerId: 1, // Morning
+    categoryId: 4, // Play
     isPremium: false,
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Spark Your Creativity",
     completionLimit: "1",
 
@@ -1028,13 +1059,15 @@ const gptRoutines = [
   },
   {
     premiumId: "5e6f7g8h9i0j1a2b3c4d",
+    triggerId: 5, // Afternoon
+    categoryId: 2, // Self Knowledge
     isPremium: false,
     original: true,
     trigger: "",
-    frequency: "twice a week",
-    
+    frequency: "everyweek",
+
     name: "Find Your Inspiration",
-    completionLimit: "1",
+    completionLimit: "2",
     emoji: "🌟",
     steps: [
       {
@@ -1076,11 +1109,13 @@ const gptRoutines = [
   },
   {
     premiumId: "6f7g8h9i0j1a2b3c4d5e",
+    triggerId: 1, // Morning
+    categoryId: 4, // Play
     isPremium: false,
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Prepare for Creative Work",
     completionLimit: "1",
     emoji: "🎨",
@@ -1133,12 +1168,14 @@ const gptRoutines = [
   },
   {
     premiumId: "7g8h9i0j1a2b3c4d5e6f",
+    triggerId: 1, // Morning
+    categoryId: 1, // Work
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Energizing Cold Shower",
     completionLimit: "1",
 
@@ -1191,12 +1228,14 @@ const gptRoutines = [
   },
   {
     premiumId: "8h9i0j1a2b3c4d5e6f7g",
+    triggerId: 4, // After Work
+    categoryId: 3, // Calm
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Nutritious Meal Preparation",
     completionLimit: "1",
 
@@ -1256,12 +1295,14 @@ const gptRoutines = [
   },
   {
     premiumId: "9i0j1a2b3c4d5e6f7g8h",
+    triggerId: 1, // Morning
+    categoryId: 1, // Work
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Physical Exercise Routine",
     completionLimit: "1",
 
@@ -1323,13 +1364,15 @@ const gptRoutines = [
   },
   {
     premiumId: "0a1b2c3d4e5f6g7h8i9j",
+    triggerId: 6, // Weekend
+    categoryId: 6, // Connect
     isPremium: false,
     //
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Strengthen Your Relationships",
     completionLimit: "1",
 
@@ -1382,12 +1425,14 @@ const gptRoutines = [
   },
   {
     premiumId: "1b2c3d4e5f6g7h8i9j0a",
+    triggerId: 6, // Weekend
+    categoryId: 6, // Connect
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "twice a week",
-    
+    frequency: "everyweek",
+
     name: "Social Connection Boost",
     completionLimit: "1",
 
@@ -1432,12 +1477,14 @@ const gptRoutines = [
   },
   {
     premiumId: "2c3d4e5f6g7h8i9j0a1b",
+    triggerId: 6, // Weekend
+    categoryId: 6, // Connect
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "once a week",
-    
+    frequency: "everyweek",
+
     name: "Deepen Your Connections",
     completionLimit: "1",
 
@@ -1482,12 +1529,14 @@ const gptRoutines = [
   },
   {
     premiumId: "3d4e5f6g7h8i9j0a1b2c",
+    triggerId: 1, // Morning
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Discover Your Authentic Self",
     completionLimit: "1",
 
@@ -1533,12 +1582,14 @@ const gptRoutines = [
   },
   {
     premiumId: "4e5f6g7h8i9j0a1b2c3d",
+    triggerId: 5, // Afternoon
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "twice a week",
-    
+    frequency: "everyweek",
+
     name: "Find Your Life Purpose",
     completionLimit: "1",
 
@@ -1584,12 +1635,14 @@ const gptRoutines = [
   },
   {
     premiumId: "5f6g7h8i9j0a1b2c3d4e",
+    triggerId: 6, // Weekend
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "once a week",
-    
+    frequency: "everyweek",
+
     name: "Discover Your Ideal Country to Live In",
     completionLimit: "1",
 
@@ -1635,12 +1688,14 @@ const gptRoutines = [
   },
   {
     premiumId: "6g7h8i9j0a1b2c3d4e5f",
+    triggerId: 6, // Weekend
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "once a week",
-    
+    frequency: "everyweek",
+
     name: "Discover Your Values in Life",
     completionLimit: "1",
 
@@ -1686,12 +1741,14 @@ const gptRoutines = [
   },
   {
     premiumId: "7h8i9j0a1b2c3d4e5f6g",
+    triggerId: 5, // Afternoon
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "once a week",
-    
+    frequency: "everyweek",
+
     name: "Find Your Strengths and Unique Powers",
     completionLimit: "1",
 
@@ -1737,13 +1794,15 @@ const gptRoutines = [
   },
   {
     premiumId: "8i9j0a1b2c3d4e5f6g7h",
+    triggerId: 6, // Weekend
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "once a week",
-    
-    name: "Discover What Inspires and Motivates You",
+    frequency: "everyweek",
+
+    name: "Discover What Inspires You",
     completionLimit: "1",
 
     emoji: "✨",
@@ -1788,12 +1847,14 @@ const gptRoutines = [
   },
   {
     premiumId: "9j0a1b2c3d4e5f6g7h8i",
+    triggerId: 2, // Night
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Reflect on Your Day",
     completionLimit: "1",
 
@@ -1846,12 +1907,14 @@ const gptRoutines = [
   },
   {
     premiumId: "0b1c2d3e4f5g6h7i8j9k",
+    triggerId: 1, // Morning
+    categoryId: 6, // Connect
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Learn from Social Interactions",
     completionLimit: "1",
 
@@ -1905,12 +1968,14 @@ const gptRoutines = [
   },
   {
     premiumId: "1c2d3e4f5g6h7i8j9k0l",
+    triggerId: 1, // Morning
+    categoryId: 1, // Work
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Productivity Tracking",
     completionLimit: "1",
 
@@ -1962,12 +2027,14 @@ const gptRoutines = [
   },
   {
     premiumId: "2d3e4f5g6h7i8j9k0l1m",
+    triggerId: 6, // Weekend
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "weekly",
-    
+    frequency: "everyweek",
+
     name: "Weekly Reflection: Takeaways",
     completionLimit: "1",
 
@@ -2013,12 +2080,14 @@ const gptRoutines = [
   },
   {
     premiumId: "3e4f5g6h7i8j9k0l1m2n",
+    triggerId: 6, // Weekend
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "monthly",
-    
+    frequency: "everymonth",
+
     name: "Monthly Reflection: Wins",
     completionLimit: "1",
 
@@ -2063,12 +2132,14 @@ const gptRoutines = [
   },
   {
     premiumId: "4f5g6h7i8j9k0l1m2n3o",
+    triggerId: 6, // Weekend
+    categoryId: 2, // Self Knowledge
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "monthly",
-    
+    frequency: "everymonth",
+
     name: "Monthly Reflection: Mistakes and Lessons",
     completionLimit: "1",
 
@@ -2113,12 +2184,14 @@ const gptRoutines = [
   },
   {
     premiumId: "5g6h7i8j9k0l1m2n3o4p",
+    triggerId: 1, // Morning
+    categoryId: 3, // Calm
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Gratitude Practice",
     completionLimit: "1",
 
@@ -2172,12 +2245,14 @@ const gptRoutines = [
   },
   {
     premiumId: "6h7i8j9k0l1m2n3o4p5q",
+    triggerId: 1, // Morning
+    categoryId: 1, // Work
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Stretching Between Pomodoro Breaks",
     completionLimit: "1",
 
@@ -2220,12 +2295,14 @@ const gptRoutines = [
   },
   {
     premiumId: "7i8j9k0l1m2n3o4p5q6r",
+    triggerId: 2, // Night
+    categoryId: 3, // Calm
     isPremium: false,
 
     original: true,
     trigger: "",
     frequency: "everyday",
-    
+
     name: "Prepare for Sleep",
     completionLimit: "1",
 
@@ -2281,11 +2358,13 @@ const gptRoutines = [
 const geminiRoutines = [
   {
     premiumId: "DeclutterPowerHour",
+    triggerId: 6, // Weekend
+    categoryId: 5, // Minimize
     isPremium: false,
 
     trigger: "",
-    frequency: "weekly",
-    
+    frequency: "everyweek",
+
     name: "Mindful Declutter Power Hour",
     completionLimit: 1,
 
@@ -2337,13 +2416,15 @@ const geminiRoutines = [
   },
   {
     premiumId: "WardrobeCapsule",
+    triggerId: 6, // Weekend
+    categoryId: 5, // Minimize
     isPremium: false,
 
     trigger: "",
-    frequency: "seasonal",
-    
+
     name: "Wardrobe Capsule Creation",
     completionLimit: 1,
+    frequency: "everymonth",
     emoji: "👕",
 
     steps: [
@@ -2392,11 +2473,13 @@ const geminiRoutines = [
   },
   {
     premiumId: "MinimalistHomeReset",
+    triggerId: 1, // Morning
+    categoryId: 5, // Minimize
     isPremium: false,
     original: true,
     trigger: "",
-    frequency: "daily",
-    
+    frequency: "everyday",
+
     name: "15-Minute Minimalist Home Reset",
     completionLimit: 1,
     emoji: "🏠",
@@ -2445,11 +2528,13 @@ const geminiRoutines = [
   },
   {
     premiumId: "ReclaimAttention",
+    triggerId: 4, // After Work
+    categoryId: 3, // Calm
     isPremium: false,
 
     trigger: "",
-    frequency: "daily",
-    
+    frequency: "everyday",
+
     name: "Reclaim Your Attention",
     completionLimit: 1,
 
@@ -2511,11 +2596,13 @@ const geminiRoutines = [
   },
   {
     premiumId: "SimplifyCommitments",
+    triggerId: 6, // Weekend
+    categoryId: 5, // Minimize
     isPremium: false,
 
     trigger: "",
-    frequency: "weekly",
-    
+    frequency: "everyweek",
+
     name: "Simplify Your Commitments",
     completionLimit: 1,
 
@@ -2567,12 +2654,14 @@ const geminiRoutines = [
   },
   {
     premiumId: "MindfulEating",
+    triggerId: 5, // Afternoon
+    categoryId: 3, // Calm
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "with every meal",
-    
+    frequency: "everyday",
+
     name: "Mindful Eating Practice",
     completionLimit: "3",
 
@@ -2625,10 +2714,12 @@ const geminiRoutines = [
   },
   {
     premiumId: "PlayfulCommute",
+    triggerId: 4, // After Work
+    categoryId: 4, // Play
     isPremium: false,
     original: true,
     trigger: "",
-    frequency: "daily",
+    frequency: "everyday",
     name: "Playful Commute Home",
     completionLimit: 1,
     emoji: "🚶",
@@ -2680,12 +2771,14 @@ const geminiRoutines = [
   },
   {
     premiumId: "PlaytimeRecharge",
+    triggerId: 4, // After Work
+    categoryId: 4, // Play
     isPremium: false,
 
     original: true,
     trigger: "",
-    frequency: "daily",
-    
+    frequency: "everyday",
+
     name: "Evening Playtime Recharge",
     completionLimit: 1,
 
@@ -2741,12 +2834,15 @@ const geminiRoutines = [
   },
   {
     premiumId: "PlayfulMindBreak",
+    triggerId: 3, // Before Work
+    categoryId: 4, // Play
     isPremium: false,
 
     trigger: "",
-    frequency: "daily",
-    
+    frequency: "everyday",
+
     name: "Playful Mind Break",
+    frequency: "everyday",
     completionLimit: "3",
 
     emoji: "🤸",

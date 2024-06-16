@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getAvatarShortcut } from "@/utils/transformers";
+import Link from "next/link";
 
 export function UserNav({ user, logout }) {
   return (
@@ -38,9 +39,11 @@ export function UserNav({ user, logout }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <Link href={"/profile"}>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+          </Link>
+          {/* <DropdownMenuItem>Billing</DropdownMenuItem>
+          <DropdownMenuItem>Settings</DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>

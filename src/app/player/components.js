@@ -196,11 +196,14 @@ export const PathwayPlayerHeader = ({
         >
           {pathway.emoji}
         </div>
-        <div className="text-xl font-bold">{pathway.name}</div>
+        <div className="sm:text-xl text-md font-bold">
+          {pathway.name.length > 40 ? pathway.name.slice(0, 40) : pathway.name}
+        </div>
       </div>
 
-      <div>
-        <button
+      <div className="flex items-center">
+        {/* FEATURE MUSIC PLAYER */}
+        {/* <button
           className="mr-2 rounded-full hover:bg-gray-100"
           onClick={() => setIsMusicPlaying(!isMusicPlaying)}
         >
@@ -209,7 +212,7 @@ export const PathwayPlayerHeader = ({
           ) : (
             <MdOutlineMusicNote size={20} className="text-slate-600" />
           )}
-        </button>
+        </button> */}
 
         <button
           className="mr-2 rounded-full hover:bg-gray-100"
@@ -231,7 +234,7 @@ export const PathwayPlayerHeader = ({
 const ClosePlayerDialog = ({ handleClose, show, setShow }) => {
   return (
     <Dialog open={show} onOpenChange={setShow}>
-      <DialogTrigger>
+      <DialogTrigger className="flex items-center justify-center">
         <button className="rounded-full hover:bg-gray-100">
           <MdClose size={20} className="text-slate-600" />
         </button>
@@ -241,7 +244,7 @@ const ClosePlayerDialog = ({ handleClose, show, setShow }) => {
           <DialogTitle>Do you want to end this session?</DialogTitle>
           <DialogDescription>All progress will be lost.</DialogDescription>
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter className="flex gap-2">
           <Button variant="outline" onClick={() => setShow(false)}>
             Cancel
           </Button>

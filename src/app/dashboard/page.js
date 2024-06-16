@@ -8,7 +8,14 @@ import { observer } from "mobx-react";
 import MobxStore from "@/mobx";
 
 import { Slider } from "@/components/ui/slider";
-import { Check, ChevronLeft, StepForward } from "lucide-react";
+import {
+  BadgeInfo,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  Lightbulb,
+  StepForward,
+} from "lucide-react";
 
 import { usePathname } from "next/navigation";
 import TimerNew from "@/components/TimerNew";
@@ -27,6 +34,30 @@ import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 
 const backgroundCover = "";
+
+const StepExpander = ({ currentStep, pathway }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  return (
+    <div
+      className="p-2 border flex justify-between flex-col"
+      onClick={() => setIsExpanded(true)}
+    >
+      Step {currentStep + 1}:
+      <div>
+        <ChevronDown />
+      </div>
+      {isExpanded && (
+        <div>
+          {pathway.steps.map((step, index) => (
+            <div key={index} className="p-2 border">
+              {step.question}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const PathwayPlayer = observer(({ pathway }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -126,6 +157,8 @@ export const PathwayPlayer = observer(({ pathway }) => {
     } else {
       setSessionComplete(true);
     }
+
+    setTimeOver(false);
   };
 
   const handlePreviousStep = () => {
@@ -139,6 +172,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
     } else {
       setPathwayPlaying(null);
     }
+    setTimeOver(false);
   };
 
   const handleSkipStep = () => {
@@ -171,6 +205,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
     } else {
       setSessionComplete(true);
     }
+    setTimeOver(false);
   };
 
   const restartTimer = () => {
@@ -297,12 +332,17 @@ export const PathwayPlayer = observer(({ pathway }) => {
         setTimeOver={setTimeOver}
       />
 
-      <h2 className="text-md mb-2">
-        <div>Step {currentStep + 1}:</div>
+      <div className="text-md mb-2">
+        <StepExpander currentStep={currentStep} pathway={pathway} />
         <div className="text-2xl my-2">{step.question}</div>
 
-        {step.context && <div className="py-2 text-sm">💡 {step.context}</div>}
-      </h2>
+        {step.context && (
+          <div className="py-2 text-sm">
+            {/* <Lightbulb size={18} /> */}
+            {step.context}
+          </div>
+        )}
+      </div>
 
       {step.responseType === "text" && (
         <textarea
@@ -402,39 +442,6 @@ const DashboardPage = observer(() => {
 
   const pathname = usePathname();
 
-  // async function testCheckAndResetProgress() {
-  //   // Simulate end of day
-  //   const endOfDay = new Date();
-  //   endOfDay.setDate(endOfDay.getDate() + 1);
-  //   endOfDay.setHours(0, 0, 0, 0);
-  //   console.log("Testing end of day reset:");
-  //   await MobxStore.checkAndResetProgress(endOfDay);
-
-  //   // Simulate end of week
-  //   const endOfWeek = new Date();
-  //   endOfWeek.setDate(endOfWeek.getDate() + 7);
-  //   endOfWeek.setHours(0, 0, 0, 0);
-  //   console.log("Testing end of week reset:");
-  //   await MobxStore.checkAndResetProgress(endOfWeek);
-
-  //   // Simulate end of month
-  //   const endOfMonth = new Date();
-  //   endOfMonth.setMonth(endOfMonth.getMonth() + 1);
-  //   endOfMonth.setDate(1);
-  //   endOfMonth.setHours(0, 0, 0, 0);
-  //   console.log("Testing end of month reset:");
-  //   await MobxStore.checkAndResetProgress(endOfMonth);
-
-  //   // Simulate end of year
-  //   const endOfYear = new Date();
-  //   endOfYear.setFullYear(endOfYear.getFullYear() + 1);
-  //   endOfYear.setMonth(0);
-  //   endOfYear.setDate(1);
-  //   endOfYear.setHours(0, 0, 0, 0);
-  //   console.log("Testing end of year reset:");
-  //   await MobxStore.checkAndResetProgress(endOfYear);
-  // }
-
   useEffect(() => {
     return () => {
       setPathwayPlaying(null);
@@ -448,7 +455,6 @@ const DashboardPage = observer(() => {
         <PathwayPlayer pathway={pathwayPlaying} />
       ) : (
         <div className="m-4 sm:mx-0">
-          {/* <Button onClick={() => MobxStore.forceResetProgress()}>test</Button> */}
           <HorizontalPathwaysList
             pathways={MobxStore.recentPathways}
             title="Recently Played"
