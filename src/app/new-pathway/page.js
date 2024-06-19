@@ -793,7 +793,8 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
           )}
 
           <div className="flex flex-col">
-            <div className="flex items-center justify-between  rounded mt-6">
+            {/* FEATURE DISABLED: TRIGGERS EVENTS */}
+            {/* <div className="flex items-center justify-between  rounded mt-6">
               <div className="flex justify-center items-center gap-1">
                 <div className="text-md font-medium">Trigger</div>
                 <QuestionHelpBox>help</QuestionHelpBox>
@@ -813,7 +814,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
                   handleInputChange("trigger", value.toLowerCase());
                 }}
               />
-            </div>
+            </div> */}
           </div>
 
           {/* FEATURE DISABLED: Show days */}
