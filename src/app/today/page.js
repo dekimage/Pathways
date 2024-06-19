@@ -6,12 +6,32 @@ import { shouldShowToday } from "@/utils/date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PathwayCard, TitleDescription } from "./pathwaycomponents";
 import { PathwayPlayer } from "../dashboard/page";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 const TodayPage = observer(() => {
-  const { userPathways, pathwayPlaying, loading } = MobxStore;
+  const {
+    userPathways,
+    pathwayPlaying,
+    setPathwayPlaying,
+    setIsPathwayEditView,
+  } = MobxStore;
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    return () => {
+      setPathwayPlaying(null);
+      setIsPathwayEditView(false);
+    };
+  }, [pathname, setPathwayPlaying, setIsPathwayEditView]);
 
   if (pathwayPlaying) {
-    return <PathwayPlayer pathway={pathwayPlaying} />;
+    return (
+      <div className="sm:px-8 px-0">
+        <PathwayPlayer pathway={pathwayPlaying} />
+      </div>
+    );
   }
 
   return (

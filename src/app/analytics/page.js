@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ReactMarkdown from "react-markdown";
 import {
   formatSeconds,
   formatSecondsToHumanReadable,
@@ -17,6 +18,8 @@ import {
   CalendarDays,
   CalendarIcon,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ChevronUp,
   Clock4,
   Gem,
@@ -170,7 +173,7 @@ const LogDetails = observer(({ log, setIsExpanded }) => {
               </div>
 
               <div className="mt-4 text-md bg-muted p-2 rounded">
-                {step.response}
+                <ReactMarkdown>{step.response}</ReactMarkdown>
               </div>
 
               {step.skipped ? (
@@ -343,7 +346,13 @@ const LogCardReward = ({ log }) => {
 
 const LogsPage = observer(() => {
   const [date, setDate] = useState(new Date());
-  const { isMobileOpen, logs, pathwayPlaying } = MobxStore;
+  const {
+    isMobileOpen,
+    logs,
+    pathwayPlaying,
+    setIsPathwayEditView,
+    setPathwayPlaying,
+  } = MobxStore;
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -352,6 +361,33 @@ const LogsPage = observer(() => {
 
   const pathwayId = searchParams.get("pathwayId");
   const rewardId = searchParams.get("rewardId");
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    return () => {
+      setPathwayPlaying(null);
+      setIsPathwayEditView(false);
+    };
+  }, [pathname, setPathwayPlaying, setIsPathwayEditView]);
+
+  // const shiftDateBy = (days) => {
+  //   console.log(321);
+  //   setDate(
+  //     (prevDate) => new Date(prevDate.setDate(prevDate.getDate() + days))
+  //   );
+  // };
+
+  // const isNextDayTomorrow = () => {
+  //   console.log(123);
+  //   const today = new Date();
+  //   const tomorrow = new Date(
+  //     today.setDate(today.getDate() + 1)
+  //   ).toDateString();
+  //   return (
+  //     new Date(date.setDate(date.getDate() + 1)).toDateString() === tomorrow
+  //   );
+  // };
 
   const filteredLogs = logs
     .filter((log) => {
@@ -431,6 +467,10 @@ const LogsPage = observer(() => {
             </TabsTrigger>
           </TabsList>
         </Tabs>
+        {/* 
+        <Button variant={"outline"} onClick={() => shiftDateBy(-1)}>
+          <ChevronLeft className="h-4 w-4" />
+        </Button> */}
 
         <div className={`grid gap-2`}>
           <Popover>
@@ -461,6 +501,13 @@ const LogsPage = observer(() => {
             </PopoverContent>
           </Popover>
         </div>
+        {/* <Button
+          variant={"outline"}
+          onClick={() => shiftDateBy(1)}
+          disabled={isNextDayTomorrow()}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button> */}
       </div>
 
       {!analyticsOk.ok && (

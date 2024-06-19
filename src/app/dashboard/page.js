@@ -32,25 +32,46 @@ import {
 } from "../player/components";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import { formatSecondsToHumanReadable } from "@/utils/date";
 
 const backgroundCover = "";
 
 const StepExpander = ({ currentStep, pathway }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <div
-      className="p-2 border flex justify-between flex-col"
-      onClick={() => setIsExpanded(true)}
-    >
-      Step {currentStep + 1}:
-      <div>
-        <ChevronDown />
+    <div className="border flex justify-between flex-col">
+      <div
+        className="flex justify-between p-2 cursor-pointer"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        Step {currentStep + 1}:
+        {isExpanded ? (
+          <div className="flex items-center text-xs">
+            Hide
+            <ChevronDown size={16} className="ml-1" />
+          </div>
+        ) : (
+          <div className="flex items-center text-xs">
+            Show
+            <ChevronDown size={16} className="ml-1" />
+          </div>
+        )}
       </div>
+
       {isExpanded && (
         <div>
           {pathway.steps.map((step, index) => (
-            <div key={index} className="p-2 border">
-              {step.question}
+            <div
+              key={index}
+              className={`p-2 border ${
+                index == currentStep ? "bg-green-400/50" : "bg-background"
+              }`}
+            >
+              <div className="flex text-lg font-bold">Step {index + 1}:</div>
+              <div> {step.question}</div>
+              <div className="flex justify-between">
+                <div>{formatSecondsToHumanReadable(step.timer, false)}</div>
+              </div>
             </div>
           ))}
         </div>
@@ -59,7 +80,7 @@ const StepExpander = ({ currentStep, pathway }) => {
   );
 };
 
-export const PathwayPlayer = observer(({ pathway }) => {
+export const PathwayPlayer = observer(({ pathway, isShare = false }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const step = pathway.steps[currentStep];
   const [timer, setTimer] = useState(step.timer);
@@ -77,7 +98,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
   const { setPathwayPlaying } = MobxStore;
 
-  const audioRef = useRef(null);
+  // const audioRef = useRef(null);
 
   const { isPathwayEditView, setIsPathwayEditView } = MobxStore;
 
@@ -219,7 +240,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
   if (sessionComplete) {
     return (
-      <div className="flex flex-col max-w-lg  p-4 rounded-lg shadow-md mt-8 ml-8 border border-gray">
+      <div className="flex flex-col max-w-lg  p-4 rounded-lg shadow-md  sm:mt-8 sm:ml-8 border border-gray">
         <Button
           onClick={() => handlePreviousStep()}
           className="w-fit mb-2"
@@ -238,6 +259,7 @@ export const PathwayPlayer = observer(({ pathway }) => {
           ))}
         </div> */}
         <div className="mb-4">You ve completed the session!</div>
+
         <div className="text-sm mb-2">
           Total Duration: {Math.floor(totalDuration / 60)}:
           {totalDuration % 60 < 10
@@ -249,26 +271,31 @@ export const PathwayPlayer = observer(({ pathway }) => {
             <ResponseItem response={response} key={index} index={index} />
           ))}
         </div>
+
         <Button
+          disabled={isShare}
           className="w-full mt-2"
           onClick={async () => {
             let pathwayPremiumCopy = false;
             // for original pathways 1. check if original 2. check if already added
             if (pathway.original) {
-              console.log("path original", pathway.original);
               const isPathwayAlreadyAdded = MobxStore.userPathways.find(
                 (userPathway) => userPathway.premiumId == pathway.premiumId
               );
-              console.log({ isPathwayAlreadyAdded });
+
               if (!isPathwayAlreadyAdded) {
-                const newId = await MobxStore.addUserPathway(pathway);
-                console.log({ newId });
+                const copiedPathway = {
+                  ...pathway,
+                  original: false,
+                  originalPathwayId: pathway.premiumId,
+                };
+                const newId = await MobxStore.addUserPathway(copiedPathway);
+
                 pathwayPremiumCopy = { ...pathway, id: newId };
               }
             }
 
             let pathwayForLog = pathwayPremiumCopy || pathway;
-            console.log({ pathwayPremiumCopy });
 
             MobxStore.addLog(pathwayForLog, {
               pathway: pathwayForLog,
@@ -292,6 +319,40 @@ export const PathwayPlayer = observer(({ pathway }) => {
         >
           Complete
         </Button>
+        {isShare && (
+          <div>
+            <div className="text-xs flex gap-2 items-center p-2 border rounded bg-yellow-100 text-black flex-col">
+              <div>This is a short demo of the app to try out routines.</div>
+              <div>If you like to access the full app`s features such as:</div>
+              <ol>
+                <li>- Create custom routines</li>
+                <li>- Save routine`s data in logs</li>
+                <li>- Access to more routines</li>
+                <li>- Organize routines in lists</li>
+                <li>+ much more</li>
+              </ol>
+              <div>
+                You can create a free account in seconds (using email or via
+                google) and bring some actionable practice into your daily
+                routine.{" "}
+              </div>
+              <div>
+                If you want to access all the features, you can buy the premium
+                version here.
+              </div>
+              <div></div>
+            </div>
+            <Link href={"/signup"}>
+              <Button className="w-full mt-2">Create Free Account</Button>
+            </Link>
+            <div className="w-full text-center mt-1">or</div>
+            <Link href={"/"}>
+              <Button variant="outline" className="w-full mt-2">
+                Check the Landing Page
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     );
   }
@@ -300,11 +361,12 @@ export const PathwayPlayer = observer(({ pathway }) => {
 
   return (
     <div className="flex flex-col max-w-lg p-4 sm:mt-8 m-0 sm:rounded-lg sm:shadow-md sm:border border-gray">
-      <audio
+      {/* FEATURE DISABLED: MUSIC */}
+      {/* <audio
         ref={audioRef}
         src={`rpg-music-${pathway.musicPack || 2}.mp3`}
         loop
-      />
+      /> */}
 
       <PathwayPlayerHeader
         pathway={pathway}
@@ -313,6 +375,8 @@ export const PathwayPlayer = observer(({ pathway }) => {
         setIsMusicPlaying={setIsMusicPlaying}
         setIsPathwayEditView={setIsPathwayEditView}
         setPathwayPlaying={setPathwayPlaying}
+        isFirstStep={currentStep === 0}
+        isShare={isShare}
       />
 
       <ProgressBar currentStep={currentStep} pathway={pathway} />
@@ -333,7 +397,14 @@ export const PathwayPlayer = observer(({ pathway }) => {
       />
 
       <div className="text-md mb-2">
-        <StepExpander currentStep={currentStep} pathway={pathway} />
+        <div className="flex text-lg font-bold">
+          <span className="p-2 px-4 bg-primary rounded-full text-black">
+            Step {currentStep + 1}{" "}
+          </span>
+        </div>
+
+        {/* FEATURE STEP VIEWER */}
+        {/* <StepExpander currentStep={currentStep} pathway={pathway} /> */}
         <div className="text-2xl my-2">{step.question}</div>
 
         {step.context && (

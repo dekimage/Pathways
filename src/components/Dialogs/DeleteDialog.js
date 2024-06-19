@@ -10,7 +10,14 @@ import {
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
 import { Trash2 } from "lucide-react";
-export const DeleteDialog = ({ trigger, onDelete, setShow, show, label }) => {
+export const DeleteDialog = ({
+  trigger,
+  onDelete,
+  setShow,
+  show,
+  label,
+  isResetDefault,
+}) => {
   const { toast } = useToast();
   return (
     <Dialog open={show} onOpenChange={setShow}>
@@ -27,7 +34,10 @@ export const DeleteDialog = ({ trigger, onDelete, setShow, show, label }) => {
         <DialogHeader>
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will delete your {label}.
+            This action cannot be undone.{" "}
+            {isResetDefault
+              ? "This will restore the default"
+              : `This will delete your ${label}.`}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -38,10 +48,12 @@ export const DeleteDialog = ({ trigger, onDelete, setShow, show, label }) => {
             onClick={() => {
               setShow(false);
               onDelete();
-              toast({ title: `${label} deleted` });
+              toast({
+                title: `${label} ${isResetDefault ? "restored" : "deleted"}`,
+              });
             }}
           >
-            Delete
+            {isResetDefault ? "Restore Default" : "Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>

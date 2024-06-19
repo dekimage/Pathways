@@ -1,6 +1,6 @@
 "use client";
 import { observer } from "mobx-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MobxStore from "@/mobx";
 import { PathwayPlayer } from "../dashboard/page";
 import { PathwayCard, TitleDescription } from "../today/pathwaycomponents";
@@ -15,6 +15,7 @@ import {
   Minimize2,
   ScanEye,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export const CATEGORIES = [
   {
@@ -165,7 +166,12 @@ const enhancedRoutines = (routines) => {
 };
 
 const ExplorePage = observer(() => {
-  const { pathwayPlaying, userPathways } = MobxStore;
+  const {
+    pathwayPlaying,
+    userPathways,
+    setPathwayPlaying,
+    setIsPathwayEditView,
+  } = MobxStore;
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTrigger, setSelectedTrigger] = useState(null);
   const [selectedDurations, setSelectedDurations] = useState(null);
@@ -199,6 +205,15 @@ const ExplorePage = observer(() => {
       return true;
     });
   };
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    return () => {
+      setPathwayPlaying(null);
+      setIsPathwayEditView(false);
+    };
+  }, [pathname, setPathwayPlaying, setIsPathwayEditView]);
 
   if (pathwayPlaying) {
     return (
@@ -235,7 +250,12 @@ const ExplorePage = observer(() => {
 
       <div className="flex flex-wrap sm:gap-8 gap-2 mt-8">
         {filterRoutines().map((routine, i) => (
-          <PathwayCard key={i} pathway={routine} />
+          <PathwayCard
+            key={i}
+            pathway={routine}
+            fromExplore
+            isOriginalPathway={routine.original}
+          />
         ))}
       </div>
     </div>

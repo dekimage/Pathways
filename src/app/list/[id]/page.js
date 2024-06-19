@@ -6,7 +6,7 @@ import { PodcastEmptyPlaceholder } from "@/reusable-ui/EmptyList";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/reusable-ui/ComboBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { HiOutlineCog6Tooth } from "react-icons/hi2";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { PathwayPlayer } from "@/app/dashboard/page";
@@ -41,6 +41,8 @@ const CustomListPage = observer(({ params }) => {
     lists,
     deleteList,
     editListName,
+    setPathwayPlaying,
+    setIsPathwayEditView,
   } = MobxStore;
   const [showDialog, setShowDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -70,8 +72,21 @@ const CustomListPage = observer(({ params }) => {
     userPathwaysInCombobox[0]
   );
 
+  const pathname = usePathname();
+
+  useEffect(() => {
+    return () => {
+      setPathwayPlaying(null);
+      setIsPathwayEditView(false);
+    };
+  }, [pathname, setPathwayPlaying, setIsPathwayEditView]);
+
   if (pathwayPlaying) {
-    return <PathwayPlayer pathway={pathwayPlaying} />;
+    return (
+      <div className="sm:px-8 px-0">
+        <PathwayPlayer pathway={pathwayPlaying} />
+      </div>
+    );
   }
 
   const router = useRouter();
@@ -110,8 +125,10 @@ const CustomListPage = observer(({ params }) => {
               Cancel
             </Button>
             <Button
+              disabled={!selectedPathway}
               onClick={() => {
                 addPathwayToList(listId, selectedPathway.id);
+                setSelectedPathway(userPathwaysInCombobox[0] || null);
                 setShowDialog(false);
                 toast({ title: "✔️ Routine Added" });
               }}

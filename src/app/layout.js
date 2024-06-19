@@ -17,7 +17,14 @@ const brico = Bricolage_Grotesque({
 export default function RootLayout({ children }) {
   const pathname = usePathname();
 
-  const publicRoutes = ["/login", "/signup", "/", "/privacy-policy", "/tos"];
+  const publicRoutes = [
+    "/login",
+    "/signup",
+    "/",
+    "/privacy-policy",
+    "/tos",
+    "/share",
+  ];
 
   const isPublicRoute = publicRoutes.includes(pathname);
   return (

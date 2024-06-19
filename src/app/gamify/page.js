@@ -43,6 +43,7 @@ const defaultReward = {
   cost: 10,
   name: "",
   emoji: "🎁",
+  color: getRandomColor(),
   timesPurchased: 0,
   backgroundColor: "transparent",
   // maxPurchaseLimit: "unlimited",
@@ -56,7 +57,7 @@ const RewardBuilder = ({
 }) => {
   const [hex, setHex] = useState("#F44E3B");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
+  const { toast } = useToast();
   const [reward, setReward] = useState(
     rewardState ? rewardState : defaultReward
   );
@@ -77,7 +78,37 @@ const RewardBuilder = ({
     setRewardState(null);
   };
 
+  const rewardValidationSchema = {
+    name: {
+      maxLength: 150,
+      errorMessage: "Name must be less than or equal to 500 characters",
+    },
+    cost: {
+      max: 500,
+      errorMessage: "Cost must be less than or equal to 500",
+    },
+  };
+
+  const validateRewardInput = (name, value) => {
+    const rule = rewardValidationSchema[name];
+
+    if (rule.maxLength && value.length > rule.maxLength) {
+      return rule.errorMessage;
+    }
+
+    if (rule.max && value > rule.max) {
+      return rule.errorMessage;
+    }
+
+    return null;
+  };
+
   const handleInputChange = (name, value) => {
+    const error = validateRewardInput(name, value);
+    if (error) {
+      toast({ title: `${error}` });
+      return;
+    }
     setReward({ ...reward, [name]: value });
   };
 

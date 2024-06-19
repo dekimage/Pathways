@@ -111,7 +111,7 @@ const TimerNew = ({
 
   return (
     <div
-      className={`flex justify-center flex-col items-center px-4 py-2 w-full ${backgroundClass}`}
+      className={`flex justify-center flex-col items-center mb-4 px-4 py-2 w-full ${backgroundClass}`}
     >
       <div className="w-fit text-center">
         <div className={`text-[62px] font-bold ${textClass}`}>

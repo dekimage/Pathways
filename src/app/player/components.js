@@ -111,21 +111,20 @@ export const ResponseItem = ({ response, index }) => {
   const [isShowing, setIsShowing] = useState(false);
 
   return (
-    <div className="flex flex-col  mb-4 p-2 rounded-lg w-full border">
+    <div
+      className="flex flex-col  mb-4 p-2 rounded-lg w-full border cursor-pointer"
+      onClick={() => setIsShowing(!isShowing)}
+    >
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">
           {index + 1}. {response.question}
         </span>
         {/* <span className="text-sm">{response.timeSpent} seconds</span> */}
 
-        <Button
-          variant="ghost"
-          className="flex gap-2 items-center"
-          onClick={() => setIsShowing(!isShowing)}
-        >
-          {isShowing ? "Hide" : "View"}{" "}
+        <div className="flex gap-2 items-center">
+          {/* {isShowing ? "Hide" : "View"}{" "} */}
           {isShowing ? <ChevronUp /> : <ChevronDown />}
-        </Button>
+        </div>
       </div>
       {isShowing && (
         <div className="flex flex-col gap-2">
@@ -179,19 +178,24 @@ export const PathwayPlayerHeader = ({
   setIsMusicPlaying,
   setIsPathwayEditView,
   setPathwayPlaying,
+  isFirstStep,
+  isShare = false,
 }) => {
   const [show, setShow] = useState(false);
   return (
     <div className="flex justify-between items-center mb-4">
-      <button
-        className=" rounded-full hover:bg-gray-100"
-        onClick={handlePreviousStep}
-      >
-        <IoIosArrowBack size={20} className="text-slate-600" />
-      </button>
-      <div className="flex items-center">
+      {!isShare && (
+        <Button
+          variant="outline"
+          className="p-2"
+          onClick={() => (isFirstStep ? setShow(true) : handlePreviousStep())}
+        >
+          <IoIosArrowBack size={20} className="text-slate-600" />
+        </Button>
+      )}
+      <div className="flex items-center justify-center">
         <div
-          className="w-fit mr-1 p-1 rounded"
+          className="w-fit ml-2 mr-1 p-1 rounded"
           style={{ background: pathway.backgroundColor }}
         >
           {pathway.emoji}
@@ -213,19 +217,22 @@ export const PathwayPlayerHeader = ({
             <MdOutlineMusicNote size={20} className="text-slate-600" />
           )}
         </button> */}
-
-        <button
-          className="mr-2 rounded-full hover:bg-gray-100"
-          onClick={() => setIsPathwayEditView(true)}
-        >
-          <HiOutlineCog6Tooth size={20} className="text-slate-600" />
-        </button>
-
-        <ClosePlayerDialog
-          show={show}
-          setShow={setShow}
-          handleClose={() => setPathwayPlaying(null)}
-        />
+        {!isShare && (
+          <Button
+            variant="outline"
+            className="mr-2  p-2"
+            onClick={() => setIsPathwayEditView(true)}
+          >
+            <HiOutlineCog6Tooth size={20} className="text-slate-600" />
+          </Button>
+        )}
+        {!isShare && (
+          <ClosePlayerDialog
+            show={show}
+            setShow={setShow}
+            handleClose={() => setPathwayPlaying(null)}
+          />
+        )}
       </div>
     </div>
   );
@@ -235,9 +242,9 @@ const ClosePlayerDialog = ({ handleClose, show, setShow }) => {
   return (
     <Dialog open={show} onOpenChange={setShow}>
       <DialogTrigger className="flex items-center justify-center">
-        <button className="rounded-full hover:bg-gray-100">
+        <Button variant="outline" className="p-2  ">
           <MdClose size={20} className="text-slate-600" />
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -267,19 +274,19 @@ export const ProgressBar = ({ currentStep, pathway }) => {
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex-1 mr-4">
-        <div className="w-full flex rounded-full  h-2.5">
+        <div className="w-full flex rounded-full h-2.5">
           {Array.from({ length: totalSteps }, (_, index) => (
             <div
               key={index}
               className={`flex-1 h-2.5 transition-all duration-300 ${
-                index < currentStep ? "bg-primary" : "bg-muted"
+                index < currentStep + 1 ? "bg-primary" : "bg-muted"
               } ${index !== totalSteps - 1 ? "mr-0.5" : ""} rounded-full`}
             ></div>
           ))}
         </div>
       </div>
       <span className="text-sm font-medium text-gray-700">
-        {currentStep}/{totalSteps}
+        {currentStep + 1}/{totalSteps}
       </span>
     </div>
   );

@@ -41,7 +41,7 @@ const Pricing = () => {
   return (
     <div className="flex justify-center p-8 gap-8 flex-col md:flex-row lg:flex-row">
       <PricingBox data={proData} isAuthenticated={!!user} />
-      <PricingBox data={freeData} isAuthenticated={!!user} />
+      <PricingBox data={freeData} isFree isAuthenticated={!!user} />
     </div>
   );
 };

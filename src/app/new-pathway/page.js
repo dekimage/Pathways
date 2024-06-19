@@ -288,7 +288,7 @@ const Step = forwardRef(
             {step.question && `${truncateString(step.question, 30)}`}
           </div>
           <div className="flex gap-2 items-center pr-2 p-2">
-            <DeleteStepModal handleDeleteStep={handleDeleteStep} />
+            <DeleteStepModal handleDeleteStep={() => handleDeleteStep(index)} />
 
             <Button variant="outline" onClick={toggleStep}>
               {isOpen ? <ChevronUp /> : <ChevronDown />}
@@ -439,6 +439,77 @@ const Step = forwardRef(
   }
 );
 
+const validationSchema = {
+  name: {
+    max: 40,
+    required: false,
+    errorMessage: "Name must be less than 40 characters and is required",
+  },
+  description: {
+    max: 300,
+    required: false,
+    errorMessage:
+      "Description must be less than 150 characters and is required",
+  },
+  completionLimit: {
+    max: 50,
+    required: false,
+    errorMessage: "Completion limit must be at least 1 and is required",
+  },
+  reward: {
+    max: 1000,
+    required: false,
+    errorMessage: "Reward must be at least 0 and is required",
+  },
+  steps: {
+    timer: {
+      max: 1800,
+      errorMessage: "Timer must be less than or equal to 1800 seconds",
+    },
+    context: {
+      max: 1000,
+      errorMessage:
+        "Instructions must be less than or equal to 1000 characters",
+    },
+    question: {
+      max: 300,
+      errorMessage: "Question is required",
+    },
+  },
+};
+
+const validateInput = (name, value) => {
+  const rule = validationSchema[name];
+
+  if (rule.required && !value) {
+    return rule.errorMessage;
+  }
+
+  if (rule.max && value.length > rule.max) {
+    return rule.errorMessage;
+  }
+
+  if (rule.min && value < rule.min) {
+    return rule.errorMessage;
+  }
+
+  return null;
+};
+
+const validateStepInput = (name, value) => {
+  const rule = validationSchema.steps[name];
+
+  if (rule.max && value > rule.max) {
+    return rule.errorMessage;
+  }
+
+  if (rule.max && value.length > rule.max) {
+    return rule.errorMessage;
+  }
+
+  return null;
+};
+
 const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -488,6 +559,14 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
     }
   };
   const handleInputChange = (name, value) => {
+    const error = validateInput(name, value);
+
+    if (error) {
+      toast({
+        title: `${error}`,
+      });
+      return;
+    }
     setPathway({ ...pathway, [name]: value });
   };
 
@@ -512,6 +591,15 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
   };
 
   const handleStepChange = (stepIndex, e) => {
+    const { name, value } = e.target;
+    const error = validateStepInput(name, value);
+
+    if (error) {
+      toast({
+        title: `${error}`,
+      });
+      return;
+    }
     const newSteps = [...pathway.steps];
     newSteps[stepIndex] = {
       ...newSteps[stepIndex],
@@ -522,11 +610,30 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    let isPathwayAlreadyAdded;
     if (pathwayToEdit) {
-      // If we Update
+      if (pathwayToEdit.original) {
+        isPathwayAlreadyAdded = MobxStore.userPathways.find(
+          (userPathway) => userPathway.premiumId == pathwayToEdit.premiumId
+        );
 
-      await MobxStore.updateUserPathway(pathwayToEdit.id, pathway);
+        if (!isPathwayAlreadyAdded) {
+          //create new pathway based from the original
+          const copiedPathway = {
+            ...pathway,
+            original: false,
+            originalPathwayId: pathwayToEdit.premiumId,
+          };
+          await MobxStore.addUserPathway(copiedPathway);
+        }
+      }
+
+      if (isPathwayAlreadyAdded || !pathwayToEdit.original) {
+        console.log(5);
+        await MobxStore.updateUserPathway(pathwayToEdit.id, pathway);
+      }
+
+      console.log({ isPathwayAlreadyAdded, original: pathwayToEdit.original });
 
       if (editFromInside) {
         setIsPathwayEditView(false);
@@ -542,7 +649,14 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
 
     if (!pathwayToEdit) {
       // Create
-      await MobxStore.addUserPathway(pathway);
+      const cleanedUpPathway = {
+        ...pathway,
+        steps: pathway.steps.length === 0 ? [DEFAULT_STEP] : pathway.steps,
+        description: pathway.description || "No description",
+        reward: pathway.reward || 0,
+        name: pathway.name || "No name",
+      };
+      await MobxStore.addUserPathway(cleanedUpPathway);
       setPathway(DEFAULT_PATHWAY);
       router.push("/dashboard");
     }

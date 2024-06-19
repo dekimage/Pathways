@@ -160,6 +160,9 @@ export function getPeriodEndDate(frequency, lastCompletedDate) {
 
 //Pathways
 export function shouldResetProgress(frequency, lastCompletedDate) {
+  if (frequency === "unlimited") {
+    return false;
+  }
   const currentDate = new Date();
   const periodEndDate = getPeriodEndDate(
     frequency,

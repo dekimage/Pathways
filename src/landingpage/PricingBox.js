@@ -14,7 +14,7 @@ import Image from "next/image";
 import logo2Img from "@/assets/logo4.png";
 import logo3Img from "@/assets/logo3.png";
 
-export const PricingBox = ({ data, isAuthenticated }) => {
+export const PricingBox = ({ data, isAuthenticated, isFree }) => {
   const isPremium = data.title === "Premium";
   return (
     <Card
@@ -64,10 +64,11 @@ export const PricingBox = ({ data, isAuthenticated }) => {
         <div className="w-full">
           <Link href="/signup">
             <Button
+              disabled={isFree && isAuthenticated}
               variant={isPremium ? "default" : "outline"}
               className="w-full"
             >
-              {data.cta}
+              {isAuthenticated && isFree ? "Active Plan" : data.cta}
             </Button>
           </Link>
         </div>
