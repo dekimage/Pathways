@@ -289,7 +289,10 @@ export const PathwayPlayer = observer(({ pathway, isShare = false }) => {
                   original: false,
                   originalPathwayId: pathway.premiumId,
                 };
-                const newId = await MobxStore.addUserPathway(copiedPathway);
+                const newId = await MobxStore.addUserPathway(
+                  copiedPathway,
+                  true
+                );
 
                 pathwayPremiumCopy = { ...pathway, id: newId };
               }

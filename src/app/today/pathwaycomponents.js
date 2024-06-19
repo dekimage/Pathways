@@ -91,63 +91,66 @@ export const PathwayCard = observer(
 
             <div className="relative w-full h-full sm:p-4 p-2 backdrop-blur-lg bg-background/30 rounded-lg  shadow-xl flex flex-col items-between z-100">
               <div className="flex flex-grow flex-col">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="absolute sm:top-[16px] sm:right-[16px] top-[8px] right-[8px] p-2"
-                    >
-                      <MoreVertical className="h-4 w-4" />
-                      <span className="sr-only">More</span>
-                      {/* <HiOutlineCog6Tooth size={20} className="text-slate-600" /> */}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setPathwayPlaying(pathway);
-                        setIsPathwayEditView(false);
-                      }}
-                    >
-                      Edit
-                    </DropdownMenuItem>
-                    {!isOriginalPathway && (
-                      <Link
-                        href={`/analytics/?pathwayId=${pathway.id}`}
-                        passHref
+                {((fromExplore && !pathway.isPremium && !user.isPremium) ||
+                  !fromExplore) && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="absolute sm:top-[16px] sm:right-[16px] top-[8px] right-[8px] p-2"
                       >
-                        <DropdownMenuItem>View Stats</DropdownMenuItem>
-                      </Link>
-                    )}
-                    {!isOriginalPathway &&
-                      (isInList ? (
-                        <DropdownMenuItem
-                          onClick={() => {
-                            removeFromList(listId, pathway.id);
-                            toast({ title: "✔️ Routine Removed" });
-                          }}
+                        <MoreVertical className="h-4 w-4" />
+                        <span className="sr-only">More</span>
+                        {/* <HiOutlineCog6Tooth size={20} className="text-slate-600" /> */}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setPathwayPlaying(pathway);
+                          setIsPathwayEditView(false);
+                        }}
+                      >
+                        Edit
+                      </DropdownMenuItem>
+                      {!isOriginalPathway && (
+                        <Link
+                          href={`/analytics/?pathwayId=${pathway.id}`}
+                          passHref
                         >
-                          Remove From List
-                        </DropdownMenuItem>
-                      ) : (
-                        <DeleteDialog
-                          isResetDefault={fromExplore}
-                          trigger={
-                            <div className="w-full hover:bg-accent cursor-pointer relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                              {fromExplore ? "Restore Default" : "Delete"}
-                            </div>
-                          }
-                          onDelete={() => {
-                            deletePathway(pathway.id);
-                          }}
-                          setShow={setShowDeleteDialog}
-                          show={showDeleteDialog}
-                          label="routine"
-                        />
-                      ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                          <DropdownMenuItem>View Stats</DropdownMenuItem>
+                        </Link>
+                      )}
+                      {!isOriginalPathway &&
+                        (isInList ? (
+                          <DropdownMenuItem
+                            onClick={() => {
+                              removeFromList(listId, pathway.id);
+                              toast({ title: "✔️ Routine Removed" });
+                            }}
+                          >
+                            Remove From List
+                          </DropdownMenuItem>
+                        ) : (
+                          <DeleteDialog
+                            isResetDefault={fromExplore}
+                            trigger={
+                              <div className="w-full hover:bg-accent cursor-pointer relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                {fromExplore ? "Restore Default" : "Delete"}
+                              </div>
+                            }
+                            onDelete={() => {
+                              deletePathway(pathway.id);
+                            }}
+                            setShow={setShowDeleteDialog}
+                            show={showDeleteDialog}
+                            label="routine"
+                          />
+                        ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
 
                 <div
                   className="flex justify-center items-center  w-fit sm:p-4 px-3 py-2 sm:text-4xl text-xl rounded-lg"

@@ -27,6 +27,7 @@ import {
   where,
   orderBy,
   limit,
+  increment,
 } from "firebase/firestore";
 
 import Logger from "@/utils/logger";
@@ -109,8 +110,39 @@ class Store {
     this.updateStreak = this.updateStreak.bind(this);
     this.checkAndResetStreak = this.checkAndResetStreak.bind(this);
     this.checkAndResetProgress = this.checkAndResetProgress.bind(this);
+    this.updateUserStats = this.updateUserStats.bind(this);
   }
+  async updateUserStats(updates) {
+    try {
+      if (!this.user) {
+        throw new Error("User not authenticated.");
+      }
 
+      const userDocRef = doc(db, "users", this.user.uid);
+      const currentUserData = { ...this.user };
+      const updatesObject = {};
+
+      updates.forEach(({ key, value }) => {
+        const currentValue = currentUserData[key] || 0;
+        const newValue = currentValue + value;
+        updatesObject[key] = newValue;
+      });
+
+      // Update the Firestore document with the new values
+      await updateDoc(userDocRef, updatesObject);
+
+      // Update the MobX store with the new values
+      runInAction(() => {
+        updates.forEach(({ key, value }) => {
+          this.user[key] = (this.user[key] || 0) + value;
+        });
+      });
+
+      // console.log("User stats updated:", updatesObject);
+    } catch (error) {
+      console.error("Error updating user stats:", error);
+    }
+  }
   // async initializeAuth() {
   //   const auth = getAuth();
   //   onAuthStateChanged(auth, async (user) => {
@@ -574,6 +606,7 @@ class Store {
   }
 
   async addLog(pathway, logData) {
+    console.log({ logData });
     const canSave = await this.canSaveLog(pathway.id);
     if (!canSave) {
       logger.error("Log limit reached for the day");
@@ -594,6 +627,11 @@ class Store {
       await updateDoc(userPathwayRef, {
         playCount: currentPlayCount + 1,
       });
+
+      await this.updateUserStats([
+        { key: "totalDone", value: 1 },
+        { key: "totalDuration", value: logData.totalDuration },
+      ]);
     } else {
       logger.error("Pathway not found");
       return;
@@ -838,7 +876,7 @@ class Store {
     }
   }
 
-  addUserPathway = async (pathway) => {
+  addUserPathway = async (pathway, isCopy) => {
     console.log({ pathway });
     if (!this.user) {
       logger.debug("Error: User not authenticated.");
@@ -853,12 +891,18 @@ class Store {
       const docRef = await addDoc(userPathwayRef, pathway);
       console.log({ pathway });
       console.log({ id: docRef.id });
+
       runInAction(() => {
         this.userPathways.push({
           id: docRef.id,
           ...pathway,
         });
       });
+
+      if (!isCopy) {
+        this.updateUserStats([{ key: "totalCreated", value: 1 }]);
+      }
+
       logger.debug("User pathway created with ID: ", docRef.id);
       return docRef.id; // Return the ID for further use
     } catch (error) {
@@ -966,6 +1010,7 @@ class Store {
         // Remove from lists in the store (implementation below)
         this.removePathwayFromListsInStore(pathwayId);
       });
+      // this.updateUserStats("totalRoutines", -1); - i dont wanna reduce in case i go negative because of copies
     } catch (error) {
       console.error("Error deleting pathway:", error);
     }

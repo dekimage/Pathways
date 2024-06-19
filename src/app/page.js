@@ -23,10 +23,14 @@ import Link from "next/link";
 import { HackerNews, ProductHunt, Reddit, TwitterX } from "@/assets/svgs";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaDiscord } from "react-icons/fa";
 import logoImage from "@/assets/logo.png";
 import heroImg from "@/assets/hero-1.png";
+import logoImg from "@/assets/logo.png";
+import MobxStore from "@/mobx";
+import { useRouter } from "next/navigation";
+import { observer } from "mobx-react";
 
 const avatars = [
   { avatar: "RB" },
@@ -401,10 +405,29 @@ const UseCases = () => {
   );
 };
 
-const LandingPage = () => {
-  // return <div>Landing page in progress</div>;
+const LandingPage = observer(() => {
+  const { user } = MobxStore;
+  console.log(user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
+
   return (
     <div>
+      <header className="max-w-7xl mx-auto sm:px-8 px-2 py-5 flex items-center">
+        <div className="flex gap-1 items-center">
+          <Image src={logoImg} width={32} height={32} alt="logo" />
+          <div className="text-xl font-bold ml-1">PlayRoutines</div>
+        </div>
+        <div className="w-full flex items-center pl-12 md:pl-24 gap-4 md:gap-12">
+          <Link href="#pricing">Pricing</Link>
+          <Link href="#">Testemonials</Link>
+        </div>
+      </header>
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-20 lg:items-start px-8 py-8 lg:py-20">
         <div className="flex flex-col gap-10 lg:gap-14 items-center justify-center text-center lg:text-left lg:items-start">
           <h1 className="font-extrabold text-4xl lg:text-6xl tracking-tight md:-mb-4 flex flex-col gap-3 items-center lg:items-start">
@@ -790,6 +813,6 @@ const LandingPage = () => {
       </footer>
     </div>
   );
-};
+});
 
 export default LandingPage;

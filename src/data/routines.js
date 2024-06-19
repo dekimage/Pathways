@@ -131,7 +131,7 @@ const originalRoutines = [
   },
   {
     premiumId: "CfP7u06Bn5gLO59PuH9l",
-    premiumId: "CfP7u06Bn5gLO59PuH9l",
+
     triggerId: 6, // Weekend
     categoryId: 5, // Minimize
     isPremium: false,
@@ -220,7 +220,7 @@ const originalRoutines = [
     premiumId: "Jv79Z3PC7gqV7O9RCnAm",
     triggerId: 1, // Morning
     categoryId: 1, // Work
-    isPremium: true,
+    isPremium: false,
     isCopy: true,
 
     steps: [
@@ -858,7 +858,7 @@ const gptRoutines = [
     premiumId: "1a2b3c4d5e6f7g8h9i0j",
     triggerId: 1, // Morning
     categoryId: 5, // Minimize
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -910,7 +910,7 @@ const gptRoutines = [
     premiumId: "2b3c4d5e6f7g8h9i0j1a",
     triggerId: 6, // Weekend
     categoryId: 3, // Calm
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -962,7 +962,7 @@ const gptRoutines = [
     premiumId: "3c4d5e6f7g8h9i0j1a2b",
     triggerId: 6, // Weekend
     categoryId: 5, // Minimize
-    isPremium: false,
+    isPremium: true,
     original: true,
     trigger: "",
     frequency: "everymonth",
@@ -1011,7 +1011,7 @@ const gptRoutines = [
     premiumId: "4d5e6f7g8h9i0j1a2b3c",
     triggerId: 1, // Morning
     categoryId: 4, // Play
-    isPremium: false,
+    isPremium: true,
     original: true,
     trigger: "",
     frequency: "everyday",
@@ -1061,7 +1061,7 @@ const gptRoutines = [
     premiumId: "5e6f7g8h9i0j1a2b3c4d",
     triggerId: 5, // Afternoon
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
     original: true,
     trigger: "",
     frequency: "everyweek",
@@ -1111,7 +1111,7 @@ const gptRoutines = [
     premiumId: "6f7g8h9i0j1a2b3c4d5e",
     triggerId: 1, // Morning
     categoryId: 4, // Play
-    isPremium: false,
+    isPremium: true,
     original: true,
     trigger: "",
     frequency: "everyday",
@@ -1170,7 +1170,7 @@ const gptRoutines = [
     premiumId: "7g8h9i0j1a2b3c4d5e6f",
     triggerId: 1, // Morning
     categoryId: 1, // Work
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1230,7 +1230,7 @@ const gptRoutines = [
     premiumId: "8h9i0j1a2b3c4d5e6f7g",
     triggerId: 4, // After Work
     categoryId: 3, // Calm
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1297,7 +1297,7 @@ const gptRoutines = [
     premiumId: "9i0j1a2b3c4d5e6f7g8h",
     triggerId: 1, // Morning
     categoryId: 1, // Work
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1366,7 +1366,7 @@ const gptRoutines = [
     premiumId: "0a1b2c3d4e5f6g7h8i9j",
     triggerId: 6, // Weekend
     categoryId: 6, // Connect
-    isPremium: false,
+    isPremium: true,
     //
 
     original: true,
@@ -1427,7 +1427,7 @@ const gptRoutines = [
     premiumId: "1b2c3d4e5f6g7h8i9j0a",
     triggerId: 6, // Weekend
     categoryId: 6, // Connect
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1479,7 +1479,7 @@ const gptRoutines = [
     premiumId: "2c3d4e5f6g7h8i9j0a1b",
     triggerId: 6, // Weekend
     categoryId: 6, // Connect
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1531,7 +1531,7 @@ const gptRoutines = [
     premiumId: "3d4e5f6g7h8i9j0a1b2c",
     triggerId: 1, // Morning
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1584,7 +1584,7 @@ const gptRoutines = [
     premiumId: "4e5f6g7h8i9j0a1b2c3d",
     triggerId: 5, // Afternoon
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1637,7 +1637,7 @@ const gptRoutines = [
     premiumId: "5f6g7h8i9j0a1b2c3d4e",
     triggerId: 6, // Weekend
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1690,7 +1690,7 @@ const gptRoutines = [
     premiumId: "6g7h8i9j0a1b2c3d4e5f",
     triggerId: 6, // Weekend
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1743,7 +1743,7 @@ const gptRoutines = [
     premiumId: "7h8i9j0a1b2c3d4e5f6g",
     triggerId: 5, // Afternoon
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1796,7 +1796,7 @@ const gptRoutines = [
     premiumId: "8i9j0a1b2c3d4e5f6g7h",
     triggerId: 6, // Weekend
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1849,7 +1849,7 @@ const gptRoutines = [
     premiumId: "9j0a1b2c3d4e5f6g7h8i",
     triggerId: 2, // Night
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1909,7 +1909,7 @@ const gptRoutines = [
     premiumId: "0b1c2d3e4f5g6h7i8j9k",
     triggerId: 1, // Morning
     categoryId: 6, // Connect
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -1970,7 +1970,7 @@ const gptRoutines = [
     premiumId: "1c2d3e4f5g6h7i8j9k0l",
     triggerId: 1, // Morning
     categoryId: 1, // Work
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -2029,7 +2029,7 @@ const gptRoutines = [
     premiumId: "2d3e4f5g6h7i8j9k0l1m",
     triggerId: 6, // Weekend
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -2082,7 +2082,7 @@ const gptRoutines = [
     premiumId: "3e4f5g6h7i8j9k0l1m2n",
     triggerId: 6, // Weekend
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -2134,7 +2134,7 @@ const gptRoutines = [
     premiumId: "4f5g6h7i8j9k0l1m2n3o",
     triggerId: 6, // Weekend
     categoryId: 2, // Self Knowledge
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -2186,7 +2186,7 @@ const gptRoutines = [
     premiumId: "5g6h7i8j9k0l1m2n3o4p",
     triggerId: 1, // Morning
     categoryId: 3, // Calm
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -2247,7 +2247,7 @@ const gptRoutines = [
     premiumId: "6h7i8j9k0l1m2n3o4p5q",
     triggerId: 1, // Morning
     categoryId: 1, // Work
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -2297,7 +2297,7 @@ const gptRoutines = [
     premiumId: "7i8j9k0l1m2n3o4p5q6r",
     triggerId: 2, // Night
     categoryId: 3, // Calm
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -2360,7 +2360,7 @@ const geminiRoutines = [
     premiumId: "DeclutterPowerHour",
     triggerId: 6, // Weekend
     categoryId: 5, // Minimize
-    isPremium: false,
+    isPremium: true,
 
     trigger: "",
     frequency: "everyweek",
@@ -2418,7 +2418,7 @@ const geminiRoutines = [
     premiumId: "WardrobeCapsule",
     triggerId: 6, // Weekend
     categoryId: 5, // Minimize
-    isPremium: false,
+    isPremium: true,
 
     trigger: "",
 
@@ -2475,7 +2475,7 @@ const geminiRoutines = [
     premiumId: "MinimalistHomeReset",
     triggerId: 1, // Morning
     categoryId: 5, // Minimize
-    isPremium: false,
+    isPremium: true,
     original: true,
     trigger: "",
     frequency: "everyday",
@@ -2530,7 +2530,7 @@ const geminiRoutines = [
     premiumId: "ReclaimAttention",
     triggerId: 4, // After Work
     categoryId: 3, // Calm
-    isPremium: false,
+    isPremium: true,
 
     trigger: "",
     frequency: "everyday",
@@ -2598,7 +2598,7 @@ const geminiRoutines = [
     premiumId: "SimplifyCommitments",
     triggerId: 6, // Weekend
     categoryId: 5, // Minimize
-    isPremium: false,
+    isPremium: true,
 
     trigger: "",
     frequency: "everyweek",
@@ -2656,7 +2656,7 @@ const geminiRoutines = [
     premiumId: "MindfulEating",
     triggerId: 5, // Afternoon
     categoryId: 3, // Calm
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -2716,7 +2716,7 @@ const geminiRoutines = [
     premiumId: "PlayfulCommute",
     triggerId: 4, // After Work
     categoryId: 4, // Play
-    isPremium: false,
+    isPremium: true,
     original: true,
     trigger: "",
     frequency: "everyday",
@@ -2773,7 +2773,7 @@ const geminiRoutines = [
     premiumId: "PlaytimeRecharge",
     triggerId: 4, // After Work
     categoryId: 4, // Play
-    isPremium: false,
+    isPremium: true,
 
     original: true,
     trigger: "",
@@ -2836,7 +2836,7 @@ const geminiRoutines = [
     premiumId: "PlayfulMindBreak",
     triggerId: 3, // Before Work
     categoryId: 4, // Play
-    isPremium: false,
+    isPremium: true,
 
     trigger: "",
     frequency: "everyday",

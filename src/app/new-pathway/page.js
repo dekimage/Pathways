@@ -15,7 +15,13 @@ import {
 import MobxStore from "@/mobx";
 import { usePathname, useRouter } from "next/navigation";
 import EmojiPicker from "emoji-picker-react";
-import { ChevronDown, ChevronLeft, ChevronUp, Gem } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Gem,
+} from "lucide-react";
 import Circle from "@uiw/react-color-circle";
 import { getRandomColor } from "../gamify/page";
 import { Slider } from "@/components/ui/slider";
@@ -32,6 +38,14 @@ import { proData } from "../premium/page";
 import { useToast } from "@/components/ui/use-toast";
 import { daysOfWeek } from "@/data/static";
 import { generateSingleEmoji } from "@/utils/emojis";
+
+import frequencyImg from "@/assets/frequencyHelper.png";
+import gamifyImg from "@/assets/gamifyhelper.png";
+import textImg from "@/assets/texthelper.png";
+import checklistImg from "@/assets/checklisthelper.png";
+import sliderImg from "@/assets/sliderhelper.png";
+import moodpressImg from "@/assets/moodpresshelper.png";
+import Link from "next/link";
 
 const suggestedTimers = [30, 60, 90, 120, 180, 300, 600];
 
@@ -256,6 +270,72 @@ const DeleteStepModal = ({ handleDeleteStep }) => {
     </Dialog>
   );
 };
+const ResponseHelperModal = () => {
+  const [slide, setSlide] = useState(0);
+  const slideData = {
+    0: {
+      img: textImg,
+      text: "1. Text Input",
+      description:
+        "Text Input allows you to write a custom response in text format. It will be saved as a note which you can later come back to and reflect upon.",
+    },
+    1: {
+      img: checklistImg,
+      text: "2. Checklist",
+      description:
+        "Checklist is like a custom to-do list that you can make for each routine, and it will serve as a reminder for you to complete the tasks.",
+    },
+    2: {
+      img: sliderImg,
+      text: "3. Slider",
+      description:
+        "Sliders are good for setting a range of values between 1 and 100.",
+    },
+    3: {
+      img: moodpressImg,
+      text: "4. Mood Press",
+      description:
+        "Use Mood Press if you wish to respond to the step with a simple emotion.",
+    },
+  };
+
+  const content = slideData[slide];
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="text-2xl">{content.text}</div>
+      <Image
+        src={content.img}
+        width={400}
+        height={400}
+        alt="response helper"
+        className="w-full"
+      />
+      <div className="">{content.description}</div>
+
+      <div className="flex justify-between items-center">
+        <Button variant="outline" onClick={() => setSlide((slide - 1 + 4) % 4)}>
+          <ChevronLeft /> Back
+        </Button>
+        <div className="flex justify-center gap-2">
+          {Object.keys(slideData).map((index) => (
+            <div
+              key={index}
+              onClick={() => setSlide(Number(index))}
+              className={`w-4 h-4 rounded-full cursor-pointer ${
+                slide === Number(index) ? "bg-primary" : "bg-gray-300"
+              }`}
+            ></div>
+          ))}
+        </div>
+        <Button variant="outline" onClick={() => setSlide((slide + 1) % 4)}>
+          Next
+          <ChevronRight />
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 const Step = forwardRef(
   (
@@ -345,7 +425,7 @@ const Step = forwardRef(
                   label: "Mood Press",
                 },
               ]}
-              helperChildren={"hey"}
+              helperChildren={<ResponseHelperModal />}
             />
 
             {step.responseType === "checklist" && (
@@ -624,7 +704,7 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
             original: false,
             originalPathwayId: pathwayToEdit.premiumId,
           };
-          await MobxStore.addUserPathway(copiedPathway);
+          await MobxStore.addUserPathway(copiedPathway, true);
         }
       }
 
@@ -769,7 +849,29 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
                 label: "Every Year",
               },
             ]}
-            helperChildren={"When will you do this pathway?"}
+            helperChildren={
+              <div className="flex flex-col gap-2">
+                <div className="text-2xl">Frequency</div>
+                <Image
+                  src={frequencyImg}
+                  width={400}
+                  height={400}
+                  alt="frequency helper"
+                />
+                <div className="">
+                  Adding a frequency to the routine will let you know how many
+                  times you want to perform this routine on a regular basis.
+                  <br />
+                  <br />
+                  You can do it one or more times per day, week, month, or year.
+                  <br />
+                  <br />
+                  Adding frequency will never prevent you from doing a routine
+                  for more than you set it. It will only help you keep track of
+                  your progress.
+                </div>
+              </div>
+            }
           />
 
           {pathway.frequency !== "unlimited" && (
@@ -839,7 +941,32 @@ const PathwayBuilder = observer(({ pathwayToEdit = false }) => {
           title="Gamify Rewards"
           value={isGamify}
           callback={() => setIsGamify(!isGamify)}
-          helperChildren={"Gamify is..."}
+          helperChildren={
+            <div className="flex flex-col gap-2">
+              <div className="text-2xl">Gamify</div>
+              <Image
+                src={gamifyImg}
+                width={400}
+                height={400}
+                alt="frequency helper"
+              />
+              <div className="">
+                Gamifying a routine means that you will be rewarded an X number
+                of gems each time you complete it.
+                <br />
+                <br />
+                Gems can be spend in the gamify section to buy rewards made by
+                you.
+                <br />
+                <br />
+                Please nore, gamify is a{" "}
+                <Link className="underline" href="/premium">
+                  {" "}
+                  Premium feature.
+                </Link>
+              </div>
+            </div>
+          }
         />
         {isGamify && (
           <div className="flex flex-col pl-4 border-l">

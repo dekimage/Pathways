@@ -3,6 +3,7 @@
 import { PricingBox } from "@/landingpage/PricingBox";
 import MobxStore from "@/mobx";
 import { LoadingSpinner } from "@/reusable-ui/LoadingSpinner";
+import { observer } from "mobx-react";
 
 export const freeData = {
   title: "Free",
@@ -31,7 +32,7 @@ export const proData = {
   cta: "Change your life",
 };
 
-const Pricing = () => {
+const Pricing = observer(() => {
   const { user, authLoading } = MobxStore;
 
   if (authLoading) {
@@ -44,5 +45,5 @@ const Pricing = () => {
       <PricingBox data={freeData} isFree isAuthenticated={!!user} />
     </div>
   );
-};
+});
 export default Pricing;
