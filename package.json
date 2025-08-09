@@ -64,6 +64,9 @@
     "yup": "^1.4.0",
     "zod": "^3.22.4"
   },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "devDependencies": {
     "autoprefixer": "^10",
     "eslint": "^8",
